@@ -1,0 +1,23 @@
+{
+  "buildPath": "code",
+  "hook": {
+    "enabled": true,
+    "quiet": false
+  },
+  "detector": {
+    "extensions": [
+      {
+        "ext": ".blade.php",
+        "engine": "html"
+      }
+    ],
+    "ignoreValues": {
+      "overused-font": [
+        {
+          "value": "Inter",
+          "reason": "Telyuji protocol requires Inter font across all interfaces"
+        }
+      ]
+    }
+  }
+}

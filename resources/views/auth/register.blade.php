@@ -1,76 +1,76 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+<div class="max-w-md mx-auto my-8">
+    <div class="bg-white border border-gray-200 rounded-lg p-6 sm:p-8">
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900">Pendaftaran Akun</h1>
+            <p class="text-sm text-gray-600 mt-1">Daftarkan akun pemohon untuk pengajuan uji sampel.</p>
+        </div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+        <form method="POST" action="{{ route('register') }}" class="space-y-4">
+            @csrf
 
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('Name') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ __('Nama Lengkap') }}
+                </label>
+                <input id="name" type="text" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus
+                    class="w-full px-3.5 py-2 text-sm bg-white border @error('name') border-racing-red @else border-gray-300 @enderror rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-racing-red focus:border-racing-red transition-colors">
+                @error('name')
+                    <p class="mt-1.5 text-xs text-racing-red font-medium" role="alert">
+                        {{ $message }}
+                    </p>
+                @enderror
             </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ __('Alamat Email Kampus') }}
+                </label>
+                <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email"
+                    class="w-full px-3.5 py-2 text-sm bg-white border @error('email') border-racing-red @else border-gray-300 @enderror rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-racing-red focus:border-racing-red transition-colors">
+                @error('email')
+                    <p class="mt-1.5 text-xs text-racing-red font-medium" role="alert">
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ __('Kata Sandi') }}
+                </label>
+                <input id="password" type="password" name="password" required autocomplete="new-password"
+                    class="w-full px-3.5 py-2 text-sm bg-white border @error('password') border-racing-red @else border-gray-300 @enderror rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-racing-red focus:border-racing-red transition-colors">
+                @error('password')
+                    <p class="mt-1.5 text-xs text-racing-red font-medium" role="alert">
+                        {{ $message }}
+                    </p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="password-confirm" class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ __('Konfirmasi Kata Sandi') }}
+                </label>
+                <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password"
+                    class="w-full px-3.5 py-2 text-sm bg-white border border-gray-300 rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-racing-red focus:border-racing-red transition-colors">
+            </div>
+
+            <div class="pt-2">
+                <button type="submit"
+                    class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md text-sm font-semibold text-white bg-racing-red hover:bg-tiger-flame focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-racing-red transition-colors">
+                    {{ __('Daftar Sekarang') }}
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-6 pt-6 border-t border-gray-100 text-center text-xs text-gray-500">
+            Sudah memiliki akun?
+            <a href="{{ route('login') }}" class="font-medium text-racing-red hover:text-tiger-flame ml-1">
+                Masuk di sini
+            </a>
         </div>
     </div>
 </div>

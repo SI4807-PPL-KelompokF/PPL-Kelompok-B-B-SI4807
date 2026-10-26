@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-26T16:58:00+07:00",
+  "title": "Design System: Telyuji",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Racing Red", "canonical": "#ED1E28" },
+      "primary-hover": { "role": "primary", "displayName": "Tiger Flame", "canonical": "#F26A2D" },
+      "warning": { "role": "tertiary", "displayName": "Jasmine", "canonical": "#F7D488" },
+      "accent-subtle": { "role": "tertiary", "displayName": "Cream", "canonical": "#EAEFB1" },
+      "success-subtle": { "role": "tertiary", "displayName": "Frosted Mint", "canonical": "#E9F7CA" },
+      "neutral-bg": { "role": "neutral", "displayName": "Page Background", "canonical": "#F9FAFB" },
+      "neutral-surface": { "role": "neutral", "displayName": "Card Surface", "canonical": "#FFFFFF" },
+      "neutral-border": { "role": "neutral", "displayName": "Divider Border", "canonical": "#E5E7EB" },
+      "neutral-text": { "role": "neutral", "displayName": "Main Text", "canonical": "#111827" },
+      "neutral-text-muted": { "role": "neutral", "displayName": "Muted Text", "canonical": "#6B7280" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headline and prominent laboratory metrics." },
+      "headline": { "displayName": "Headline", "purpose": "Module and section headings." },
+      "title": { "displayName": "Title", "purpose": "Card titles and table section headers." },
+      "body": { "displayName": "Body", "purpose": "General interface text and forms." },
+      "label": { "displayName": "Label", "purpose": "Status pills and field identifiers." }
+    },
+    "shadows": [
+      { "name": "shadow-sm", "value": "0 1px 2px 0 rgba(0, 0, 0, 0.05)", "purpose": "Subtle interactive feedback for primary actions." }
+    ],
+    "motion": [
+      { "name": "transition-colors", "value": "cubic-bezier(0.4, 0, 0.2, 1) 150ms", "purpose": "Color transitions on button and link hover." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary action button for submission and crucial tasks.",
+      "html": "<button class=\"ds-btn-primary\">Simpan Pengajuan</button>",
+      "css": ".ds-btn-primary { background: #ED1E28; color: #FFFFFF; font-family: Inter, sans-serif; font-size: 14px; font-weight: 600; padding: 10px 18px; border-radius: 6px; border: none; cursor: pointer; transition: background 0.15s ease; } .ds-btn-primary:hover { background: #F26A2D; }"
+    },
+    {
+      "name": "Status Pill - Menunggu",
+      "kind": "chip",
+      "refersTo": "chip-warning",
+      "description": "Indicates sample is awaiting lab verification.",
+      "html": "<span class=\"ds-chip-warning\">Menunggu Verifikasi</span>",
+      "css": ".ds-chip-warning { background: #F7D488; color: #78350F; font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; display: inline-flex; align-items: center; }"
+    },
+    {
+      "name": "Status Pill - Selesai",
+      "kind": "chip",
+      "refersTo": "chip-success",
+      "description": "Indicates test results are complete and ready.",
+      "html": "<span class=\"ds-chip-success\">Pengujian Selesai</span>",
+      "css": ".ds-chip-success { background: #E9F7CA; color: #064E3B; font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 9999px; display: inline-flex; align-items: center; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Precision Testing Lab",
+    "overview": "Telyuji adalah sistem antarmuka berbasis web untuk manajemen pengujian laboratorium civitas akademika Telkom University. Filosofi desainnya mengedepankan presisi teknis, keterbacaan data instrumen, dan efisiensi operasional tanpa ornamen visual berlebihan (anti-slop).",
+    "keyCharacteristics": [
+      "Tipografi murni menggunakan font Inter pada seluruh hierarki antarmuka.",
+      "Pemanfaatan palet warna khas Telyuji untuk identitas brand dan status data.",
+      "Kepatuhan utilitas Tailwind CSS v3 tanpa tag <style> kustom.",
+      "Permukaan datar dengan border tipis (1px) berlayer lembut."
+    ],
+    "rules": [
+      { "name": "The Rarity of Red Rule", "body": "Racing Red adalah warna penentu aksi dan status. Jangan gunakan Racing Red untuk latar belakang konten luas atau teks paragraf biasa; kekuatannya terletak pada fokus aksi.", "section": "colors" },
+      { "name": "The Functional Color Rule", "body": "Warna tidak pernah menjadi ornamen semata. Setiap warna pada kartu atau badge menyatakan kondisi faktual sampel uji.", "section": "colors" },
+      { "name": "The Single Family Rule", "body": "Seluruh antarmuka menggunakan font Inter.", "section": "typography" },
+      { "name": "The Flat Border Rule", "body": "Kedalaman antarmuka diwujudkan melalui garis pemisah 1px yang tegas dan presisi, bukan bayangan kabur atau efek glow.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do selalu gunakan utility class Tailwind CSS v3 murni.",
+      "Do gunakan @extends('layouts.app') untuk setiap view Blade aplikasi.",
+      "Do pasang label deskriptif eksplisit pada setiap elemen form pengujian sampel.",
+      "Do gunakan token warna Telyuji (racing-red, tiger-flame, jasmine, cream, frosted-mint)."
+    ],
+    "donts": [
+      "Don't gunakan tag <style> kustom di dalam file Blade template.",
+      "Don't gunakan efek gradien dekoratif (gradient background / gradient text).",
+      "Don't gunakan bayangan gelap tebal atau efek glow halo pada elemen diam.",
+      "Don't gunakan font lain selain Inter di antarmuka sistem.",
+      "Don't gunakan emoji sebagai ikon antarmuka; gunakan ikon SVG yang konsisten."
+    ]
+  }
+}
