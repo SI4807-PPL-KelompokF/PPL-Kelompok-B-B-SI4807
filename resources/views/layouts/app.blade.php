@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-gray-50">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,77 +7,84 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Telyuji') }} - Sistem Pengujian Laboratorium</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <!-- Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+<body class="h-full flex flex-col font-sans text-gray-900 antialiased selection:bg-racing-red selection:text-white">
+    <div id="app" class="min-h-full flex flex-col">
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16 items-center">
+                    <!-- Brand / Logo -->
+                    <div class="flex items-center gap-3">
+                        <a href="{{ url('/') }}" class="flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-racing-red rounded-md">
+                            <div class="flex flex-col">
+                                <span class="font-bold text-lg tracking-tight text-gray-900 leading-tight">
+                                    Telyuji
+                                </span>
+                                <span class="text-xs font-medium text-gray-500 tracking-normal">
+                                    Teliti dan Teruji
+                                </span>
+                            </div>
+                        </a>
+                    </div>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-                        <!-- Authentication Links -->
+                    <!-- Navigation Links -->
+                    <nav class="flex items-center gap-2 sm:gap-4">
                         @guest
                             @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
+                                <a href="{{ route('login') }}" class="px-3.5 py-1.5 text-sm font-medium text-gray-700 hover:text-racing-red rounded-md transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-racing-red">
+                                    {{ __('Login') }}
+                                </a>
                             @endif
 
                             @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
+                                <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-racing-red hover:bg-tiger-flame rounded-md shadow-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-racing-red">
+                                    {{ __('Daftar') }}
+                                </a>
                             @endif
                         @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm font-medium text-gray-700">
                                     {{ Auth::user()->name }}
+                                </span>
+                                <span class="px-2 py-0.5 text-xs font-semibold rounded bg-cream text-gray-800 uppercase tracking-wider">
+                                    {{ Auth::user()->role ?? 'pemohon' }}
+                                </span>
+                                <a href="{{ route('logout') }}"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                   class="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-racing-red border border-gray-300 hover:border-racing-red rounded transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-racing-red">
+                                    {{ __('Logout') }}
                                 </a>
-
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
+                                    @csrf
+                                </form>
+                            </div>
                         @endguest
-                    </ul>
+                    </nav>
                 </div>
             </div>
-        </nav>
+        </header>
 
-        <main class="py-4">
+        <main class="flex-1 w-full">
             @yield('content')
         </main>
+
+        <footer class="bg-white border-t border-gray-200 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-center text-center text-xs text-gray-500">
+                <p>&copy; {{ date('Y') }} Telyuji — Sistem Informasi Pengujian Laboratorium Telkom University.</p>
+            </div>
+        </footer>
     </div>
 </body>
 </html>
