@@ -1,23 +1,60 @@
 name: Laravel CI
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.2' # Ubah ke '8.3' jika tim memakai PHP 8.3
+        extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+        coverage: none
+
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: Install Dependencies
+
+    - name: Install Composer Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    - name: Generate Key
-      run: php artisan key:generate
-    - name: Run Tests
-      run: php artisan dusk
+
+    - name: Install & Build Frontend (Vite/NPM)
+      run: |
+        npm ci
+        npm run build
+
+    - name: Generate Key & Permissions
+      run: |
+        php artisan key:generate
+        chmod -R 777 storage bootstrap/cache
+
+    - name: Create SQLite Database (Khusus Testing CI)
+      run: |
+        mkdir -p database
+        touch database/database.sqlite
+        php artisan migrate --env=testing --database=sqlite --force
+
+    - name: Run Unit & Feature Tests
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+      run: php artisan test
+
+    - name: Upgrade ChromeDriver & Run Laravel Dusk
+      env:
+        APP_URL: http://127.0.0.1:8000
+        DB_CONNECTION: sqlite
+        DB_DATABASE: database/database.sqlite
+      run: |
+        php artisan dusk:chrome-driver --detect
+        php artisan serve --env=testing &
+        sleep 3
+        php artisan dusk --env=testing
