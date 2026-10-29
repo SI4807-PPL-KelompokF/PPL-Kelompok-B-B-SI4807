@@ -26,10 +26,10 @@ jobs:
     - name: Install Composer Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-    - name: Install & Build Frontend (Vite/NPM)
+    - name: Install & Build Frontend (Laravel Mix)
       run: |
         npm ci
-        npm run build
+        npm run prod
 
     - name: Generate Key & Permissions
       run: |
@@ -37,6 +37,9 @@ jobs:
         chmod -R 777 storage bootstrap/cache
 
     - name: Create SQLite Database (Khusus Testing CI)
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: ${{ github.workspace }}/database/database.sqlite
       run: |
         mkdir -p database
         touch database/database.sqlite
@@ -45,16 +48,36 @@ jobs:
     - name: Run Unit & Feature Tests
       env:
         DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_DATABASE: ${{ github.workspace }}/database/database.sqlite
       run: php artisan test
 
-    - name: Upgrade ChromeDriver & Run Laravel Dusk
+    - name: Prepare ChromeDriver for Dusk
+      run: |
+        mkdir -p vendor/laravel/dusk/bin
+        if [ -n "$CHROMEWEBDRIVER" ] && [ -f "$CHROMEWEBDRIVER/chromedriver" ]; then
+          cp "$CHROMEWEBDRIVER/chromedriver" vendor/laravel/dusk/bin/chromedriver-linux
+        elif [ -f /usr/local/share/chrome_driver/chromedriver ]; then
+          cp /usr/local/share/chrome_driver/chromedriver vendor/laravel/dusk/bin/chromedriver-linux
+        elif which chromedriver > /dev/null 2>&1; then
+          cp "$(which chromedriver)" vendor/laravel/dusk/bin/chromedriver-linux
+        fi
+        chmod -R 0755 vendor/laravel/dusk/bin/
+
+    - name: Run Laravel Dusk Browser Tests
       env:
         APP_URL: http://127.0.0.1:8000
         DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
+        DB_DATABASE: ${{ github.workspace }}/database/database.sqlite
       run: |
-        php artisan dusk:chrome-driver --detect
-        php artisan serve --env=testing &
+        php artisan serve --no-reload --port=8000 &
         sleep 3
-        php artisan dusk --env=testing
+        php artisan dusk
+
+    - name: Upload Dusk Screenshots & Logs
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: dusk-screenshots
+        path: |
+          tests/Browser/screenshots
+          tests/Browser/console
