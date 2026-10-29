@@ -57,27 +57,23 @@ jobs:
         DB_DATABASE: ${{ github.workspace }}/database/database.sqlite
       run: php artisan test
 
-    - name: Prepare ChromeDriver for Dusk
-      run: |
-        mkdir -p vendor/laravel/dusk/bin
-        if [ -n "$CHROMEWEBDRIVER" ] && [ -f "$CHROMEWEBDRIVER/chromedriver" ]; then
-          cp "$CHROMEWEBDRIVER/chromedriver" vendor/laravel/dusk/bin/chromedriver-linux
-        elif [ -f /usr/local/share/chrome_driver/chromedriver ]; then
-          cp /usr/local/share/chrome_driver/chromedriver vendor/laravel/dusk/bin/chromedriver-linux
-        elif which chromedriver > /dev/null 2>&1; then
-          cp "$(which chromedriver)" vendor/laravel/dusk/bin/chromedriver-linux
-        fi
-        chmod -R 0755 vendor/laravel/dusk/bin/
+    - name: Set up ChromeDriver
+      uses: nanasess/setup-chromedriver@v3
 
     - name: Run Laravel Dusk Browser Tests
       env:
         APP_URL: http://127.0.0.1:8000
+        DUSK_DRIVER_URL: http://127.0.0.1:9515
         DB_CONNECTION: sqlite
         DB_DATABASE: ${{ github.workspace }}/database/database.sqlite
       run: |
-        php artisan serve --no-reload --port=8000 &
+        mkdir -p vendor/laravel/dusk/bin
+        cp "$(which chromedriver)" vendor/laravel/dusk/bin/chromedriver-linux
+        chmod -R 0755 vendor/laravel/dusk/bin/
+        chromedriver --port=9515 &
+        php artisan serve --host=127.0.0.1 --port=8000 &
         sleep 3
-        php artisan dusk
+        php artisan dusk -v
 
     - name: Upload Dusk Screenshots & Logs
       uses: actions/upload-artifact@v4
