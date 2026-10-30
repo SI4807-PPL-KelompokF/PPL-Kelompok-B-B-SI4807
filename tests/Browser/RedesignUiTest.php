@@ -24,7 +24,7 @@ class RedesignUiTest extends DuskTestCase
             $browser->script("document.getElementById('sampleTrackingInput').scrollIntoView({block: 'center', behavior: 'instant'});");
             $browser->clear('#sampleTrackingInput')
                 ->type('#sampleTrackingInput', 'TU-LAB-2026-0099')
-                ->click('#trackingForm button[type=\"submit\"]')
+                ->click('#trackingForm button[type="submit"]')
                 ->waitForText('TU-LAB-2026-0099');
 
             $browser->waitUntil("document.querySelectorAll('#flowTabs .tu-step').length > 1", 15);
