@@ -27,10 +27,10 @@ class RedesignUiTest extends DuskTestCase
                 ->click('#trackingForm button[type="submit"]')
                 ->waitForText('TU-LAB-2026-0099');
 
-            $browser->waitFor('#flow-tab-1');
-            $browser->script("document.getElementById('flow-tab-1').scrollIntoView({block: 'center', behavior: 'instant'});");
+            $browser->waitUntil("document.querySelectorAll('#flowTabs .tu-step').length > 1", 15);
+            $browser->script("document.querySelector('#flowTabs .tu-step[data-i=\"1\"]').scrollIntoView({block: 'center', behavior: 'instant'});");
             $browser->waitForText('Registrasi online')
-                ->click('#flow-tab-1')
+                ->click('#flowTabs .tu-step[data-i=\"1\"]')
                 ->waitForText('Validasi laboran');
 
             $browser->script("document.getElementById('tab-kimia').scrollIntoView({block: 'center', behavior: 'instant'});");
@@ -53,4 +53,3 @@ class RedesignUiTest extends DuskTestCase
         });
     }
 }
-
