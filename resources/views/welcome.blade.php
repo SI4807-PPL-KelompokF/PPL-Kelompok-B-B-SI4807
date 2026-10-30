@@ -1,894 +1,770 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="space-y-16 pb-16">
-    <!-- Hero Section with TULT Background Image -->
-    <section class="relative bg-gray-950 text-white overflow-hidden -mt-8">
-        <!-- Background Image with Scrim Overlay -->
-        <div class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset('images/tult.jpg') }}');"></div>
-        <div class="absolute inset-0 z-10 bg-gray-950/80 backdrop-brightness-75"></div>
+<!-- ============================ HERO ============================ -->
+<section class="relative overflow-hidden">
+    <div class="tu-grid-bg absolute inset-0" aria-hidden="true"></div>
 
-        <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32 flex flex-col items-center text-center">
-            <!-- Main Heading -->
-            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white max-w-4xl leading-tight">
-                Layanan Pengujian Laboratorium Riset & Akademik Terpadu
-            </h1>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 sm:pt-16 lg:pt-20 lg:pb-28">
+        <div class="grid lg:grid-cols-12 gap-14 lg:gap-10 items-center">
+            <!-- Copy -->
+            <div class="lg:col-span-7">
+                <h1 class="font-extrabold tracking-tight text-gray-950 leading-[1.04] text-4xl sm:text-6xl lg:text-[3.5rem] xl:text-[4.25rem]">
+                    <span class="tu-line [--d:100ms]"><span>Layanan Pengujian</span></span>
+                    <span class="tu-line [--d:220ms]"><span>Laboratorium Riset</span></span>
+                    <span class="tu-line [--d:340ms]"><span>&amp; Akademik <span class="tu-mark-underline">Terpadu</span></span></span>
+                </h1>
 
-            <!-- Subtitle -->
-            <p class="mt-5 text-base sm:text-lg text-gray-200 max-w-2xl mx-auto leading-relaxed">
-                Fasilitas pengujian instrumen modern terakreditasi lintas fakultas dan pusat riset Telkom University. Pengajuan digital, verifikasi transparan, dan penerbitan LHU resmi.
-            </p>
+                <p class="mt-7 max-w-xl text-base sm:text-lg leading-relaxed text-gray-600 tu-reveal [--d:450ms]">
+                    Fasilitas pengujian instrumen modern terakreditasi lintas fakultas dan pusat riset Telkom University. Pengajuan digital, verifikasi transparan, dan penerbitan LHU resmi.
+                </p>
 
-            <!-- Action Buttons with Smooth Hover Lift -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-8 w-full max-w-md">
-                @auth
-                    <a href="{{ route('home') }}" class="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-white bg-racing-red hover:bg-tiger-flame rounded-md shadow-lg shadow-racing-red/20 hover:shadow-tiger-flame/30 transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-racing-red">
-                        <span>Buka Dashboard Pengujian</span>
-                        <span class="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-                    </a>
-                @else
-                    <a href="{{ route('register') }}" class="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-white bg-racing-red hover:bg-tiger-flame rounded-md shadow-lg shadow-racing-red/20 hover:shadow-tiger-flame/30 transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-racing-red">
-                        <span>Mulai Pengajuan Sampel</span>
-                        <span class="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-                    </a>
-                    <a href="#katalog-lab" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 text-sm font-semibold text-white bg-white/10 hover:bg-white/20 border border-white/30 hover:border-white/50 rounded-md backdrop-blur-sm transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white">
-                        Katalog Layanan Lab
-                    </a>
-                @endauth
+                <div class="mt-9 flex flex-col sm:flex-row sm:items-center gap-3 tu-reveal [--d:560ms]">
+                    @auth
+                        <a href="{{ route('home') }}" class="tu-btn">
+                            <span>Buka Dashboard Pengujian</span>
+                            <span class="arr" aria-hidden="true">&rarr;</span>
+                        </a>
+                    @else
+                        <a href="{{ route('register') }}" class="tu-btn">
+                            <span>Mulai Pengajuan Sampel</span>
+                            <span class="arr" aria-hidden="true">&rarr;</span>
+                        </a>
+                        <a href="#katalog-lab" class="tu-btn tu-btn--ghost">
+                            <span>Katalog Layanan Lab</span>
+                        </a>
+                    @endauth
+                </div>
             </div>
 
-            <!-- Quick Sample Tracking Widget -->
-            <div class="mt-12 w-full max-w-xl bg-white/95 backdrop-blur-md text-gray-900 rounded-xl p-5 shadow-2xl border border-white/30 text-left transition-all duration-300 hover:shadow-racing-red/10">
-                <form id="trackingForm" onsubmit="event.preventDefault(); trackSample();" class="flex flex-col sm:flex-row gap-2">
-                    <input type="text" id="sampleTrackingInput" placeholder="Contoh: TU-LAB-2026-0042" value="TU-LAB-2026-0042"
-                        class="flex-1 px-3.5 py-2.5 text-sm bg-gray-50 border border-gray-300 rounded-md text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-racing-red focus:border-racing-red transition-all">
-                    <button type="submit"
-                        class="px-5 py-2.5 text-sm font-semibold text-white bg-racing-red hover:bg-tiger-flame active:scale-95 rounded-md transition-all duration-200 shadow-sm hover:shadow whitespace-nowrap flex items-center justify-center gap-1.5">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        Cari Status
-                    </button>
-                </form>
+            <!-- Instrument & Facility Showcase Frame -->
+            <div class="lg:col-span-5 relative">
+                <div id="scanFrame" class="tu-frame aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5] select-none">
+                    @php
+                        $heroSlides = [
+                            ['src' => asset('images/tult.jpg'), 'alt' => 'Gedung Laboratorium Terpadu TULT Telkom University'],
+                            ['src' => asset('images/buildings/tult-tower.jpg'), 'alt' => 'Fasad Menara TULT Telkom University'],
+                            ['src' => asset('images/buildings/btp.jpg'), 'alt' => 'Kawasan Bandung Techno Park Telkom University'],
+                            ['src' => asset('images/buildings/gku.jpg'), 'alt' => 'Gedung Kuliah Umum Telkom University'],
+                            ['src' => asset('images/buildings/gedung-bangkit.jpg'), 'alt' => 'Gedung Bangkit Rektorat Telkom University'],
+                            ['src' => asset('images/buildings/lab-kedokteran.jpg'), 'alt' => 'Laboratorium Biosains dan Medis Telkom University'],
+                            ['src' => asset('images/buildings/lab-fabrikasi.jpg'), 'alt' => 'Laboratorium Fabrikasi dan Prototipe Telkom University'],
+                            ['src' => asset('images/buildings/lab-praktikum.jpg'), 'alt' => 'Laboratorium Elektronika dan Instrumen Telkom University'],
+                        ];
+                    @endphp
 
-                <!-- Interactive Result Display -->
-                <div id="trackingResult" class="mt-3.5 pt-3.5 border-t border-gray-100 text-xs transition-all duration-300">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <div>
-                            <span class="text-gray-500">ID Sampel:</span>
-                            <span class="font-semibold text-gray-900 ml-1 font-mono">TU-LAB-2026-0042</span>
-                            <span class="text-gray-400 mx-1">&bull;</span>
-                            <span class="text-gray-600">Spektrofotometri UV-Vis</span>
-                        </div>
-                        <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-jasmine/30 text-amber-900 border border-jasmine">
-                            Sedang Diuji di Lab
-                        </span>
+                    <div id="heroSlides" class="absolute inset-0">
+                        @foreach ($heroSlides as $idx => $slide)
+                            <div class="tu-slide {{ $idx === 0 ? 'is-active' : '' }}" data-slide="{{ $idx }}" aria-hidden="{{ $idx === 0 ? 'false' : 'true' }}">
+                                <img src="{{ $slide['src'] }}" alt="{{ $slide['alt'] }}" @if($idx > 1) loading="lazy" @endif>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="mt-2 flex items-center gap-1.5 text-xs text-gray-500">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                        Laboran PIC: <strong>Ahmad Fauzi, S.Si.</strong> (Lab Terpadu Kampus) &bull; Estimasi Selesai: 28 Okt 2026
-                    </div>
+
+                    <div class="tu-frame-scrim pointer-events-none absolute inset-0 z-[3]"></div>
+                    <span id="heroScanBeam" class="tu-scan-beam" aria-hidden="true"></span>
+
+                    <span class="tu-bracket tu-bracket--tl"></span>
+                    <span class="tu-bracket tu-bracket--tr"></span>
+                    <span class="tu-bracket tu-bracket--bl"></span>
+                    <span class="tu-bracket tu-bracket--br"></span>
+                </div>
+
+                <!-- Sample tracking -->
+                <div class="mt-4 lg:mt-0 lg:absolute lg:-bottom-12 lg:-left-14 lg:right-6 bg-white border border-gray-200 p-4 sm:p-5 shadow-tu-float tu-reveal [--d:650ms]">
+                    <form id="trackingForm" onsubmit="event.preventDefault(); trackSample();" class="flex gap-2" novalidate>
+                        <label for="sampleTrackingInput" class="sr-only">Lacak status sampel (resi / ID)</label>
+                        <input type="text" id="sampleTrackingInput" placeholder="TU-LAB-2026-0042" value="TU-LAB-2026-0042" autocomplete="off" spellcheck="false"
+                            class="tu-input tu-mono min-w-0 flex-1 !py-2.5 !text-[13px]">
+                        <button type="submit" class="tu-btn !px-4 !py-2.5" aria-label="Cari status sampel">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            <span class="hidden sm:inline">Cari</span>
+                        </button>
+                    </form>
+
+                    <div id="trackingResult" class="mt-4 pt-4 border-t border-gray-100" aria-live="polite"></div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Metrics & Service Highlights with Smooth Hover Lift -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-10 relative z-20">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="group bg-white border border-gray-200 rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-racing-red/30 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-0 h-1 bg-gradient-to-r from-racing-red to-tiger-flame transition-all duration-300 group-hover:w-full"></div>
-                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Laboratorium</span>
-                <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-racing-red transition-transform duration-300 group-hover:scale-105 origin-left">14+</p>
-                <p class="text-xs text-gray-600 mt-1">Fakultas & Pusat Riset Kampus</p>
+<!-- ============================ METRICS ============================ -->
+<section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Ringkasan layanan">
+    <div class="border-y border-gray-200 grid grid-cols-2 lg:grid-cols-4">
+        <div class="tu-metric tu-reveal px-5 sm:px-8 py-9 border-r border-b lg:border-b-0 border-gray-200 [--c:#ED1E28]">
+            <span class="tu-tick"></span>
+            <p class="tu-eyebrow mt-6 text-gray-500">Laboratorium</p>
+            <p class="mt-2 text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-950 tabular-nums whitespace-nowrap"><span data-count="14" data-suffix="+">14+</span></p>
+            <p class="mt-2 text-xs text-gray-600">Fakultas &amp; Pusat Riset Kampus</p>
+        </div>
+        <div class="tu-metric tu-reveal px-5 sm:px-8 py-9 border-b lg:border-b-0 lg:border-r border-gray-200 [--c:#F26A2D] [--d:90ms]">
+            <span class="tu-tick"></span>
+            <p class="tu-eyebrow mt-6 text-gray-500">Alat &amp; Instrumen</p>
+            <p class="mt-2 text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-950 tabular-nums whitespace-nowrap"><span data-count="50" data-suffix="+">50+</span></p>
+            <p class="mt-2 text-xs text-gray-600">Terkalibrasi dan bersertifikasi</p>
+        </div>
+        <div class="tu-metric tu-reveal px-5 sm:px-8 py-9 border-r border-gray-200 [--c:#111827] [--d:180ms]">
+            <span class="tu-tick"></span>
+            <p class="tu-eyebrow mt-6 text-gray-500">Akses Civitas</p>
+            <p class="mt-2 text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-950 tabular-nums whitespace-nowrap"><span data-count="100" data-suffix="%">100%</span></p>
+            <p class="mt-2 text-xs text-gray-600">Fasilitas riset akademik internal</p>
+        </div>
+        <div class="tu-metric tu-reveal px-5 sm:px-8 py-9 [--c:#F7D488] [--d:270ms]">
+            <span class="tu-tick"></span>
+            <p class="tu-eyebrow mt-6 text-gray-500">Rata-rata Durasi Uji</p>
+            <p class="mt-2 text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-950 tabular-nums whitespace-nowrap"><span data-count="5" data-prefix="&lt; ">&lt; 5</span><span class="ml-2 text-base font-semibold tracking-normal text-gray-500">Hari</span></p>
+            <p class="mt-2 text-xs text-gray-600">SLA cepat dari penyerahan sampel</p>
+        </div>
+    </div>
+    <div class="tu-ruler tu-reveal mt-3 opacity-70" aria-hidden="true"></div>
+</section>
+
+<!-- ============================ ALUR ============================ -->
+<section id="alur" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28">
+    <div class="grid lg:grid-cols-12 gap-6 items-end">
+        <div class="lg:col-span-7 tu-reveal">
+            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950">Alur Standar Pengujian Sampel</h2>
+        </div>
+        <p class="lg:col-span-5 text-sm sm:text-base leading-relaxed text-gray-600 tu-reveal [--d:100ms]">
+            Lima tahap dari registrasi hingga LHU resmi terbit. Pilih salah satu tahap untuk melihat apa saja yang terjadi di dalamnya.
+        </p>
+    </div>
+
+    <div id="flow" class="tu-flow mt-12 tu-reveal">
+        <div id="flowTabs" class="grid grid-cols-5 gap-2 sm:gap-3" role="tablist" aria-label="Tahapan pengujian sampel"></div>
+        <div id="flowPanel" class="relative mt-5 bg-white border border-gray-200 overflow-hidden lg:min-h-[23rem]" role="tabpanel" aria-live="polite"></div>
+    </div>
+</section>
+
+<!-- ============================ KATALOG ============================ -->
+<section id="katalog-lab" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div class="tu-reveal max-w-2xl">
+            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950">Katalog Laboratorium &amp; Instrumen Uji</h2>
+            <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">Daftar instrumen dan parameter pengujian yang tersedia di seluruh rumpun laboratorium kampus Telkom University.</p>
+        </div>
+
+        <!-- Carousel controls -->
+        <div class="flex items-center gap-2 self-start md:self-auto tu-reveal [--d:100ms]">
+            <button type="button" onclick="scrollCarousel('left')" aria-label="Geser ke kiri" title="Geser ke kiri" class="tu-icon-btn">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+            <button type="button" onclick="scrollCarousel('right')" aria-label="Geser ke kanan" title="Geser ke kanan" class="tu-icon-btn">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Category tabs -->
+    <div class="mt-10 flex items-end justify-between gap-6 border-b border-gray-200 tu-reveal">
+        <div class="flex overflow-x-auto no-scrollbar" role="tablist" aria-label="Kategori instrumen">
+            <button type="button" role="tab" aria-selected="true" onclick="switchLabTab('all')" id="tab-all" class="lab-tab-btn tu-tab">Semua Instrumen</button>
+            <button type="button" role="tab" aria-selected="false" onclick="switchLabTab('kimia')" id="tab-kimia" class="lab-tab-btn tu-tab">Material &amp; Kimia Terapan</button>
+            <button type="button" role="tab" aria-selected="false" onclick="switchLabTab('telekomunikasi')" id="tab-telekomunikasi" class="lab-tab-btn tu-tab">Telekomunikasi, RF &amp; IoT</button>
+            <button type="button" role="tab" aria-selected="false" onclick="switchLabTab('bioteknologi')" id="tab-bioteknologi" class="lab-tab-btn tu-tab">Bioteknologi &amp; Lingkungan</button>
+            <button type="button" role="tab" aria-selected="false" onclick="switchLabTab('komputasi')" id="tab-komputasi" class="lab-tab-btn tu-tab">Simulasi &amp; Komputasi Riset</button>
+        </div>
+        <p id="catalogCount" class="tu-mono hidden lg:block pb-3 text-xs text-gray-500 whitespace-nowrap">12 instrumen</p>
+    </div>
+
+    <!-- Carousel viewport -->
+    <div id="carouselWrap" class="tu-fade-edges relative mt-6 -mx-4 sm:-mx-6 lg:mx-0">
+        <div id="carousel-track" class="flex gap-5 overflow-x-auto no-scrollbar px-4 sm:px-6 lg:px-0 py-4 cursor-grab active:cursor-grabbing select-none"></div>
+    </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section id="faq" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28">
+    <div class="grid lg:grid-cols-12 gap-10 lg:gap-16">
+        <div class="lg:col-span-4">
+            <div class="lg:sticky lg:top-28 tu-reveal">
+                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950">Pertanyaan Umum (FAQ)</h2>
+                <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">Panduan praktis prosedur pengujian laboratorium di Telkom University.</p>
+            </div>
+        </div>
+
+        <div class="lg:col-span-8 tu-reveal [--d:100ms]">
+            <div id="faq-item-1" class="tu-faq-item">
+                <h3>
+                    <button type="button" onclick="toggleFaq(1)" id="faq-btn-1" aria-expanded="false" aria-controls="faq-content-1" class="group w-full flex items-start gap-5 py-6 text-left">
+                        <span class="tu-mono pt-1 text-xs text-gray-400">01</span>
+                        <span class="flex-1 text-base sm:text-lg font-semibold leading-snug text-gray-950 transition-colors group-hover:text-racing-red">Siapa saja yang dapat mengajukan pengujian sampel di Telyuji?</span>
+                        <span class="tu-plus mt-0.5 text-gray-500" aria-hidden="true"><i></i><i></i></span>
+                    </button>
+                </h3>
+                <div id="faq-content-1" class="tu-acc" role="region" aria-labelledby="faq-btn-1">
+                    <div><p class="pl-9 sm:pl-10 pr-10 pb-7 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Seluruh mahasiswa, dosen, dan peneliti aktif di lingkungan Telkom University dapat mendaftar dengan akun kampus untuk keperluan tugas akhir, riset mandiri, maupun penelitian hibah.</p></div>
+                </div>
             </div>
 
-            <div class="group bg-white border border-gray-200 rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-tiger-flame/30 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-0 h-1 bg-gradient-to-r from-tiger-flame to-racing-red transition-all duration-300 group-hover:w-full"></div>
-                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Alat & Instrumen</span>
-                <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-tiger-flame transition-transform duration-300 group-hover:scale-105 origin-left">50+</p>
-                <p class="text-xs text-gray-600 mt-1">Terkalibrasi dan bersertifikasi</p>
+            <div id="faq-item-2" class="tu-faq-item">
+                <h3>
+                    <button type="button" onclick="toggleFaq(2)" id="faq-btn-2" aria-expanded="false" aria-controls="faq-content-2" class="group w-full flex items-start gap-5 py-6 text-left">
+                        <span class="tu-mono pt-1 text-xs text-gray-400">02</span>
+                        <span class="flex-1 text-base sm:text-lg font-semibold leading-snug text-gray-950 transition-colors group-hover:text-racing-red">Apakah layanan pengujian ini dikenakan biaya?</span>
+                        <span class="tu-plus mt-0.5 text-gray-500" aria-hidden="true"><i></i><i></i></span>
+                    </button>
+                </h3>
+                <div id="faq-content-2" class="tu-acc" role="region" aria-labelledby="faq-btn-2">
+                    <div><p class="pl-9 sm:pl-10 pr-10 pb-7 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Sesuai kebijakan kampus, pengujian laboratorium untuk keperluan akademik civitas internal Telkom University difasilitasi tanpa biaya (100% bebas biaya fasilitas lab kampus).</p></div>
+                </div>
             </div>
 
-            <div class="group bg-white border border-gray-200 rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-gray-400 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-0 h-1 bg-gray-900 transition-all duration-300 group-hover:w-full"></div>
-                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Akses Civitas</span>
-                <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-gray-900 transition-transform duration-300 group-hover:scale-105 origin-left">100%</p>
-                <p class="text-xs text-gray-600 mt-1">Fasilitas riset akademik internal</p>
+            <div id="faq-item-3" class="tu-faq-item">
+                <h3>
+                    <button type="button" onclick="toggleFaq(3)" id="faq-btn-3" aria-expanded="false" aria-controls="faq-content-3" class="group w-full flex items-start gap-5 py-6 text-left">
+                        <span class="tu-mono pt-1 text-xs text-gray-400">03</span>
+                        <span class="flex-1 text-base sm:text-lg font-semibold leading-snug text-gray-950 transition-colors group-hover:text-racing-red">Di mana lokasi penyerahan fisik sampel di kampus?</span>
+                        <span class="tu-plus mt-0.5 text-gray-500" aria-hidden="true"><i></i><i></i></span>
+                    </button>
+                </h3>
+                <div id="faq-content-3" class="tu-acc" role="region" aria-labelledby="faq-btn-3">
+                    <div><p class="pl-9 sm:pl-10 pr-10 pb-7 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Setelah pengajuan diverifikasi secara online, sampel diserahkan langsung ke Ruang Laboran pada laboratorium fakultas terkait atau Pusat Lab Terpadu TULT sesuai rincian pada E-Ticket Pengujian Anda.</p></div>
+                </div>
             </div>
 
-            <div class="group bg-white border border-gray-200 rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:border-tiger-flame/30 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-0 h-1 bg-gradient-to-r from-tiger-flame to-racing-red transition-all duration-300 group-hover:w-full"></div>
-                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Rata-rata Durasi Uji</span>
-                <p class="mt-1 text-2xl sm:text-3xl font-extrabold text-tiger-flame transition-transform duration-300 group-hover:scale-105 origin-left">&lt; 5 Hari</p>
-                <p class="text-xs text-gray-600 mt-1">SLA cepat dari penyerahan sampel</p>
+            <div id="faq-item-4" class="tu-faq-item">
+                <h3>
+                    <button type="button" onclick="toggleFaq(4)" id="faq-btn-4" aria-expanded="false" aria-controls="faq-content-4" class="group w-full flex items-start gap-5 py-6 text-left">
+                        <span class="tu-mono pt-1 text-xs text-gray-400">04</span>
+                        <span class="flex-1 text-base sm:text-lg font-semibold leading-snug text-gray-950 transition-colors group-hover:text-racing-red">Berapa lama rata-rata durasi waktu pengujian sampel?</span>
+                        <span class="tu-plus mt-0.5 text-gray-500" aria-hidden="true"><i></i><i></i></span>
+                    </button>
+                </h3>
+                <div id="faq-content-4" class="tu-acc" role="region" aria-labelledby="faq-btn-4">
+                    <div><p class="pl-9 sm:pl-10 pr-10 pb-7 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Rata-rata waktu pengujian adalah 2&ndash;5 hari kerja terhitung sejak spesimen fisik diterima dan divalidasi oleh laboran, tergantung pada kompleksitas instrumen dan parameter uji yang dipilih.</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================ CTA ============================ -->
+<section class="relative mt-28 overflow-hidden bg-gray-950 text-white">
+    <div class="tu-grid-dark absolute inset-0 opacity-70" aria-hidden="true"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-20">
+        <div class="max-w-4xl tu-reveal">
+            <h2 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.04]">Siap Melakukan Pengujian Sampel Riset <span class="text-racing-red">Anda?</span></h2>
+            <p class="mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-gray-300">
+                Daftarkan akun dan ajukan pengujian instrumen laboratorium Anda hari ini melalui sistem Telyuji. Bebas biaya bagi seluruh civitas akademika Telkom University.
+            </p>
+            <div class="mt-9 flex flex-col sm:flex-row sm:items-center gap-3">
+                <a href="{{ route('register') }}" class="tu-btn tu-btn--on-dark">
+                    <span>Daftar Akun Pemohon</span>
+                    <span class="arr" aria-hidden="true">&rarr;</span>
+                </a>
+                <a href="{{ route('login') }}" class="tu-btn tu-btn--ghost-dark">
+                    <span>Sudah Memiliki Akun? Masuk</span>
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- Alur Standar Pengujian Sampel (Serpentine Ribbon Timeline Process) -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <div class="text-center max-w-2xl mx-auto mb-10">
-            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 mt-1">ALUR STANDAR PENGUJIAN SAMPEL</h2>
-        </div>
-
-        <!-- Desktop Infographic: Serpentine Stepped Ribbon Process -->
-        <div class="hidden lg:block bg-white border border-gray-200 rounded-xl p-8 shadow-sm overflow-hidden">
-            <svg viewBox="0 0 1200 500" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
-                <!-- ================= TOP CALLOUTS (Step 02 & Step 04) ================= -->
-                <!-- Callout 02 (Above Step 02) -->
-                <g transform="translate(300, 25)">
-                    <text x="0" y="0" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#F26A2D">VALIDASI LABORAN</text>
-                    <text x="0" y="20" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">1. Verifikasi berkas permohonan</text>
-                    <text x="0" y="38" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">2. Penyerahan spesimen di lab</text>
-                    <text x="0" y="56" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">3. Pengecekan wadah & kuantitas</text>
-                    <text x="0" y="74" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">4. Penetapan antrean instrumen</text>
-                </g>
-
-                <!-- Callout 04 (Above Step 04) -->
-                <g transform="translate(745, 25)">
-                    <text x="0" y="0" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#3F6212">EKSEKUSI PENGUJIAN</text>
-                    <text x="0" y="20" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">1. Pengujian instrumen terakreditasi</text>
-                    <text x="0" y="38" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">2. Akuisisi spektrum & sinyal</text>
-                    <text x="0" y="56" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">3. Replikasi uji untuk akurasi data</text>
-                    <text x="0" y="74" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">4. Input rekapitulasi data hasil uji</text>
-                </g>
-
-                <!-- ================= PIN LINES & SQUARE MARKERS ================= -->
-                <!-- START Pin Marker (Far Left) -->
-                <line x1="94" y1="230" x2="94" y2="152" stroke="#ED1E28" stroke-width="2" />
-                <rect x="88" y="146" width="12" height="12" rx="2" fill="#ED1E28" />
-                <text x="94" y="136" font-family="Inter, sans-serif" font-weight="800" font-size="11" fill="#ED1E28" text-anchor="middle" letter-spacing="0.05em">START</text>
-
-                <!-- Pin 01 (Down to Callout 01) -->
-                <line x1="181.5" y1="328" x2="181.5" y2="385" stroke="#ED1E28" stroke-width="2" />
-                <rect x="175.5" y="380" width="12" height="12" rx="1" fill="#ED1E28" />
-
-                <!-- Pin 02 (Up to Callout 02) -->
-                <line x1="384" y1="190" x2="384" y2="135" stroke="#F26A2D" stroke-width="2" />
-                <rect x="378" y="129" width="12" height="12" rx="1" fill="#F26A2D" />
-
-                <!-- Pin 03 (Down to Callout 03 - Jasmine) -->
-                <line x1="609" y1="328" x2="609" y2="385" stroke="#B45309" stroke-width="2" />
-                <rect x="603" y="380" width="12" height="12" rx="1" fill="#F7D488" stroke="#B45309" stroke-width="1.5" />
-
-                <!-- Pin 04 (Up to Callout 04 - Cream) -->
-                <line x1="829" y1="190" x2="829" y2="135" stroke="#4D7C0F" stroke-width="2" />
-                <rect x="823" y="129" width="12" height="12" rx="1" fill="#EAEFB1" stroke="#4D7C0F" stroke-width="1.5" />
-
-                <!-- Pin 05 (Down to Callout 05 - Frosted Mint) -->
-                <line x1="1031.5" y1="328" x2="1031.5" y2="385" stroke="#047857" stroke-width="2" />
-                <rect x="1025.5" y="380" width="12" height="12" rx="1" fill="#E9F7CA" stroke="#047857" stroke-width="1.5" />
-
-                <!-- ================= CONTINUOUS SERPENTINE RIBBON PATHS & CHEVRONS ================= -->
-                <!-- Step 01 Ribbon (Racing Red: Down left -> Right bottom -> Up right -> Forward chevron at top) -->
-                <path d="M 80 230 L 108 230 L 108 300 L 255 300 L 255 190 L 300 190 L 314 204 L 300 218 L 283 218 L 283 328 L 80 328 Z" fill="#ED1E28" />
-
-                <!-- Step 02 Ribbon (Tiger Flame: Chevron indent at top -> Right top -> Down right -> Forward chevron at bottom) - Siku fixed with (485, 328) -->
-                <path d="M 300 190 L 513 190 L 513 300 L 530 300 L 544 314 L 530 328 L 485 328 L 485 218 L 300 218 L 314 204 Z" fill="#F26A2D" />
-
-                <!-- Step 03 Ribbon (Jasmine #F7D488: Chevron indent at bottom -> Right bottom -> Up right -> Forward chevron at top) -->
-                <path d="M 530 300 L 705 300 L 705 190 L 750 190 L 764 204 L 750 218 L 733 218 L 733 328 L 530 328 L 544 314 Z" fill="#F7D488" stroke="#E5BA6A" stroke-width="1.5" />
-
-                <!-- Step 04 Ribbon (Cream #EAEFB1: Chevron indent at top -> Right top -> Down right -> Forward chevron at bottom) - Siku fixed with (925, 328) -->
-                <path d="M 750 190 L 953 190 L 953 300 L 970 300 L 984 314 L 970 328 L 925 328 L 925 218 L 750 218 L 764 204 Z" fill="#EAEFB1" stroke="#CAD67E" stroke-width="1.5" />
-
-                <!-- Step 05 Ribbon (Frosted Mint #E9F7CA: Chevron indent at bottom -> Right bottom -> Terminating arrow point) -->
-                <path d="M 970 300 L 1110 300 L 1110 292 L 1142 314 L 1110 336 L 1110 328 L 970 328 L 984 314 Z" fill="#E9F7CA" stroke="#B5D98B" stroke-width="1.5" />
-
-                <!-- ================= NODE CONTENT: NUMBER, TITLE, ICON ================= -->
-                <!-- Node 01 (Inside Step 01 Alcove) -->
-                <g>
-                    <text x="181.5" y="228" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#111827" text-anchor="middle">01</text>
-                    <text x="181.5" y="248" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#ED1E28" text-anchor="middle" letter-spacing="0.06em">PENGAJUAN</text>
-                    <!-- Magnifying Glass Search Icon -->
-                    <circle cx="178" cy="272" r="6" stroke="#ED1E28" stroke-width="2" fill="none" />
-                    <line x1="182.5" y1="276.5" x2="187" y2="281" stroke="#ED1E28" stroke-width="2" stroke-linecap="round" />
-                </g>
-
-                <!-- Node 02 (Inside Step 02 Alcove) -->
-                <g>
-                    <text x="384" y="254" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#111827" text-anchor="middle">02</text>
-                    <text x="384" y="274" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#F26A2D" text-anchor="middle" letter-spacing="0.06em">VERIFIKASI</text>
-                    <!-- User Silhouette Icon -->
-                    <circle cx="384" cy="292" r="4.5" fill="#F26A2D" />
-                    <path d="M 376 305 C 376 299, 392 299, 392 305" stroke="#F26A2D" stroke-width="2" fill="none" stroke-linecap="round" />
-                </g>
-
-                <!-- Node 03 (Inside Step 03 Alcove - Jasmine) -->
-                <g>
-                    <text x="609" y="228" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#111827" text-anchor="middle">03</text>
-                    <text x="609" y="248" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#B45309" text-anchor="middle" letter-spacing="0.06em">PREPARASI</text>
-                    <!-- Lightbulb / Creation Icon -->
-                    <path d="M 605 272 A 4.5 4.5 0 0 1 613 272 C 613 274.5, 611 276, 611 278 L 607 278 C 607 276, 605 274.5, 605 272 Z" stroke="#B45309" stroke-width="1.8" fill="none" />
-                    <line x1="607" y1="280" x2="611" y2="280" stroke="#B45309" stroke-width="1.8" />
-                    <line x1="609" y1="265" x2="609" y2="263" stroke="#B45309" stroke-width="1.5" />
-                    <line x1="602" y1="268" x2="600" y2="266" stroke="#B45309" stroke-width="1.5" />
-                    <line x1="616" y1="268" x2="618" y2="266" stroke="#B45309" stroke-width="1.5" />
-                </g>
-
-                <!-- Node 04 (Inside Step 04 Alcove - Cream) -->
-                <g>
-                    <text x="829" y="254" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#111827" text-anchor="middle">04</text>
-                    <text x="829" y="274" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#3F6212" text-anchor="middle" letter-spacing="0.06em">PENGUJIAN</text>
-                    <!-- Checklist / Test Sheet Icon -->
-                    <rect x="822" y="288" width="14" height="17" rx="2" stroke="#3F6212" stroke-width="1.8" fill="none" />
-                    <path d="M 825 294 L 827 296 L 831 292" stroke="#3F6212" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-                    <line x1="825" y1="300" x2="833" y2="300" stroke="#3F6212" stroke-width="1.6" stroke-linecap="round" />
-                </g>
-
-                <!-- Node 05 (Inside Step 05 Alcove - Frosted Mint) -->
-                <g>
-                    <text x="1031.5" y="228" font-family="Inter, sans-serif" font-weight="800" font-size="28" fill="#111827" text-anchor="middle">05</text>
-                    <text x="1031.5" y="248" font-family="Inter, sans-serif" font-weight="700" font-size="12" fill="#065F46" text-anchor="middle" letter-spacing="0.06em">SERTIFIKASI</text>
-                    <!-- Bar Chart / Results Progress Icon -->
-                    <rect x="1022" y="274" width="4" height="7" fill="#047857" rx="0.5" />
-                    <rect x="1028" y="270" width="4" height="11" fill="#047857" rx="0.5" />
-                    <rect x="1034" y="266" width="4" height="15" fill="#047857" rx="0.5" />
-                    <rect x="1040" y="262" width="4" height="19" fill="#047857" rx="0.5" />
-                </g>
-
-                <!-- ================= BOTTOM CALLOUTS (Step 01, Step 03, Step 05) ================= -->
-                <!-- Callout 01 (Below Step 01) -->
-                <g transform="translate(95, 412)">
-                    <text x="0" y="0" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#ED1E28">REGISTRASI ONLINE</text>
-                    <text x="0" y="20" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">1. Pilih instrumen & parameter uji</text>
-                    <text x="0" y="38" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">2. Unggah berkas (Surat/MSDS)</text>
-                    <text x="0" y="56" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">3. Tentukan jumlah & sifat sampel</text>
-                    <text x="0" y="74" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">4. Dapatkan No. Resi & E-Ticket</text>
-                </g>
-
-                <!-- Callout 03 (Below Step 03 - Jasmine) -->
-                <g transform="translate(520, 412)">
-                    <text x="0" y="0" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#B45309">PERSIAPAN & KALIBRASI</text>
-                    <text x="0" y="20" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">1. Preparasi kimiawi & fisik sampel</text>
-                    <text x="0" y="38" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">2. Kalibrasi instrumen sesuai SOP</text>
-                    <text x="0" y="56" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">3. Blank testing & setup baseline</text>
-                    <text x="0" y="74" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">4. Pencatatan log lingkungan lab</text>
-                </g>
-
-                <!-- Callout 05 (Below Step 05 - Frosted Mint) -->
-                <g transform="translate(945, 412)">
-                    <text x="0" y="0" font-family="Inter, sans-serif" font-weight="700" font-size="13" fill="#065F46">PENERBITAN LHU RESMI</text>
-                    <text x="0" y="20" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">1. Validasi oleh Kepala Lab</text>
-                    <text x="0" y="38" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">2. Pengesahan digital & QR Barcode</text>
-                    <text x="0" y="56" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">3. Laporan Hasil Uji (LHU) terbit</text>
-                    <text x="0" y="74" font-family="Inter, sans-serif" font-size="11.5" fill="#4B5563">4. Unduh PDF & ambil spesimen</text>
-                </g>
-            </svg>
-        </div>
-
-        <!-- Mobile & Tablet Layout: Responsive Stepper with Matching Colors & Flow -->
-        <div class="lg:hidden space-y-4">
-            <!-- Step 1 Mobile -->
-            <div class="group bg-white border border-gray-200 border-l-4 border-l-racing-red rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:bg-cream/10">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-7 h-7 rounded bg-racing-red text-white flex items-center justify-center font-bold text-xs shadow-sm">01</span>
-                        <span class="font-bold text-sm text-racing-red">PENGAJUAN &bull; REGISTRASI ONLINE</span>
-                    </div>
-                    <span class="text-xs px-2.5 py-0.5 rounded font-semibold bg-red-50 text-racing-red border border-red-200">Tahap 1</span>
-                </div>
-                <ul class="mt-3 text-xs text-gray-600 space-y-1.5 pl-1">
-                    <li>1. Pilih instrumen & parameter pengujian yang dibutuhkan</li>
-                    <li>2. Unggah dokumen pendukung (Surat Pengantar / MSDS)</li>
-                    <li>3. Tentukan jumlah & sifat spesimen sampel</li>
-                    <li>4. Dapatkan Nomor Resi & E-Ticket Pengujian resmi</li>
-                </ul>
+    <!-- Instrument marquee -->
+    <div class="relative border-t border-white/10 py-7 overflow-hidden" aria-hidden="true">
+        <div class="tu-marquee">
+            <div class="flex shrink-0 items-center">
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">UV-Vis</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">FTIR</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">UTM</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">VNA</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Oscilloscope</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Anechoic Chamber</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Water Quality</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Incubator</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Centrifuge</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">HPC Cluster</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Edge AI Rig</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Biomedical Imaging</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
             </div>
-
-            <!-- Step 2 Mobile -->
-            <div class="group bg-white border border-gray-200 border-l-4 border-l-tiger-flame rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:bg-cream/10">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-7 h-7 rounded bg-tiger-flame text-white flex items-center justify-center font-bold text-xs shadow-sm">02</span>
-                        <span class="font-bold text-sm text-tiger-flame">VERIFIKASI &bull; VALIDASI LABORAN</span>
-                    </div>
-                    <span class="text-xs px-2.5 py-0.5 rounded font-semibold bg-orange-50 text-tiger-flame border border-orange-200">Tahap 2</span>
-                </div>
-                <ul class="mt-3 text-xs text-gray-600 space-y-1.5 pl-1">
-                    <li>1. Pemeriksaan kelayakan berkas online oleh laboran</li>
-                    <li>2. Penyerahan fisik spesimen di laboratorium terkait</li>
-                    <li>3. Validasi kondisi spesimen & kelayakan wadah uji</li>
-                    <li>4. Penetapan jadwal antrean dan kesiapan instrumen</li>
-                </ul>
-            </div>
-
-            <!-- Step 3 Mobile (Jasmine) -->
-            <div class="group bg-white border border-gray-200 border-l-4 border-l-[#F7D488] rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:bg-cream/10">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-7 h-7 rounded bg-[#F7D488] text-amber-950 font-bold flex items-center justify-center text-xs shadow-sm border border-amber-300">03</span>
-                        <span class="font-bold text-sm text-amber-800">PREPARASI &bull; PERSIAPAN & KALIBRASI</span>
-                    </div>
-                    <span class="text-xs px-2.5 py-0.5 rounded font-semibold bg-[#F7D488]/30 text-amber-900 border border-[#F7D488]">Tahap 3</span>
-                </div>
-                <ul class="mt-3 text-xs text-gray-600 space-y-1.5 pl-1">
-                    <li>1. Preparasi kimiawi & fisik spesimen oleh tim laboran</li>
-                    <li>2. Kalibrasi instrumen uji sesuai SOP baku</li>
-                    <li>3. Blank testing & setup baseline pengukuran alat</li>
-                    <li>4. Pencatatan log book kondisi lingkungan lab</li>
-                </ul>
-            </div>
-
-            <!-- Step 4 Mobile (Cream) -->
-            <div class="group bg-white border border-gray-200 border-l-4 border-l-[#EAEFB1] rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:bg-cream/10">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-7 h-7 rounded bg-[#EAEFB1] text-lime-950 font-bold flex items-center justify-center text-xs shadow-sm border border-lime-300">04</span>
-                        <span class="font-bold text-sm text-lime-800">PENGUJIAN &bull; EKSEKUSI INSTRUMEN</span>
-                    </div>
-                    <span class="text-xs px-2.5 py-0.5 rounded font-semibold bg-[#EAEFB1] text-lime-900 border border-lime-300">Tahap 4</span>
-                </div>
-                <ul class="mt-3 text-xs text-gray-600 space-y-1.5 pl-1">
-                    <li>1. Pengujian dengan alat laboratorium terakreditasi</li>
-                    <li>2. Akumulasi data spektrum / pengukuran kuantitatif</li>
-                    <li>3. Replikasi pengujian untuk menjamin presisi data</li>
-                    <li>4. Input rekapitulasi data hasil uji oleh laboran</li>
-                </ul>
-            </div>
-
-            <!-- Step 5 Mobile (Frosted Mint) -->
-            <div class="group bg-white border border-gray-200 border-l-4 border-l-[#E9F7CA] rounded-lg p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:bg-cream/10">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-7 h-7 rounded bg-[#E9F7CA] text-emerald-950 font-bold flex items-center justify-center text-xs shadow-sm border border-emerald-300">05</span>
-                        <span class="font-bold text-sm text-emerald-800">SERTIFIKASI &bull; PENERBITAN LHU RESMI</span>
-                    </div>
-                    <span class="text-xs px-2.5 py-0.5 rounded font-semibold bg-[#E9F7CA] text-emerald-900 border border-emerald-300">Tahap 5</span>
-                </div>
-                <ul class="mt-3 text-xs text-gray-600 space-y-1.5 pl-1">
-                    <li>1. Validasi data hasil pengujian oleh Kepala Lab</li>
-                    <li>2. Pengesahan dokumen digital dengan QR Barcode resmi</li>
-                    <li>3. Laporan Hasil Uji (LHU) terbit di sistem Telyuji</li>
-                    <li>4. Unduh sertifikat PDF resmi & pengambilan residu sampel</li>
-                </ul>
+            <div class="flex shrink-0 items-center">
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">UV-Vis</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">FTIR</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">UTM</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">VNA</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Oscilloscope</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Anechoic Chamber</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Water Quality</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Incubator</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Centrifuge</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">HPC Cluster</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Edge AI Rig</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Biomedical Imaging</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
             </div>
         </div>
-    </section>
-
-    <!-- Interactive Laboratory Domain Catalog Carousel -->
-    <section id="katalog-lab" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-6 gap-4">
-            <div>
-                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">Katalog Laboratorium & Instrumen Uji</h2>
-                <p class="text-sm text-gray-600 mt-2">Daftar instrumen dan parameter pengujian yang tersedia di seluruh rumpun laboratorium kampus Telkom University.</p>
-            </div>
-
-            <!-- Carousel Navigation Controls: Prev, Next -->
-            <div class="flex items-center gap-2 self-start md:self-auto">
-                <button type="button" onclick="scrollCarousel('left')" aria-label="Geser ke Kiri" title="Geser ke Kiri"
-                    class="w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-700 flex items-center justify-center hover:bg-racing-red hover:text-white hover:border-racing-red transition-all duration-200 active:scale-90 shadow-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <button type="button" onclick="scrollCarousel('right')" aria-label="Geser ke Kanan" title="Geser ke Kanan"
-                    class="w-10 h-10 rounded-full border border-gray-300 bg-white text-gray-700 flex items-center justify-center hover:bg-racing-red hover:text-white hover:border-racing-red transition-all duration-200 active:scale-90 shadow-sm">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- Category Filter Tabs -->
-        <div class="flex flex-wrap items-center gap-2 mb-6">
-            <button type="button" onclick="switchLabTab('all')" id="tab-all"
-                class="lab-tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-full border transition-all duration-200 active:scale-95 bg-racing-red text-white border-racing-red shadow-sm">
-                Semua Instrumen
-            </button>
-            <button type="button" onclick="switchLabTab('kimia')" id="tab-kimia"
-                class="lab-tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-full border transition-all duration-200 active:scale-95 bg-white text-gray-700 border-gray-300 hover:border-tiger-flame hover:text-tiger-flame">
-                Material & Kimia Terapan
-            </button>
-            <button type="button" onclick="switchLabTab('telekomunikasi')" id="tab-telekomunikasi"
-                class="lab-tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-full border transition-all duration-200 active:scale-95 bg-white text-gray-700 border-gray-300 hover:border-tiger-flame hover:text-tiger-flame">
-                Telekomunikasi, RF & IoT
-            </button>
-            <button type="button" onclick="switchLabTab('bioteknologi')" id="tab-bioteknologi"
-                class="lab-tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-full border transition-all duration-200 active:scale-95 bg-white text-gray-700 border-gray-300 hover:border-tiger-flame hover:text-tiger-flame">
-                Bioteknologi & Lingkungan
-            </button>
-            <button type="button" onclick="switchLabTab('komputasi')" id="tab-komputasi"
-                class="lab-tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-full border transition-all duration-200 active:scale-95 bg-white text-gray-700 border-gray-300 hover:border-tiger-flame hover:text-tiger-flame">
-                Simulasi & Komputasi Riset
-            </button>
-        </div>
-
-        <!-- Carousel Viewport with Ambient Edge Fade & Infinite Motion -->
-        <div class="relative group/carousel overflow-hidden rounded-xl">
-            <!-- Left Gradient Fade Mask -->
-            <div class="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-gray-50/90 to-transparent z-10 hidden sm:block"></div>
-            <!-- Right Gradient Fade Mask -->
-            <div class="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-gray-50/90 to-transparent z-10 hidden sm:block"></div>
-
-            <!-- Dynamic Horizontal Carousel Scroll Track -->
-            <div id="carousel-track"
-                class="flex gap-6 overflow-x-auto no-scrollbar py-4 px-2 cursor-grab active:cursor-grabbing select-none">
-                <div class="group/card w-[310px] sm:w-[350px] flex-shrink-0 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-racing-red/40 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-0 h-1 bg-gradient-to-r from-racing-red to-tiger-flame transition-all duration-300 group-hover/card:w-full"></div>
-                    <div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-cream text-gray-800 border border-jasmine/60">Lab Material Maju</span>
-                        <h3 class="text-base sm:text-lg font-bold text-gray-900 mt-2.5 group-hover/card:text-racing-red transition-colors line-clamp-1">Spektrofotometer UV-Vis</h3>
-                        <p class="text-xs text-gray-600 mt-1.5 leading-relaxed line-clamp-2">Pengukuran absorbansi larutan, penentuan konsentrasi sampel cair, dan analisis spektral panjang gelombang 190–1100 nm.</p>
-                        <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500 space-y-1.5">
-                            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-tiger-flame flex-shrink-0"></span><span class="truncate">Kapasitas: Kuarsa / Kaca 10 mm</span></div>
-                            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-tiger-flame flex-shrink-0"></span><span>Standar SLA: 2-3 Hari Kerja</span></div>
-                        </div>
-                    </div>
-                    <div class="mt-5 pt-3 border-t border-gray-50 flex items-center justify-between">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-frosted-mint text-emerald-900 border border-emerald-300/70"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>Siap Menerima Sampel</span>
-                        <a href="{{ route('register') }}" class="text-xs font-bold text-racing-red hover:text-tiger-flame transition-colors flex items-center gap-1 group-hover/card:translate-x-0.5">Ajukan &rarr;</a>
-                    </div>
-                </div>
-
-                <div class="group/card w-[310px] sm:w-[350px] flex-shrink-0 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-racing-red/40 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-0 h-1 bg-gradient-to-r from-racing-red to-tiger-flame transition-all duration-300 group-hover/card:w-full"></div>
-                    <div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-cream text-gray-800 border border-jasmine/60">Lab Kimia Terpadu</span>
-                        <h3 class="text-base sm:text-lg font-bold text-gray-900 mt-2.5 group-hover/card:text-racing-red transition-colors line-clamp-1">FTIR Spectrometer</h3>
-                        <p class="text-xs text-gray-600 mt-1.5 leading-relaxed line-clamp-2">Identifikasi gugus fungsi senyawa organik, polimer, dan analisis struktur molekuler material serbuk maupun film tipis.</p>
-                        <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500 space-y-1.5">
-                            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-tiger-flame flex-shrink-0"></span><span class="truncate">Resolusi: hingga 0.5 cm⁻¹</span></div>
-                            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-tiger-flame flex-shrink-0"></span><span>Standar SLA: 3-4 Hari Kerja</span></div>
-                        </div>
-                    </div>
-                    <div class="mt-5 pt-3 border-t border-gray-50 flex items-center justify-between">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-frosted-mint text-emerald-900 border border-emerald-300/70"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>Siap Menerima Sampel</span>
-                        <a href="{{ route('register') }}" class="text-xs font-bold text-racing-red hover:text-tiger-flame transition-colors flex items-center gap-1 group-hover/card:translate-x-0.5">Ajukan &rarr;</a>
-                    </div>
-                </div>
-
-                <div class="group/card w-[310px] sm:w-[350px] flex-shrink-0 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-racing-red/40 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-0 h-1 bg-gradient-to-r from-racing-red to-tiger-flame transition-all duration-300 group-hover/card:w-full"></div>
-                    <div>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-cream text-gray-800 border border-jasmine/60">Lab Uji Mekanik</span>
-                        <h3 class="text-base sm:text-lg font-bold text-gray-900 mt-2.5 group-hover/card:text-racing-red transition-colors line-clamp-1">Universal Testing Machine (UTM)</h3>
-                        <p class="text-xs text-gray-600 mt-1.5 leading-relaxed line-clamp-2">Pengujian mekanik material meliputi uji tarik (tensile), uji tekan (compression), dan bending spesimen standar ASTM.</p>
-                        <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500 space-y-1.5">
-                            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-tiger-flame flex-shrink-0"></span><span class="truncate">Kapasitas beban: Hingga 50 kN</span></div>
-                            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-tiger-flame flex-shrink-0"></span><span>Standar SLA: 3-5 Hari Kerja</span></div>
-                        </div>
-                    </div>
-                    <div class="mt-5 pt-3 border-t border-gray-50 flex items-center justify-between">
-                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-frosted-mint text-emerald-900 border border-emerald-300/70"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>Siap Menerima Sampel</span>
-                        <a href="{{ route('register') }}" class="text-xs font-bold text-racing-red hover:text-tiger-flame transition-colors flex items-center gap-1 group-hover/card:translate-x-0.5">Ajukan &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive FAQ Accordion -->
-    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-gray-200 pt-16">
-        <div class="text-center mb-10">
-            <span class="text-xs font-bold text-racing-red uppercase tracking-wider">Pusat Informasi</span>
-            <h2 class="text-2xl font-bold tracking-tight text-gray-900 mt-1">Pertanyaan Umum (FAQ)</h2>
-            <p class="text-xs sm:text-sm text-gray-600 mt-1">Panduan praktis prosedur pengujian laboratorium di Telkom University.</p>
-        </div>
-
-        <div class="space-y-3">
-            <div id="faq-item-1" class="border border-gray-200 rounded-lg overflow-hidden bg-white transition-all duration-300 hover:border-racing-red/30">
-                <button type="button" onclick="toggleFaq(1)" class="w-full px-5 py-4 text-left font-semibold text-sm text-gray-900 flex justify-between items-center hover:bg-gray-50/80 transition-colors group">
-                    <span class="group-hover:text-racing-red transition-colors">Siapa saja yang dapat mengajukan pengujian sampel di Telyuji?</span>
-                    <span id="faq-icon-1" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-xs transition-all duration-300 group-hover:bg-racing-red group-hover:text-white">
-                        <svg class="w-3.5 h-3.5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </span>
-                </button>
-                <div id="faq-content-1" class="hidden px-5 pb-5 text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-3.5 bg-cream/10">
-                    Seluruh mahasiswa, dosen, dan peneliti aktif di lingkungan Telkom University dapat mendaftar dengan akun kampus untuk keperluan tugas akhir, riset mandiri, maupun penelitian hibah.
-                </div>
-            </div>
-
-            <div id="faq-item-2" class="border border-gray-200 rounded-lg overflow-hidden bg-white transition-all duration-300 hover:border-racing-red/30">
-                <button type="button" onclick="toggleFaq(2)" class="w-full px-5 py-4 text-left font-semibold text-sm text-gray-900 flex justify-between items-center hover:bg-gray-50/80 transition-colors group">
-                    <span class="group-hover:text-racing-red transition-colors">Apakah layanan pengujian ini dikenakan biaya?</span>
-                    <span id="faq-icon-2" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-xs transition-all duration-300 group-hover:bg-racing-red group-hover:text-white">
-                        <svg class="w-3.5 h-3.5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </span>
-                </button>
-                <div id="faq-content-2" class="hidden px-5 pb-5 text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-3.5 bg-cream/10">
-                    Sesuai kebijakan kampus, pengujian laboratorium untuk keperluan akademik civitas internal Telkom University difasilitasi tanpa biaya (100% bebas biaya fasilitas lab kampus).
-                </div>
-            </div>
-
-            <div id="faq-item-3" class="border border-gray-200 rounded-lg overflow-hidden bg-white transition-all duration-300 hover:border-racing-red/30">
-                <button type="button" onclick="toggleFaq(3)" class="w-full px-5 py-4 text-left font-semibold text-sm text-gray-900 flex justify-between items-center hover:bg-gray-50/80 transition-colors group">
-                    <span class="group-hover:text-racing-red transition-colors">Di mana lokasi penyerahan fisik sampel di kampus?</span>
-                    <span id="faq-icon-3" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-xs transition-all duration-300 group-hover:bg-racing-red group-hover:text-white">
-                        <svg class="w-3.5 h-3.5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </span>
-                </button>
-                <div id="faq-content-3" class="hidden px-5 pb-5 text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-3.5 bg-cream/10">
-                    Setelah pengajuan diverifikasi secara online, sampel diserahkan langsung ke Ruang Laboran pada laboratorium fakultas terkait atau Pusat Lab Terpadu TULT sesuai rincian pada E-Ticket Pengujian Anda.
-                </div>
-            </div>
-
-            <div id="faq-item-4" class="border border-gray-200 rounded-lg overflow-hidden bg-white transition-all duration-300 hover:border-racing-red/30">
-                <button type="button" onclick="toggleFaq(4)" class="w-full px-5 py-4 text-left font-semibold text-sm text-gray-900 flex justify-between items-center hover:bg-gray-50/80 transition-colors group">
-                    <span class="group-hover:text-racing-red transition-colors">Berapa lama rata-rata durasi waktu pengujian sampel?</span>
-                    <span id="faq-icon-4" class="w-6 h-6 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center text-xs transition-all duration-300 group-hover:bg-racing-red group-hover:text-white">
-                        <svg class="w-3.5 h-3.5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path>
-                        </svg>
-                    </span>
-                </button>
-                <div id="faq-content-4" class="hidden px-5 pb-5 text-xs text-gray-600 leading-relaxed border-t border-gray-100 pt-3.5 bg-cream/10">
-                    Rata-rata waktu pengujian adalah 2–5 hari kerja terhitung sejak spesimen fisik diterima dan divalidasi oleh laboran, tergantung pada kompleksitas instrumen dan parameter uji yang dipilih.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Bottom CTA Card with Ambient Gradient Glow -->
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 rounded-xl p-8 sm:p-14 text-center text-white relative overflow-hidden shadow-xl border border-gray-800">
-            <!-- Decorative Ambient Glowing Orbs -->
-            <div class="absolute -top-24 -right-24 w-80 h-80 bg-racing-red/15 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
-            <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-tiger-flame/15 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="relative z-10 max-w-2xl mx-auto">
-                <h3 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Siap Melakukan Pengujian Sampel Riset Anda?</h3>
-                <p class="mt-3 text-sm text-gray-300 leading-relaxed">
-                    Daftarkan akun dan ajukan pengujian instrumen laboratorium Anda hari ini melalui sistem Telyuji. Bebas biaya bagi seluruh civitas akademika Telkom University.
-                </p>
-                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-                    <a href="{{ route('register') }}" class="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-semibold text-white bg-racing-red hover:bg-tiger-flame rounded-md shadow-lg shadow-racing-red/25 hover:shadow-tiger-flame/35 transition-all duration-300 transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-racing-red">
-                        <span>Daftar Akun Pemohon</span>
-                        <span class="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-                    </a>
-                    <a href="{{ route('login') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 text-sm font-semibold text-gray-200 hover:text-white border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 rounded-md backdrop-blur-sm transition-all duration-300 transform hover:-translate-y-0.5">
-                        Sudah Memiliki Akun? Masuk
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
+    </div>
+</section>
 
 <!-- Interactive Client Logic -->
 <script>
-    // All 12 laboratory instruments across categories
+    // ------------------------------------------------------------------
+    // Data
+    // ------------------------------------------------------------------
     const allInstruments = [
         // Material & Kimia
-        {
-            category: 'kimia',
-            title: "Spektrofotometer UV-Vis",
-            location: "Lab Material Maju",
-            desc: "Pengukuran absorbansi larutan, penentuan konsentrasi sampel cair, dan analisis spektral panjang gelombang 190–1100 nm.",
-            specs: "Kapasitas: Kuarsa / Kaca 10 mm",
-            sla: "2-3 Hari Kerja"
-        },
-        {
-            category: 'kimia',
-            title: "FTIR Spectrometer",
-            location: "Lab Kimia Terpadu",
-            desc: "Identifikasi gugus fungsi senyawa organik, polimer, dan analisis struktur molekuler material serbuk maupun film tipis.",
-            specs: "Resolusi: hingga 0.5 cm⁻¹",
-            sla: "3-4 Hari Kerja"
-        },
-        {
-            category: 'kimia',
-            title: "Universal Testing Machine (UTM)",
-            location: "Lab Uji Mekanik",
-            desc: "Pengujian mekanik material meliputi uji tarik (tensile), uji tekan (compression), dan bending spesimen standar ASTM.",
-            specs: "Kapasitas beban: Hingga 50 kN",
-            sla: "3-5 Hari Kerja"
-        },
+        { category: 'kimia', title: "Spektrofotometer UV-Vis", location: "Lab Material Maju",
+          desc: "Pengukuran absorbansi larutan, penentuan konsentrasi sampel cair, dan analisis spektral panjang gelombang 190–1100 nm.",
+          specs: "Kapasitas: Kuarsa / Kaca 10 mm", sla: "2-3 Hari Kerja" },
+        { category: 'kimia', title: "FTIR Spectrometer", location: "Lab Kimia Terpadu",
+          desc: "Identifikasi gugus fungsi senyawa organik, polimer, dan analisis struktur molekuler material serbuk maupun film tipis.",
+          specs: "Resolusi: hingga 0.5 cm⁻¹", sla: "3-4 Hari Kerja" },
+        { category: 'kimia', title: "Universal Testing Machine (UTM)", location: "Lab Uji Mekanik",
+          desc: "Pengujian mekanik material meliputi uji tarik (tensile), uji tekan (compression), dan bending spesimen standar ASTM.",
+          specs: "Kapasitas beban: Hingga 50 kN", sla: "3-5 Hari Kerja" },
         // Telekomunikasi & IoT
-        {
-            category: 'telekomunikasi',
-            title: "Vector Network Analyzer (VNA)",
-            location: "Lab Gelombang Mikro FTE",
-            desc: "Analisis parameter S (S11, S21), impedansi frekuensi tinggi, dan karakterisasi rangkaian gelombang mikro hingga 14 GHz.",
-            specs: "Rentang frekuensi: 100 kHz - 14 GHz",
-            sla: "2-4 Hari Kerja"
-        },
-        {
-            category: 'telekomunikasi',
-            title: "Anechoic Chamber & Antena Testing",
-            location: "Lab Antena & Propagasi",
-            desc: "Pengukuran pola radiasi antena (radiation pattern), gain antena, dan polarisasi tanpa interferensi sinyal eksternal.",
-            specs: "Ruang kedap gelombang RF standar IEEE",
-            sla: "3-5 Hari Kerja"
-        },
-        {
-            category: 'telekomunikasi',
-            title: "Digital Oscilloscope 1 GHz",
-            location: "Lab Embedded & IoT",
-            desc: "Verifikasi integritas sinyal digital kecepatan tinggi, analisis protokol komunikasi serial I2C/SPI/UART.",
-            specs: "Sampling rate: 5 GSa/s, 4 Channel",
-            sla: "1-2 Hari Kerja"
-        },
+        { category: 'telekomunikasi', title: "Vector Network Analyzer (VNA)", location: "Lab Gelombang Mikro FTE",
+          desc: "Analisis parameter S (S11, S21), impedansi frekuensi tinggi, dan karakterisasi rangkaian gelombang mikro hingga 14 GHz.",
+          specs: "Rentang frekuensi: 100 kHz - 14 GHz", sla: "2-4 Hari Kerja" },
+        { category: 'telekomunikasi', title: "Anechoic Chamber & Antena Testing", location: "Lab Antena & Propagasi",
+          desc: "Pengukuran pola radiasi antena (radiation pattern), gain antena, dan polarisasi tanpa interferensi sinyal eksternal.",
+          specs: "Ruang kedap gelombang RF standar IEEE", sla: "3-5 Hari Kerja" },
+        { category: 'telekomunikasi', title: "Digital Oscilloscope 1 GHz", location: "Lab Embedded & IoT",
+          desc: "Verifikasi integritas sinyal digital kecepatan tinggi, analisis protokol komunikasi serial I2C/SPI/UART.",
+          specs: "Sampling rate: 5 GSa/s, 4 Channel", sla: "1-2 Hari Kerja" },
         // Bioteknologi & Lingkungan
-        {
-            category: 'bioteknologi',
-            title: "Automated Water Quality Analyzer",
-            location: "Lab Rekayasa Lingkungan",
-            desc: "Pengujian parameter COD, BOD, TSS, kekeruhan, dan keasaman sampel perairan lingkungan secara terotomasi.",
-            specs: "Sesuai baku mutu air standar SNI",
-            sla: "2-4 Hari Kerja"
-        },
-        {
-            category: 'bioteknologi',
-            title: "Inkubator Mikrobiologi Presisi",
-            location: "Lab Biosains & Terapan",
-            desc: "Kultivasi bakteri dan mikroorganisme dengan kontrol suhu stabil 0.1°C untuk uji antibakteri dan bioassay.",
-            specs: "Rentang suhu: 5°C - 70°C",
-            sla: "3-5 Hari Kerja"
-        },
-        {
-            category: 'bioteknologi',
-            title: "Centrifuge Kecepatan Tinggi",
-            location: "Lab Sentral Riset",
-            desc: "Separasi fraksi seluler, presipitasi protein, dan isolasi DNA/RNA dengan pendinginan suhu terkontrol.",
-            specs: "Kecepatan maks: 15.000 RPM",
-            sla: "1-2 Hari Kerja"
-        },
+        { category: 'bioteknologi', title: "Automated Water Quality Analyzer", location: "Lab Rekayasa Lingkungan",
+          desc: "Pengujian parameter COD, BOD, TSS, kekeruhan, dan keasaman sampel perairan lingkungan secara terotomasi.",
+          specs: "Sesuai baku mutu air standar SNI", sla: "2-4 Hari Kerja" },
+        { category: 'bioteknologi', title: "Inkubator Mikrobiologi Presisi", location: "Lab Biosains & Terapan",
+          desc: "Kultivasi bakteri dan mikroorganisme dengan kontrol suhu stabil 0.1°C untuk uji antibakteri dan bioassay.",
+          specs: "Rentang suhu: 5°C - 70°C", sla: "3-5 Hari Kerja" },
+        { category: 'bioteknologi', title: "Centrifuge Kecepatan Tinggi", location: "Lab Sentral Riset",
+          desc: "Separasi fraksi seluler, presipitasi protein, dan isolasi DNA/RNA dengan pendinginan suhu terkontrol.",
+          specs: "Kecepatan maks: 15.000 RPM", sla: "1-2 Hari Kerja" },
         // Simulasi & Komputasi Riset
-        {
-            category: 'komputasi',
-            title: "Cluster Server Simulasi Pemodelan",
-            location: "Lab High Performance Computing",
-            desc: "Komputasi paralel untuk simulasi dinamika fluida (CFD), kalkulasi kimia komputasi DFT, dan pemodelan numerik.",
-            specs: "Node komputasi multi-GPU NVIDIA A100",
-            sla: "2-5 Hari Kerja"
-        },
-        {
-            category: 'komputasi',
-            title: "Testing Rig Embedded AI & Edge",
-            location: "Lab AI & Robotika",
-            desc: "Uji performa inferensi model kecerdasan buatan, konsumsi daya instrumen, dan stabilitas pada perangkat edge.",
-            specs: "Power meter analitik & thermal camera",
-            sla: "2-3 Hari Kerja"
-        },
-        {
-            category: 'komputasi',
-            title: "Stasiun Kerja Citra Biomedis",
-            location: "Lab Rekayasa Biomedika",
-            desc: "Pemrosesan citra medis DICOM, segmentasi organ 3D, dan pelatihan deep learning klasifikasi data laboratorium.",
-            specs: "Monitor kalibrasi warna medis 4K",
-            sla: "1-3 Hari Kerja"
-        }
+        { category: 'komputasi', title: "Cluster Server Simulasi Pemodelan", location: "Lab High Performance Computing",
+          desc: "Komputasi paralel untuk simulasi dinamika fluida (CFD), kalkulasi kimia komputasi DFT, dan pemodelan numerik.",
+          specs: "Node komputasi multi-GPU NVIDIA A100", sla: "2-5 Hari Kerja" },
+        { category: 'komputasi', title: "Testing Rig Embedded AI & Edge", location: "Lab AI & Robotika",
+          desc: "Uji performa inferensi model kecerdasan buatan, konsumsi daya instrumen, dan stabilitas pada perangkat edge.",
+          specs: "Power meter analitik & thermal camera", sla: "2-3 Hari Kerja" },
+        { category: 'komputasi', title: "Stasiun Kerja Citra Biomedis", location: "Lab Rekayasa Biomedika",
+          desc: "Pemrosesan citra medis DICOM, segmentasi organ 3D, dan pelatihan deep learning klasifikasi data laboratorium.",
+          specs: "Monitor kalibrasi warna medis 4K", sla: "1-3 Hari Kerja" }
     ];
 
-    let currentCategory = 'all';
-    let isCarouselPlaying = true;
-    let isUserHovered = false;
-    let isDragging = false;
-    let startX = 0;
-    let startScrollLeft = 0;
-    let scrollSpeed = 0.8; // smooth continuous drift
-    let animFrameId = null;
+    const flowSteps = [
+        { n: '01', title: 'Pengajuan', sub: 'Registrasi online', sc: '#ED1E28', st: '#ED1E28', items: [
+            'Pilih instrumen & parameter pengujian yang dibutuhkan',
+            'Unggah dokumen pendukung (Surat Pengantar / MSDS)',
+            'Tentukan jumlah & sifat spesimen sampel',
+            'Dapatkan Nomor Resi & E-Ticket Pengujian resmi' ] },
+        { n: '02', title: 'Verifikasi', sub: 'Validasi laboran', sc: '#F26A2D', st: '#C2410C', items: [
+            'Pemeriksaan kelayakan berkas online oleh laboran',
+            'Penyerahan fisik spesimen di laboratorium terkait',
+            'Validasi kondisi spesimen & kelayakan wadah uji',
+            'Penetapan jadwal antrean dan kesiapan instrumen' ] },
+        { n: '03', title: 'Preparasi', sub: 'Persiapan & kalibrasi', sc: '#F7D488', st: '#B45309', items: [
+            'Preparasi kimiawi & fisik spesimen oleh tim laboran',
+            'Kalibrasi instrumen uji sesuai SOP baku',
+            'Blank testing & setup baseline pengukuran alat',
+            'Pencatatan log book kondisi lingkungan lab' ] },
+        { n: '04', title: 'Pengujian', sub: 'Eksekusi instrumen', sc: '#EAEFB1', st: '#3F6212', items: [
+            'Pengujian dengan alat laboratorium terakreditasi',
+            'Akumulasi data spektrum / pengukuran kuantitatif',
+            'Replikasi pengujian untuk menjamin presisi data',
+            'Input rekapitulasi data hasil uji oleh laboran' ] },
+        { n: '05', title: 'Sertifikasi', sub: 'Penerbitan LHU resmi', sc: '#E9F7CA', st: '#047857', items: [
+            'Validasi data hasil pengujian oleh Kepala Lab',
+            'Pengesahan dokumen digital dengan QR Barcode resmi',
+            'Laporan Hasil Uji (LHU) terbit di sistem Telyuji',
+            'Unduh sertifikat PDF resmi & pengambilan residu sampel' ] }
+    ];
 
-    function renderCard(item) {
-        return `
-            <div class="group/card w-[310px] sm:w-[350px] flex-shrink-0 bg-white border border-gray-200 rounded-xl p-5 sm:p-6 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:border-racing-red/40 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-0 h-1 bg-gradient-to-r from-racing-red to-tiger-flame transition-all duration-300 group-hover/card:w-full"></div>
-                <div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-semibold bg-cream text-gray-800 border border-jasmine/60">${item.location}</span>
-                    <h3 class="text-base sm:text-lg font-bold text-gray-900 mt-2.5 group-hover/card:text-racing-red transition-colors line-clamp-1">${item.title}</h3>
-                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed line-clamp-2">${item.desc}</p>
-                    <div class="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-500 space-y-1.5">
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-tiger-flame flex-shrink-0"></span>
-                            <span class="truncate">${item.specs}</span>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full bg-tiger-flame flex-shrink-0"></span>
-                            <span>Standar SLA: ${item.sla}</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-5 pt-3 border-t border-gray-50 flex items-center justify-between">
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold bg-frosted-mint text-emerald-900 border border-emerald-300/70">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>
-                        Siap Menerima Sampel
-                    </span>
-                    <a href="{{ route('register') }}" class="text-xs font-bold text-racing-red hover:text-tiger-flame transition-colors flex items-center gap-1 group-hover/card:translate-x-0.5">
-                        Ajukan &rarr;
-                    </a>
-                </div>
-            </div>
-        `;
-    }
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function initCarousel(category = 'all') {
-        const track = document.getElementById('carousel-track');
-        if (!track) return;
-
-        currentCategory = category;
-        const filtered = category === 'all' 
-            ? allInstruments 
-            : allInstruments.filter(item => item.category === category);
-
-        // Repeat items for seamless infinite wrap
-        let repeatCount = 2;
-        if (filtered.length <= 3) repeatCount = 4;
-        else if (filtered.length <= 6) repeatCount = 3;
-
-        let html = '';
-        for (let r = 0; r < repeatCount; r++) {
-            html += filtered.map(item => renderCard(item)).join('');
-        }
-        track.innerHTML = html;
-
-        // Position in the middle so left-to-right drift has space to roll smoothly
-        requestAnimationFrame(() => {
-            const singleSetWidth = track.scrollWidth / repeatCount;
-            track.scrollLeft = singleSetWidth;
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
         });
     }
 
-    // Continuous flow animation: moves from left to right (decreasing scrollLeft)
-    function runCarouselAnimation() {
-        const track = document.getElementById('carousel-track');
-        if (track && isCarouselPlaying && !isUserHovered && !isDragging) {
-            // Decreasing scrollLeft makes items glide towards the right ("kiri ke kanan")
-            track.scrollLeft -= scrollSpeed;
+    // ------------------------------------------------------------------
+    // Hero automatic illustration rotator (laser-scan aperture wipe)
+    // ------------------------------------------------------------------
+    (function () {
+        var frame = document.getElementById('scanFrame');
+        var slidesWrap = document.getElementById('heroSlides');
+        var beam = document.getElementById('heroScanBeam');
+        if (!frame || !slidesWrap) return;
 
-            // When reaching the left edge, seamlessly shift to middle
-            if (track.scrollLeft <= 2) {
-                const singleSetWidth = track.scrollWidth / 2;
-                track.scrollLeft += singleSetWidth;
+        var slides = [].slice.call(slidesWrap.querySelectorAll('.tu-slide'));
+        var total = slides.length;
+        if (total < 2) return;
+
+        var active = 0;
+        var prev = -1;
+        var busy = false;
+
+        function preloadSlide(i) {
+            var target = slides[(i + total) % total];
+            if (!target) return;
+            var img = target.querySelector('img');
+            if (img && img.getAttribute('loading') === 'lazy') {
+                img.removeAttribute('loading');
             }
         }
-        animFrameId = requestAnimationFrame(runCarouselAnimation);
-    }
 
-    function scrollCarousel(dir) {
-        const track = document.getElementById('carousel-track');
-        if (!track) return;
-        const cardWidth = 374; // approx card width + gap
-        if (dir === 'left') {
-            track.scrollBy({ left: -cardWidth, behavior: 'smooth' });
-            setTimeout(() => {
-                if (track.scrollLeft <= 10) {
-                    track.scrollLeft += track.scrollWidth / 2;
-                }
-            }, 350);
-        } else {
-            track.scrollBy({ left: cardWidth, behavior: 'smooth' });
-            setTimeout(() => {
-                if (track.scrollLeft >= track.scrollWidth - track.clientWidth - 10) {
-                    track.scrollLeft -= track.scrollWidth / 2;
-                }
-            }, 350);
+        function nextSlide() {
+            if (busy || document.hidden) return;
+            busy = true;
+
+            var target = (active + 1) % total;
+            preloadSlide(target);
+            preloadSlide(target + 1);
+
+            if (prev >= 0 && prev !== active) {
+                slides[prev].classList.remove('is-prev', 'is-entering');
+            }
+
+            prev = active;
+            active = target;
+
+            var outSlide = slides[prev];
+            var inSlide = slides[active];
+
+            outSlide.classList.remove('is-active', 'is-entering');
+            outSlide.classList.add('is-prev');
+            outSlide.setAttribute('aria-hidden', 'true');
+
+            inSlide.classList.remove('is-prev', 'is-entering');
+            void inSlide.offsetWidth;
+            inSlide.classList.add('is-active', 'is-entering');
+            inSlide.setAttribute('aria-hidden', 'false');
+
+            if (beam && !prefersReducedMotion) {
+                beam.classList.remove('is-scanning');
+                void beam.offsetWidth;
+                beam.classList.add('is-scanning');
+            }
+
+            frame.classList.add('is-locking');
+            setTimeout(function () { frame.classList.remove('is-locking'); }, 480);
+
+            setTimeout(function () {
+                outSlide.classList.remove('is-prev');
+                inSlide.classList.remove('is-entering');
+                busy = false;
+            }, prefersReducedMotion ? 40 : 940);
         }
-    }
 
-    function switchLabTab(key) {
-        document.querySelectorAll('.lab-tab-btn').forEach(btn => {
-            btn.className = 'lab-tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-full border transition-all duration-200 active:scale-95 bg-white text-gray-700 border-gray-300 hover:border-tiger-flame hover:text-tiger-flame';
-        });
-
-        const activeBtn = document.getElementById('tab-' + key);
-        if (activeBtn) {
-            activeBtn.className = 'lab-tab-btn px-4 py-2 text-xs sm:text-sm font-semibold rounded-full border transition-all duration-200 active:scale-95 bg-racing-red text-white border-racing-red shadow-sm';
+        preloadSlide(1);
+        if (!prefersReducedMotion) {
+            setInterval(nextSlide, 4200);
         }
+    })();
 
-        initCarousel(key);
+    // ------------------------------------------------------------------
+    // Sample tracking
+    // ------------------------------------------------------------------
+    var trackingStages = ['Pengajuan', 'Verifikasi', 'Preparasi', 'Pengujian', 'Sertifikasi'];
+    var trackingColors = ['#ED1E28', '#F26A2D', '#F7D488', '#EAEFB1', '#E9F7CA'];
+    var defaultSample = {
+        id: 'TU-LAB-2026-0042',
+        note: 'Spektrofotometri UV-Vis',
+        status: 'Sedang Diuji di Lab',
+        stage: 4,
+        footer: 'Laboran PIC: <strong>Ahmad Fauzi, S.Si.</strong> (Lab Terpadu Kampus) &bull; Estimasi Selesai: 28 Okt 2026'
+    };
+
+    function trackingMarkup(d) {
+        var segments = trackingStages.map(function (_, i) {
+            var on = i < d.stage;
+            var current = i === d.stage - 1;
+            return '<span class="h-1.5 flex-1 ' + (current ? 'animate-pulse' : '') + '" style="background:' + (on ? trackingColors[i] : '#e5e7eb') + ';box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)"></span>';
+        }).join('');
+
+        return '' +
+            '<div class="flex flex-wrap items-start justify-between gap-2">' +
+                '<div class="min-w-0">' +
+                    '<p class="tu-mono text-sm font-semibold text-gray-950 break-all">' + escapeHtml(d.id) + '</p>' +
+                    '<p class="mt-0.5 text-xs text-gray-600">' + d.note + '</p>' +
+                '</div>' +
+            '</div>' +
+            '<div class="mt-3.5 flex gap-1" role="img" aria-label="Tahap ' + d.stage + ' dari 5: ' + trackingStages[d.stage - 1] + '">' + segments + '</div>' +
+            '<div class="mt-1.5 flex justify-between tu-mono text-[10px] uppercase tracking-wider text-gray-400">' +
+                '<span>Tahap ' + d.stage + '/5 &middot; ' + trackingStages[d.stage - 1] + '</span>' +
+            '</div>' +
+            '<p class="mt-3 text-xs leading-relaxed text-gray-500">' + d.footer + '</p>';
     }
 
-    function setupCarousel() {
-        initCarousel('all');
-        runCarouselAnimation();
-
-        const track = document.getElementById('carousel-track');
-        if (track) {
-            // Hover pause
-            track.addEventListener('mouseenter', () => { isUserHovered = true; });
-            track.addEventListener('mouseleave', () => { 
-                isUserHovered = false; 
-                isDragging = false; 
-            });
-
-            // Mouse drag
-            track.addEventListener('mousedown', (e) => {
-                isDragging = true;
-                startX = e.pageX - track.offsetLeft;
-                startScrollLeft = track.scrollLeft;
-            });
-
-            track.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                e.preventDefault();
-                const x = e.pageX - track.offsetLeft;
-                const walk = (x - startX) * 1.5;
-                track.scrollLeft = startScrollLeft - walk;
-            });
-
-            track.addEventListener('mouseup', () => { isDragging = false; });
-        }
+    function showTracking(d) {
+        var result = document.getElementById('trackingResult');
+        result.innerHTML = trackingMarkup(d);
+        result.style.animation = 'none';
+        void result.offsetWidth;
+        result.style.animation = 'tu-up .5s var(--ease) both';
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupCarousel);
-    } else {
-        setupCarousel();
-    }
-
-    // Quick Sample Tracking Simulator with animated loading state
     function trackSample() {
-        const input = document.getElementById('sampleTrackingInput').value.trim();
-        const result = document.getElementById('trackingResult');
+        var input = document.getElementById('sampleTrackingInput');
+        var result = document.getElementById('trackingResult');
+        var value = input.value.trim();
 
-        if (!input) {
-            alert('Silakan masukkan nomor resi / ID sampel uji.');
+        if (!value) {
+            input.classList.add('is-invalid');
+            input.style.animation = 'tu-shake .4s';
+            result.innerHTML = '<p class="tu-error !mt-0" role="alert">Silakan masukkan nomor resi / ID sampel uji.</p>';
+            input.focus();
+            setTimeout(function () { input.style.animation = ''; }, 450);
             return;
         }
+        input.classList.remove('is-invalid');
 
-        // Show animated loader
-        result.innerHTML = `
-            <div class="flex items-center gap-2.5 py-2.5 text-xs text-gray-600 animate-pulse">
-                <svg class="animate-spin h-4 w-4 text-racing-red" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                </svg>
-                <span>Menghubungi basis data laboratorium Telkom University...</span>
-            </div>
-        `;
+        result.innerHTML =
+            '<div class="flex items-center gap-2.5 py-2 text-xs text-gray-600">' +
+                '<svg class="animate-spin h-4 w-4 text-racing-red" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">' +
+                    '<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>' +
+                    '<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>' +
+                '</svg>' +
+                '<span>Menghubungi basis data laboratorium Telkom University...</span>' +
+            '</div>';
 
-        setTimeout(() => {
-            result.innerHTML = `
-                <div class="flex flex-wrap items-center justify-between gap-2">
-                    <div>
-                        <span class="text-gray-500">ID Sampel:</span>
-                        <span class="font-semibold text-gray-900 ml-1 font-mono">${input}</span>
-                        <span class="text-gray-400 mx-1">&bull;</span>
-                        <span class="text-gray-600">Terverifikasi di Sistem Telyuji</span>
-                    </div>
-                    <span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-jasmine/30 text-amber-900 border border-jasmine">
-                        Dalam Antrean Pengujian
-                    </span>
-                </div>
-                <div class="mt-2 flex items-center gap-1.5 text-xs text-gray-500">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    Lokasi: Laboratorium Riset Telkom University &bull; Sampel fisik telah diterima laboran.
-                </div>
-            `;
-        }, 350);
+        setTimeout(function () {
+            if (value.toUpperCase() === defaultSample.id) { showTracking(defaultSample); return; }
+            showTracking({
+                id: value,
+                note: 'Terverifikasi di Sistem Telyuji',
+                status: 'Dalam Antrean Pengujian',
+                stage: 2,
+                footer: 'Lokasi: Laboratorium Riset Telkom University &bull; Sampel fisik telah diterima laboran.'
+            });
+        }, 450);
     }
+    showTracking(defaultSample);
 
-    // FAQ Accordion toggle with smooth icon rotation
-    function toggleFaq(num) {
-        const item = document.getElementById('faq-item-' + num);
-        const content = document.getElementById('faq-content-' + num);
-        const icon = document.getElementById('faq-icon-' + num);
-        const svg = icon ? icon.querySelector('svg') : null;
+    // ------------------------------------------------------------------
+    // Flow stepper (autoplay when visible, stops after the user picks a step)
+    // ------------------------------------------------------------------
+    (function () {
+        var tabs = document.getElementById('flowTabs');
+        var panel = document.getElementById('flowPanel');
+        var flow = document.getElementById('flow');
+        if (!tabs || !panel) return;
 
-        if (content.classList.contains('hidden')) {
-            content.classList.remove('hidden');
-            if (item) {
-                item.classList.add('border-racing-red/40', 'shadow-sm');
-            }
-            if (icon) {
-                icon.classList.add('bg-racing-red', 'text-white');
-                icon.classList.remove('bg-gray-100', 'text-gray-500');
-            }
-            if (svg) {
-                svg.classList.add('rotate-45');
-            }
-        } else {
-            content.classList.add('hidden');
-            if (item) {
-                item.classList.remove('border-racing-red/40', 'shadow-sm');
-            }
-            if (icon) {
-                icon.classList.remove('bg-racing-red', 'text-white');
-                icon.classList.add('bg-gray-100', 'text-gray-500');
-            }
-            if (svg) {
-                svg.classList.remove('rotate-45');
-            }
+        var current = 0;
+        var autoplay = false;
+        var duration = 5;
+
+        tabs.innerHTML = flowSteps.map(function (s, i) {
+            return '' +
+                '<button type="button" role="tab" id="flow-tab-' + i + '" aria-controls="flowPanel" class="tu-step" data-i="' + i + '" style="--sc:' + s.sc + ';--st:' + s.st + ';--dur:' + duration + 's">' +
+                    '<span class="bar"><i></i></span>' +
+                    '<span class="tu-mono num mt-3 block text-xs font-semibold">' + s.n + '</span>' +
+                    '<span class="lbl mt-1 hidden sm:block text-sm font-semibold">' + s.title + '</span>' +
+                '</button>';
+        }).join('');
+
+        function renderPanel(i) {
+            var s = flowSteps[i];
+            panel.setAttribute('aria-labelledby', 'flow-tab-' + i);
+            panel.innerHTML = '' +
+                '<span class="absolute inset-x-0 top-0 h-1.5" style="background:' + s.sc + '"></span>' +
+                '<div class="grid lg:grid-cols-12">' +
+                    '<div class="lg:col-span-5 flex flex-row lg:flex-col items-end lg:items-start justify-between gap-6 p-6 sm:p-10 lg:border-r border-gray-200" style="--sc:' + s.st + '">' +
+                        '<div class="tu-numeral tu-item" style="--i:0">' + s.n + '</div>' +
+                        '<div class="tu-item lg:mt-10 text-right lg:text-left" style="--i:1">' +
+                            '<p class="tu-eyebrow" style="color:' + s.st + '">Tahap ' + (i + 1) + ' / ' + flowSteps.length + '</p>' +
+                            '<h3 class="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-950">' + s.title + '</h3>' +
+                            '<p class="mt-1 text-sm text-gray-500">' + s.sub + '</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<ol class="lg:col-span-7 divide-y divide-gray-100 p-6 sm:p-10 lg:pl-12 self-center">' +
+                        s.items.map(function (t, k) {
+                            return '<li class="tu-item flex gap-5 py-4" style="--i:' + (k + 1) + '">' +
+                                '<span class="tu-mono pt-0.5 text-xs text-gray-400">0' + (k + 1) + '</span>' +
+                                '<span class="text-sm sm:text-base leading-relaxed text-gray-800">' + t + '</span>' +
+                            '</li>';
+                        }).join('') +
+                    '</ol>' +
+                '</div>';
         }
+
+        function select(i) {
+            current = i;
+            [].forEach.call(tabs.children, function (btn, idx) {
+                var bar = btn.querySelector('.bar i');
+                btn.classList.remove('is-active');
+                btn.classList.toggle('is-done', idx < i);
+                btn.setAttribute('aria-selected', idx === i ? 'true' : 'false');
+                btn.tabIndex = idx === i ? 0 : -1;
+                bar.style.animation = autoplay ? '' : 'none';
+                if (idx === i) { void btn.offsetWidth; btn.classList.add('is-active'); }
+            });
+            renderPanel(i);
+        }
+
+        tabs.addEventListener('click', function (e) {
+            var btn = e.target.closest('.tu-step');
+            if (!btn) return;
+            autoplay = false;
+            select(parseInt(btn.getAttribute('data-i'), 10));
+        });
+
+        tabs.addEventListener('keydown', function (e) {
+            if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+            var next = (current + (e.key === 'ArrowRight' ? 1 : flowSteps.length - 1)) % flowSteps.length;
+            autoplay = false;
+            select(next);
+            tabs.children[next].focus();
+        });
+
+        tabs.addEventListener('animationend', function (e) {
+            if (autoplay && e.animationName === 'tu-fill') select((current + 1) % flowSteps.length);
+        });
+
+        select(0);
+
+        if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+            var started = false;
+            new IntersectionObserver(function (entries, obs) {
+                if (entries[0].isIntersecting && !started) {
+                    started = true;
+                    autoplay = true;
+                    select(0);
+                    obs.disconnect();
+                }
+            }, { threshold: 0.45 }).observe(flow);
+        }
+    })();
+
+    // ------------------------------------------------------------------
+    // Catalog carousel (endless drift, drag, nudge, pause)
+    // ------------------------------------------------------------------
+    (function () {
+        var track = document.getElementById('carousel-track');
+        var wrap = document.getElementById('carouselWrap');
+        if (!track) return;
+
+        var state = { playing: !prefersReducedMotion, hover: false, drag: false, touch: false, pos: 0, setW: 0, boost: 0, speed: 0.7, step: 374 };
+        var lastSet = 0;
+        var visible = true;
+
+        function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+        function renderCard(item, idx, total, clone) {
+            return '' +
+                '<article class="tu-card group/card w-[280px] sm:w-[330px] shrink-0 flex flex-col justify-between min-h-[22rem] bg-white border border-gray-200 p-6"' + (clone ? ' aria-hidden="true"' : '') + '>' +
+                    '<span class="tu-card-bar"></span>' +
+                    '<div>' +
+                        '<div class="flex items-center justify-between gap-3">' +
+                            '<span class="tu-mono text-xs text-gray-400">' + pad(idx + 1) + ' / ' + pad(total) + '</span>' +
+                            '<span class="tu-chip tu-chip--cream">' + item.location + '</span>' +
+                        '</div>' +
+                        '<h3 class="mt-6 min-h-[3.1rem] line-clamp-2 text-lg font-bold leading-snug tracking-tight text-gray-950 transition-colors duration-300 group-hover/card:text-white">' + item.title + '</h3>' +
+                        '<p class="mt-2.5 line-clamp-3 text-[13px] leading-relaxed text-gray-600 transition-colors duration-300 group-hover/card:text-gray-300">' + item.desc + '</p>' +
+                        '<dl class="mt-5 space-y-2 border-t border-gray-100 pt-4 text-xs transition-colors duration-300 group-hover/card:border-white/15">' +
+                            '<div class="flex gap-3"><dt class="tu-mono w-9 shrink-0 pt-0.5 text-[10px] uppercase text-gray-400">Spek</dt><dd class="text-gray-600 transition-colors duration-300 group-hover/card:text-gray-200">' + item.specs + '</dd></div>' +
+                            '<div class="flex gap-3"><dt class="tu-mono w-9 shrink-0 pt-0.5 text-[10px] uppercase text-gray-400">SLA</dt><dd class="text-gray-600 transition-colors duration-300 group-hover/card:text-gray-200">' + item.sla + '</dd></div>' +
+                        '</dl>' +
+                    '</div>' +
+                    '<div class="mt-6 flex items-center pt-4">' +
+                        '<a href="{{ route('register') }}" class="tu-card-go text-xs font-bold text-racing-red group-hover/card:text-white"' + (clone ? ' tabindex="-1"' : '') + '>Ajukan &rarr;</a>' +
+                    '</div>' +
+                '</article>';
+        }
+
+        function build(category) {
+            var items = category === 'all' ? allInstruments : allInstruments.filter(function (i) { return i.category === category; });
+            var html = function (clone) { return items.map(function (it, i) { return renderCard(it, i, items.length, clone); }).join(''); };
+
+            track.innerHTML = html(false);
+            var gap = parseFloat(getComputedStyle(track).columnGap) || 20;
+            var padL = parseFloat(getComputedStyle(track).paddingLeft) || 0;
+            var padR = parseFloat(getComputedStyle(track).paddingRight) || 0;
+            var one = track.scrollWidth - padL - padR + gap;
+            var reps = one > 0 ? Math.ceil(track.clientWidth / one) + 3 : 3;
+            for (var r = 1; r < reps; r++) track.insertAdjacentHTML('beforeend', html(true));
+
+            var first = track.firstElementChild;
+            state.step = first ? first.offsetWidth + gap : 374;
+            state.setW = one;
+            state.pos = one;
+            state.boost = 0;
+            track.scrollLeft = one;
+            lastSet = track.scrollLeft;
+
+            var count = document.getElementById('catalogCount');
+            if (count) count.textContent = items.length + ' instrumen';
+        }
+
+        function frame() {
+            if (visible) {
+                if (state.playing && !state.hover && !state.drag && !state.touch) state.pos -= state.speed;
+                if (state.boost) {
+                    var d = Math.abs(state.boost) < 0.5 ? state.boost : state.boost * 0.14;
+                    state.pos += d;
+                    state.boost -= d;
+                }
+                if (state.setW) {
+                    if (state.pos < state.setW) state.pos += state.setW;
+                    if (state.pos >= state.setW * 2) state.pos -= state.setW;
+                }
+                if (!state.drag && Math.abs(track.scrollLeft - state.pos) > 0.4) {
+                    track.scrollLeft = state.pos;
+                    lastSet = track.scrollLeft;
+                }
+            }
+            requestAnimationFrame(frame);
+        }
+
+        track.addEventListener('scroll', function () {
+            if (Math.abs(track.scrollLeft - lastSet) > 2) {
+                state.pos = track.scrollLeft;
+                lastSet = track.scrollLeft;
+            }
+        }, { passive: true });
+
+        wrap.addEventListener('mouseenter', function () { state.hover = true; });
+        wrap.addEventListener('mouseleave', function () { state.hover = false; state.drag = false; });
+        track.addEventListener('touchstart', function () { state.touch = true; }, { passive: true });
+        track.addEventListener('touchend', function () { setTimeout(function () { state.touch = false; }, 1200); }, { passive: true });
+
+        var startX = 0, startScroll = 0, moved = 0;
+        track.addEventListener('mousedown', function (e) {
+            state.drag = true; moved = 0; startX = e.pageX; startScroll = track.scrollLeft;
+        });
+        window.addEventListener('mouseup', function () { state.drag = false; });
+        track.addEventListener('mousemove', function (e) {
+            if (!state.drag) return;
+            e.preventDefault();
+            moved = Math.abs(e.pageX - startX);
+            track.scrollLeft = startScroll - (e.pageX - startX) * 1.2;
+        });
+        track.addEventListener('click', function (e) { if (moved > 6) { e.preventDefault(); e.stopPropagation(); moved = 0; } }, true);
+
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(wrap);
+        }
+
+        window.scrollCarousel = function (dir) {
+            state.boost += (dir === 'left' ? -1 : 1) * state.step;
+        };
+
+        window.switchLabTab = function (key) {
+            [].forEach.call(document.querySelectorAll('.lab-tab-btn'), function (btn) {
+                btn.setAttribute('aria-selected', btn.id === 'tab-' + key ? 'true' : 'false');
+            });
+            build(key);
+        };
+
+        build('all');
+        requestAnimationFrame(frame);
+    })();
+
+    // ------------------------------------------------------------------
+    // FAQ accordion
+    // ------------------------------------------------------------------
+    function toggleFaq(num) {
+        var item = document.getElementById('faq-item-' + num);
+        var btn = document.getElementById('faq-btn-' + num);
+        var open = !item.classList.contains('is-open');
+        item.classList.toggle('is-open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
 </script>
 @endsection
