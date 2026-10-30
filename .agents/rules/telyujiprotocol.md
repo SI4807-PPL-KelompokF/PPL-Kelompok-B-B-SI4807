@@ -20,7 +20,7 @@ Saat menghasilkan, memodifikasi, atau mengonversi kode antarmuka (UI), AI Agent 
 - **Gaya Visual & Logogram (Anti AI-Slop):**
   * Menggunakan logogram resmi Telyuji (simbol kesatuan huruf "T", "U", dan sayap/centang dalam format vektor SVG atau PNG HD transparan).
   * Seluruh elemen grafis, ikon, dan ilustrasi pendukung wajib bergaya **2D flat, minimalis, dan geometris** (*solid color blocking*). Dilarang membuat efek 3D berlebihan, gradasi kompleks, atau *drop shadow* mencolok.
-- **Tipografi:** Gunakan font **Inter** untuk seluruh antarmuka (hierarki, judul, teks data, form).
+- **Tipografi:** Gunakan font **General Sans** (Indian Type Foundry) dengan *system-font fallback* (`-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`) untuk seluruh antarmuka (hierarki, judul, teks data, form).
 - **Palet Warna Utama (Berdasarkan Desain Sistem Telyuji):**
   * **Racing Red (`#ED1E28`):** Gunakan untuk *sidebar*, identitas *brand* utama, tombol aksi krusial (Simpan/Kirim), dan penanda status aktif.
   * **Tiger Flame (`#F26A2D`):** Gunakan untuk efek *hover* pada tombol, kartu ringkasan data (seperti metrik MRR pada *dashboard*), dan elemen pendukung sekunder.

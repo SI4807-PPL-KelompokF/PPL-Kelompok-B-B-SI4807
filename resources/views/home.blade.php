@@ -2,8 +2,6 @@
 
 @section('content')
 <div class="relative">
-    <div class="tu-grid-bg absolute inset-x-0 top-0 h-80" aria-hidden="true"></div>
-
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
@@ -14,7 +12,7 @@
                 </p>
             </div>
             <div class="tu-reveal [--d:120ms]">
-                <a href="#" class="tu-btn">
+                <a href="{{ url('/#katalog-lab') }}" class="tu-btn">
                     <span aria-hidden="true">+</span>
                     <span>Pengajuan Sampel Baru</span>
                 </a>
@@ -102,7 +100,7 @@
                     </div>
                     <p class="mt-5 text-sm font-semibold text-gray-950">Belum ada pengujian sampel aktif</p>
                     <p class="mt-1.5 max-w-sm text-xs leading-relaxed text-gray-500">Klik tombol pengajuan sampel baru untuk memulai proses pengujian laboratorium Anda.</p>
-                    <a href="#" class="tu-btn tu-btn--ghost tu-btn--sm mt-6">
+                    <a href="{{ url('/#alur') }}" class="tu-btn tu-btn--ghost tu-btn--sm mt-6">
                         <span>Pelajari Prosedur Pengujian &amp; Persyaratan Dokumen</span>
                         <span class="arr" aria-hidden="true">&rarr;</span>
                     </a>

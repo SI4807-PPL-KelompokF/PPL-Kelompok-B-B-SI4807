@@ -44,20 +44,13 @@
 @keyframes tu-draw {
   to { stroke-dashoffset: 0; }
 }
-@keyframes tu-scan {
-  from { left: 0; }
-  to { left: 100%; }
-}
 @keyframes tu-scan-y {
-  from { top: 0; }
-  to { top: 100%; }
+  from { transform: translateY(-24px); }
+  to { transform: translateY(24px); }
 }
 @keyframes tu-fill {
-  from { width: 0; }
-  to { width: 100%; }
-}
-@keyframes tu-marquee {
-  to { transform: translateX(-50%); }
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 @keyframes tu-ping {
   0% { transform: scale(1); opacity: .55; }
@@ -105,23 +98,23 @@
   to { transform: scale(1.02); }
 }
 @keyframes tu-beam-down {
-  0% { top: 0%; opacity: .95; }
+  0% { transform: translateY(0); opacity: .95; }
   88% { opacity: .95; }
-  100% { top: 100%; opacity: 0; }
+  100% { transform: translateY(420px); opacity: 0; }
 }
 @keyframes tu-beam-up {
-  0% { top: 100%; opacity: .95; }
+  0% { transform: translateY(420px); opacity: .95; }
   88% { opacity: .95; }
-  100% { top: 0%; opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
 }
 
 @layer components {
   .tu-eyebrow {
-    @apply font-mono text-[11px] uppercase tracking-[.18em];
+    @apply font-sans text-xs font-semibold tracking-normal;
   }
 
   .tu-mono {
-    @apply font-mono tabular-nums;
+    @apply font-sans tabular-nums;
   }
 
   /* Reveal on scroll */
@@ -167,31 +160,18 @@
     animation: tu-underline 1s var(--ease-io) 1.05s forwards;
   }
 
-  /* Decorative & structural surfaces */
+  /* Decorative & structural surfaces (flat solid colors, zero gradients) */
   .tu-grid-bg {
-    background-image:
-      linear-gradient(to right, rgba(17, 24, 39, .06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(17, 24, 39, .06) 1px, transparent 1px);
-    background-size: 64px 64px;
-    -webkit-mask-image: radial-gradient(ellipse 75% 80% at 25% 25%, #000 25%, transparent 78%);
-    mask-image: radial-gradient(ellipse 75% 80% at 25% 25%, #000 25%, transparent 78%);
+    background-color: transparent;
   }
 
   .tu-grid-dark {
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, .07) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, .07) 1px, transparent 1px);
-    background-size: 56px 56px;
+    background-color: transparent;
   }
 
   .tu-ruler {
     height: 14px;
     transform-origin: left;
-    background-image:
-      repeating-linear-gradient(to right, #9ca3af 0 1px, transparent 1px 10px),
-      repeating-linear-gradient(to right, #4b5563 0 1px, transparent 1px 100px);
-    background-size: 100% 6px, 100% 14px;
-    background-repeat: no-repeat;
   }
   .js .tu-ruler.tu-reveal {
     opacity: 1;
@@ -210,30 +190,19 @@
     border-radius: 9999px;
     background: var(--red);
   }
-  .tu-dot::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: inherit;
-    animation: tu-ping 2s ease-out infinite;
-  }
-  .tu-dot--green,
-  .tu-dot--green::after {
+  .tu-dot--green {
     background: #059669;
   }
 
   /* Header */
   .tu-header {
-    background: rgba(249, 250, 251, .72);
-    -webkit-backdrop-filter: saturate(1.4) blur(14px);
-    backdrop-filter: saturate(1.4) blur(14px);
+    background: #f9fafb;
     border-bottom: 1px solid transparent;
     transition: border-color .3s, background .3s;
   }
   .tu-header[data-scrolled="true"] {
     border-bottom-color: #e5e7eb;
-    background: rgba(255, 255, 255, .88);
+    background: #ffffff;
   }
 
   .tu-logo-mark {
@@ -244,13 +213,27 @@
   }
 
   .tu-link {
-    background: linear-gradient(currentColor, currentColor) left bottom / 0 1px no-repeat;
-    transition: background-size .35s var(--ease), color .2s;
+    position: relative;
+    transition: color .2s;
     padding-bottom: 3px;
   }
+  .tu-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .35s var(--ease);
+  }
   .tu-link:hover {
-    background-size: 100% 1px;
     color: var(--red);
+  }
+  .tu-link:hover::after {
+    transform: scaleX(1);
   }
 
   /* Buttons */
@@ -278,7 +261,7 @@
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: var(--ink);
+    background: var(--flame);
     transform: translateX(-101%);
     transition: transform .55s var(--ease-io);
   }
@@ -287,7 +270,7 @@
     transform: none;
   }
   .tu-btn:hover {
-    border-color: var(--ink);
+    border-color: var(--flame);
   }
   .tu-btn:active {
     transform: scale(.98);
@@ -312,10 +295,11 @@
     border-color: #d1d5db;
   }
   .tu-btn--ghost::before {
-    background: var(--ink);
+    background: var(--flame);
   }
   .tu-btn--ghost:hover {
     color: #fff;
+    border-color: var(--flame);
   }
   .tu-btn--on-dark::before {
     background: var(--flame);
@@ -329,11 +313,11 @@
     border-color: rgba(255, 255, 255, .28);
   }
   .tu-btn--ghost-dark::before {
-    background: #fff;
+    background: var(--flame);
   }
   .tu-btn--ghost-dark:hover {
-    color: var(--ink);
-    border-color: #fff;
+    color: #fff;
+    border-color: var(--flame);
   }
 
   .tu-icon-btn {
@@ -349,9 +333,9 @@
     transition: background .25s, color .25s, border-color .25s, transform .2s;
   }
   .tu-icon-btn:hover {
-    background: var(--red);
+    background: var(--flame);
     color: #fff;
-    border-color: var(--red);
+    border-color: var(--flame);
   }
   .tu-icon-btn:active {
     transform: scale(.92);
@@ -380,7 +364,7 @@
   .tu-input:focus {
     outline: none;
     border-color: var(--red);
-    box-shadow: 0 0 0 4px rgba(237, 30, 40, .1);
+    box-shadow: 0 0 0 2px rgba(237, 30, 40, .12);
   }
   .tu-input.is-invalid {
     border-color: var(--red);
@@ -404,10 +388,8 @@
     right: .6rem;
     transform: translateY(-50%);
     padding: .25rem .4rem;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 10px;
-    letter-spacing: .12em;
-    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 600;
     color: #6b7280;
     transition: color .2s;
   }
@@ -425,7 +407,7 @@
     display: inline-grid;
     place-items: center;
     cursor: pointer;
-    transition: all .2s;
+    transition: background-color .2s, border-color .2s;
   }
   .tu-check:checked {
     background: var(--red);
@@ -483,7 +465,15 @@
     border-color: var(--jasmine);
   }
   .tu-chip--cream {
-    @apply text-white bg-racing-red border-racing-red;
+    color: #111827;
+    background: #f2f6c2;
+    border-color: #cfd88b;
+    transition: background-color .3s, color .3s, border-color .3s;
+  }
+  .tu-card:hover .tu-chip--cream {
+    color: #eaefb1;
+    background: rgba(234, 239, 177, .14);
+    border-color: rgba(234, 239, 177, .38);
   }
 
   /* Hero showcase & optical scan transition */
@@ -531,7 +521,7 @@
     animation: tu-aperture-up .92s var(--ease-io) both;
   }
   .tu-frame-scrim {
-    background: linear-gradient(to top, rgba(10, 10, 11, .72), rgba(10, 10, 11, 0) 52%);
+    background-color: transparent;
   }
   .tu-scan-beam {
     position: absolute;
@@ -540,7 +530,6 @@
     z-index: 4;
     height: 2px;
     background: var(--red);
-    border-bottom: 1px solid rgba(255, 255, 255, .7);
     opacity: 0;
     pointer-events: none;
   }
@@ -598,16 +587,18 @@
     border-right-width: 1.5px;
   }
 
-  /* Metrics */
+  /* Metrics & accents */
   .tu-tick {
     display: block;
-    width: 24px;
+    width: 72px;
     height: 4px;
     background: var(--c, var(--red));
-    transition: width .55s var(--ease);
+    transform: scaleX(.3333);
+    transform-origin: left;
+    transition: transform .55s var(--ease);
   }
   .tu-metric:hover .tu-tick {
-    width: 72px;
+    transform: scaleX(1);
   }
 
   /* Flow stepper */
@@ -630,13 +621,14 @@
   .tu-step .bar i {
     display: block;
     height: 100%;
-    width: 0;
+    width: 100%;
     background: var(--sc);
-    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08);
+    transform: scaleX(0);
+    transform-origin: left;
   }
   .tu-step.is-done .bar i,
   .tu-step.is-active .bar i {
-    width: 100%;
+    transform: scaleX(1);
   }
   .tu-step.is-active .bar i {
     animation: tu-fill var(--dur, 5s) linear;
@@ -653,8 +645,14 @@
   .tu-step.is-active .lbl {
     color: var(--st);
   }
-  .tu-step:hover .lbl {
+  .tu-step:hover:not(.is-active) .num {
+    color: var(--flame);
+  }
+  .tu-step:hover:not(.is-active) .lbl {
     color: #111827;
+  }
+  .tu-step:hover:not(.is-active):not(.is-done) .bar {
+    background: #d1d5db;
   }
   .tu-flow:hover .tu-step.is-active .bar i {
     animation-play-state: paused;
@@ -663,7 +661,7 @@
     font-size: clamp(7rem, 15vw, 11.5rem);
     line-height: .8;
     font-weight: 800;
-    letter-spacing: -.06em;
+    letter-spacing: -.02em;
     color: transparent;
     -webkit-text-stroke: 1.5px var(--sc);
   }
@@ -703,17 +701,22 @@
   .tu-tab:hover {
     color: #111827;
   }
+  .tu-tab:hover:not([aria-selected="true"])::after {
+    background: var(--flame);
+    transform: scaleX(.45);
+  }
   .tu-tab[aria-selected="true"] {
     color: #111827;
   }
   .tu-tab[aria-selected="true"]::after {
-    transform: none;
+    background: var(--red);
+    transform: scaleX(1);
   }
   .tu-card {
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    transition: border-color .4s, transform .5s var(--ease);
+    transition: border-color .4s, transform .45s var(--ease);
   }
   .tu-card::before {
     content: "";
@@ -723,10 +726,11 @@
     background: var(--ink);
     transform: scaleY(0);
     transform-origin: bottom;
-    transition: transform .6s var(--ease-io);
+    transition: transform .55s var(--ease-io);
   }
   .tu-card:hover {
     border-color: var(--ink);
+    transform: translateY(-4px);
   }
   .tu-card:hover::before {
     transform: scaleY(1);
@@ -736,12 +740,14 @@
     left: 0;
     top: 0;
     height: 3px;
-    width: 0;
+    width: 100%;
     background: var(--red);
-    transition: width .6s var(--ease) .15s;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .6s var(--ease) .15s;
   }
   .tu-card:hover .tu-card-bar {
-    width: 100%;
+    transform: scaleX(1);
   }
   .tu-card .tu-card-go {
     transition: transform .4s var(--ease), color .3s;
@@ -750,8 +756,7 @@
     transform: translateX(4px);
   }
   .tu-fade-edges {
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 4%, #000 96%, transparent);
+    position: relative;
   }
 
   /* FAQ */
@@ -798,6 +803,11 @@
     flex: none;
     width: 22px;
     height: 22px;
+    transition: color .25s, transform .35s var(--ease);
+  }
+  .tu-faq-item:hover:not(.is-open) .tu-plus {
+    color: var(--flame);
+    transform: scale(1.08);
   }
   .tu-plus i {
     position: absolute;
@@ -820,14 +830,6 @@
   }
 
   /* CTA */
-  .tu-marquee {
-    display: flex;
-    width: max-content;
-    animation: tu-marquee 48s linear infinite;
-  }
-  .tu-marquee:hover {
-    animation-play-state: paused;
-  }
   .tu-outline-text {
     color: transparent;
     -webkit-text-stroke: 1px rgba(255, 255, 255, .38);
@@ -852,16 +854,8 @@
     background: #f3f4f6;
     border-radius: 2px;
   }
-  .tu-skel::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    transform: translateX(-100%);
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, .85), transparent);
-    animation: tu-shimmer 1.8s infinite;
-  }
   .tu-empty-fade {
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .88) 38%, #fff 62%);
+    background-color: rgba(255, 255, 255, .92);
   }
   .tu-scan-line {
     animation: tu-scan-y 2.6s var(--ease-io) infinite alternate;
@@ -870,8 +864,8 @@
   /* Footer */
   .tu-wordmark {
     font-weight: 800;
-    letter-spacing: -.06em;
-    line-height: .78;
+    letter-spacing: -.02em;
+    line-height: .84;
     color: transparent;
     -webkit-text-stroke: 1px #e5e7eb;
     user-select: none;
@@ -900,7 +894,6 @@
     animation-iteration-count: 1 !important;
     transition-duration: .001ms !important;
   }
-  .tu-marquee,
   .tu-wave {
     animation: none !important;
   }

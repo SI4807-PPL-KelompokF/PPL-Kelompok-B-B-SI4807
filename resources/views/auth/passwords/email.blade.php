@@ -20,6 +20,9 @@
         <div>
             <label for="email" class="tu-label">{{ __('Alamat Email') }}</label>
             <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
+                placeholder="nama@student.telkomuniversity.ac.id"
+                pattern="^[a-zA-Z0-9._%+-]+@student\.telkomuniversity\.ac\.id$"
+                title="Gunakan alamat email berdomain @student.telkomuniversity.ac.id"
                 class="tu-input @error('email') is-invalid @enderror">
             @error('email')
                 <p class="tu-error" role="alert">{{ $message }}</p>

@@ -27,4 +27,44 @@ class ResetPasswordController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+
+    /**
+     * Get the password reset validation rules.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return [
+            'token' => 'required',
+            'email' => [
+                'required',
+                'email',
+                'regex:/^[a-zA-Z0-9._%+-]+@student\.telkomuniversity\.ac\.id$/i',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[^a-zA-Z0-9]/',
+                'confirmed',
+            ],
+        ];
+    }
+
+    /**
+     * Get the password reset validation error messages.
+     *
+     * @return array
+     */
+    protected function validationErrorMessages()
+    {
+        return [
+            'email.regex' => 'Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.',
+            'password.min' => 'Kata sandi minimal harus 8 karakter.',
+            'password.regex' => 'Kata sandi wajib mengandung kombinasi huruf kecil, huruf besar, dan simbol.',
+        ];
+    }
 }

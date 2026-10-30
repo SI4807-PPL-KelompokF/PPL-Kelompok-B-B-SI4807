@@ -7,10 +7,8 @@
 <div class="grid min-h-[calc(100vh-4rem)] lg:grid-cols-[5fr_6fr]">
     <!-- Brand panel -->
     <aside class="relative hidden lg:flex flex-col justify-center overflow-hidden bg-gray-950 p-12 xl:p-16 text-white" aria-hidden="true">
-        <div class="tu-grid-dark absolute inset-0 opacity-60"></div>
-
         <div class="relative -mt-16">
-            <h2 class="text-5xl xl:text-7xl font-extrabold tracking-tight leading-[1.02]">
+            <h2 class="text-5xl xl:text-7xl font-bold tracking-tight leading-[1.04]">
                 <span class="tu-line [--d:100ms]"><span>Teliti</span></span>
                 <span class="tu-line [--d:230ms]"><span>dan <span class="text-racing-red">Teruji.</span></span></span>
             </h2>
@@ -35,10 +33,8 @@
 
     <!-- Form panel -->
     <section class="relative flex items-center justify-center px-4 py-12 sm:px-10">
-        <div class="tu-grid-bg absolute inset-0" aria-hidden="true"></div>
-
-        <div class="relative w-full max-w-md bg-white/80 sm:bg-white border border-gray-200 p-6 sm:p-10 shadow-tu-auth tu-reveal">
-            <h1 class="text-3xl font-extrabold tracking-tight text-gray-950">{{ $heading }}</h1>
+        <div class="relative w-full max-w-md bg-white border border-gray-200 p-6 sm:p-10 shadow-tu-auth tu-reveal">
+            <h1 class="text-3xl font-bold tracking-tight text-gray-950">{{ $heading }}</h1>
             <p class="mt-2 text-sm leading-relaxed text-gray-600">{{ $subheading }}</p>
 
             <div class="mt-8">
@@ -49,4 +45,3 @@
         </div>
     </section>
 </div>
-
