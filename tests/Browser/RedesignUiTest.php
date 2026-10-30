@@ -16,28 +16,31 @@ class RedesignUiTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/')
-                ->assertSee('Telyuji')
-                ->assertSee('Layanan Pengujian')
+                ->waitForText('Telyuji')
+                ->waitForText('Layanan Pengujian')
                 ->assertPresent('#heroSlides .tu-slide.is-active')
                 ->waitForText('TU-LAB-2026-0042');
 
-            $browser->script("document.getElementById('sampleTrackingInput').scrollIntoView({block: 'center'});");
+            $browser->script("document.getElementById('sampleTrackingInput').scrollIntoView({block: 'center', behavior: 'instant'});");
             $browser->clear('#sampleTrackingInput')
                 ->type('#sampleTrackingInput', 'TU-LAB-2026-0099')
                 ->click('#trackingForm button[type="submit"]')
                 ->waitForText('TU-LAB-2026-0099');
 
             $browser->waitFor('#flow-tab-1');
-            $browser->script("document.getElementById('flow-tab-1').scrollIntoView({block: 'center'});");
-            $browser->click('#flow-tab-1')
+            $browser->script("document.getElementById('flow-tab-1').scrollIntoView({block: 'center', behavior: 'instant'});");
+            $browser->waitForText('Registrasi online')
+                ->click('#flow-tab-1')
                 ->waitForText('Validasi laboran');
 
-            $browser->script("document.getElementById('tab-kimia').scrollIntoView({block: 'center'});");
-            $browser->click('#tab-kimia')
+            $browser->script("document.getElementById('tab-kimia').scrollIntoView({block: 'center', behavior: 'instant'});");
+            $browser->waitForText('Material & Kimia Terapan')
+                ->click('#tab-kimia')
                 ->assertAttribute('#tab-kimia', 'aria-selected', 'true');
 
-            $browser->script("document.getElementById('faq-btn-1').scrollIntoView({block: 'center'});");
-            $browser->click('#faq-btn-1')
+            $browser->script("document.getElementById('faq-btn-1').scrollIntoView({block: 'center', behavior: 'instant'});");
+            $browser->waitForText('Siapa saja yang dapat mengajukan pengujian sampel di Telyuji?')
+                ->click('#faq-btn-1')
                 ->assertAttribute('#faq-btn-1', 'aria-expanded', 'true');
 
             $browser->visit('/login')
