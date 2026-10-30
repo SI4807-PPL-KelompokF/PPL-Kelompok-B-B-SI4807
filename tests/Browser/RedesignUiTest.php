@@ -46,9 +46,9 @@ class RedesignUiTest extends DuskTestCase
             $browser->visit('/login')
                 ->waitForText('Masuk ke Telyuji')
                 ->assertAttribute('#password', 'type', 'password')
-                ->click('button[data-toggle-******]')
+                ->click('button[data-toggle-password]')
                 ->assertAttribute('#password', 'type', 'text')
-                ->click('button[data-toggle-******]')
+                ->click('button[data-toggle-password]')
                 ->assertAttribute('#password', 'type', 'password');
         });
     }
