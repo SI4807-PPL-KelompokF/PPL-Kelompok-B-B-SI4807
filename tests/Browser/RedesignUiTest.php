@@ -24,13 +24,13 @@ class RedesignUiTest extends DuskTestCase
             $browser->script("document.getElementById('sampleTrackingInput').scrollIntoView({block: 'center', behavior: 'instant'});");
             $browser->clear('#sampleTrackingInput')
                 ->type('#sampleTrackingInput', 'TU-LAB-2026-0099')
-                ->click('#trackingForm button[type="submit"]')
+                ->click('#trackingForm button[type=\"submit\"]')
                 ->waitForText('TU-LAB-2026-0099');
 
             $browser->waitUntil("document.querySelectorAll('#flowTabs .tu-step').length > 1", 15);
             $browser->script("document.querySelector('#flowTabs .tu-step[data-i=\"1\"]').scrollIntoView({block: 'center', behavior: 'instant'});");
             $browser->waitForText('Registrasi online')
-                ->click('#flowTabs .tu-step[data-i=\"1\"]')
+                ->click('#flowTabs .tu-step[data-i="1"]')
                 ->waitForText('Validasi laboran');
 
             $browser->script("document.getElementById('tab-kimia').scrollIntoView({block: 'center', behavior: 'instant'});");
@@ -46,9 +46,9 @@ class RedesignUiTest extends DuskTestCase
             $browser->visit('/login')
                 ->waitForText('Masuk ke Telyuji')
                 ->assertAttribute('#password', 'type', 'password')
-                ->click('button[data-toggle-password="password"]')
+                ->click('button[data-toggle-******]')
                 ->assertAttribute('#password', 'type', 'text')
-                ->click('button[data-toggle-password="password"]')
+                ->click('button[data-toggle-******]')
                 ->assertAttribute('#password', 'type', 'password');
         });
     }
