@@ -3,13 +3,11 @@
 @section('content')
 <!-- ============================ HERO ============================ -->
 <section class="relative overflow-hidden">
-    <div class="tu-grid-bg absolute inset-0" aria-hidden="true"></div>
-
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 sm:pt-16 lg:pt-20 lg:pb-28">
         <div class="grid lg:grid-cols-12 gap-14 lg:gap-10 items-center">
             <!-- Copy -->
             <div class="lg:col-span-7">
-                <h1 class="font-extrabold tracking-tight text-gray-950 leading-[1.04] text-4xl sm:text-6xl lg:text-[3.5rem] xl:text-[4.25rem]">
+                <h1 class="font-bold tracking-tight text-gray-950 leading-[1.06] text-4xl sm:text-6xl lg:text-[3.5rem] xl:text-[4.15rem]">
                     <span class="tu-line [--d:100ms]"><span>Layanan Pengujian</span></span>
                     <span class="tu-line [--d:220ms]"><span>Laboratorium Riset</span></span>
                     <span class="tu-line [--d:340ms]"><span>&amp; Akademik <span class="tu-mark-underline">Terpadu</span></span></span>
@@ -61,7 +59,6 @@
                         @endforeach
                     </div>
 
-                    <div class="tu-frame-scrim pointer-events-none absolute inset-0 z-[3]"></div>
                     <span id="heroScanBeam" class="tu-scan-beam" aria-hidden="true"></span>
 
                     <span class="tu-bracket tu-bracket--tl"></span>
@@ -71,7 +68,7 @@
                 </div>
 
                 <!-- Sample tracking -->
-                <div class="mt-4 lg:mt-0 lg:absolute lg:-bottom-12 lg:-left-14 lg:right-6 bg-white border border-gray-200 p-4 sm:p-5 shadow-tu-float tu-reveal [--d:650ms]">
+                <div data-ui class="mt-4 lg:mt-0 lg:absolute lg:-bottom-12 lg:-left-14 lg:right-6 bg-white border border-gray-200 p-4 sm:p-5 shadow-tu-float tu-reveal [--d:650ms]">
                     <form id="trackingForm" onsubmit="event.preventDefault(); trackSample();" class="flex gap-2" novalidate>
                         <label for="sampleTrackingInput" class="sr-only">Lacak status sampel (resi / ID)</label>
                         <input type="text" id="sampleTrackingInput" placeholder="TU-LAB-2026-0042" value="TU-LAB-2026-0042" autocomplete="off" spellcheck="false"
@@ -96,37 +93,50 @@
     <div class="border-y border-gray-200 grid grid-cols-2 lg:grid-cols-4">
         <div class="tu-metric tu-reveal px-5 sm:px-8 py-9 border-r border-b lg:border-b-0 border-gray-200 [--c:#ED1E28]">
             <span class="tu-tick"></span>
-            <p class="tu-eyebrow mt-6 text-gray-500">Laboratorium</p>
+            <p class="tu-eyebrow mt-6 uppercase tracking-[.14em] text-[11px] text-gray-500">Laboratorium</p>
             <p class="mt-2 text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-950 tabular-nums whitespace-nowrap"><span data-count="14" data-suffix="+">14+</span></p>
             <p class="mt-2 text-xs text-gray-600">Fakultas &amp; Pusat Riset Kampus</p>
         </div>
         <div class="tu-metric tu-reveal px-5 sm:px-8 py-9 border-b lg:border-b-0 lg:border-r border-gray-200 [--c:#F26A2D] [--d:90ms]">
             <span class="tu-tick"></span>
-            <p class="tu-eyebrow mt-6 text-gray-500">Alat &amp; Instrumen</p>
+            <p class="tu-eyebrow mt-6 uppercase tracking-[.14em] text-[11px] text-gray-500">Alat &amp; Instrumen</p>
             <p class="mt-2 text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-950 tabular-nums whitespace-nowrap"><span data-count="50" data-suffix="+">50+</span></p>
             <p class="mt-2 text-xs text-gray-600">Terkalibrasi dan bersertifikasi</p>
         </div>
         <div class="tu-metric tu-reveal px-5 sm:px-8 py-9 border-r border-gray-200 [--c:#111827] [--d:180ms]">
             <span class="tu-tick"></span>
-            <p class="tu-eyebrow mt-6 text-gray-500">Akses Civitas</p>
+            <p class="tu-eyebrow mt-6 uppercase tracking-[.14em] text-[11px] text-gray-500">Akses Civitas</p>
             <p class="mt-2 text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-950 tabular-nums whitespace-nowrap"><span data-count="100" data-suffix="%">100%</span></p>
             <p class="mt-2 text-xs text-gray-600">Fasilitas riset akademik internal</p>
         </div>
         <div class="tu-metric tu-reveal px-5 sm:px-8 py-9 [--c:#F7D488] [--d:270ms]">
             <span class="tu-tick"></span>
-            <p class="tu-eyebrow mt-6 text-gray-500">Rata-rata Durasi Uji</p>
+            <p class="tu-eyebrow mt-6 uppercase tracking-[.14em] text-[11px] text-gray-500">Rata-rata Durasi Uji</p>
             <p class="mt-2 text-5xl sm:text-6xl font-extrabold tracking-tight text-gray-950 tabular-nums whitespace-nowrap"><span data-count="5" data-prefix="&lt; ">&lt; 5</span><span class="ml-2 text-base font-semibold tracking-normal text-gray-500">Hari</span></p>
             <p class="mt-2 text-xs text-gray-600">SLA cepat dari penyerahan sampel</p>
         </div>
     </div>
-    <div class="tu-ruler tu-reveal mt-3 opacity-70" aria-hidden="true"></div>
+    <div class="tu-ruler tu-reveal mt-3 opacity-70" aria-hidden="true">
+        <svg class="w-full h-3.5 block" preserveAspectRatio="none">
+            <defs>
+                <pattern id="tu-ruler-minor" width="10" height="14" patternUnits="userSpaceOnUse">
+                    <line x1="0.5" y1="0" x2="0.5" y2="6" stroke="#9ca3af" stroke-width="1" />
+                </pattern>
+                <pattern id="tu-ruler-major" width="100" height="14" patternUnits="userSpaceOnUse">
+                    <line x1="0.5" y1="0" x2="0.5" y2="14" stroke="#4b5563" stroke-width="1" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="6" fill="url(#tu-ruler-minor)" />
+            <rect width="100%" height="14" fill="url(#tu-ruler-major)" />
+        </svg>
+    </div>
 </section>
 
 <!-- ============================ ALUR ============================ -->
 <section id="alur" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28">
     <div class="grid lg:grid-cols-12 gap-6 items-end">
         <div class="lg:col-span-7 tu-reveal">
-            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950">Alur Standar Pengujian Sampel</h2>
+            <h2 class="text-3xl sm:text-5xl font-bold tracking-tight text-gray-950">Alur Standar Pengujian Sampel</h2>
         </div>
         <p class="lg:col-span-5 text-sm sm:text-base leading-relaxed text-gray-600 tu-reveal [--d:100ms]">
             Lima tahap dari registrasi hingga LHU resmi terbit. Pilih salah satu tahap untuk melihat apa saja yang terjadi di dalamnya.
@@ -143,7 +153,7 @@
 <section id="katalog-lab" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28">
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div class="tu-reveal max-w-2xl">
-            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950">Katalog Laboratorium &amp; Instrumen Uji</h2>
+            <h2 class="text-3xl sm:text-5xl font-bold tracking-tight text-gray-950">Katalog Laboratorium &amp; Instrumen Uji</h2>
             <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">Daftar instrumen dan parameter pengujian yang tersedia di seluruh rumpun laboratorium kampus Telkom University.</p>
         </div>
 
@@ -181,61 +191,61 @@
     <div class="grid lg:grid-cols-12 gap-10 lg:gap-16">
         <div class="lg:col-span-4">
             <div class="lg:sticky lg:top-28 tu-reveal">
-                <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950">Pertanyaan Umum (FAQ)</h2>
-                <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">Panduan praktis prosedur pengujian laboratorium di Telkom University.</p>
+                <h2 class="text-3xl sm:text-5xl font-bold tracking-tight text-gray-950">Pertanyaan Umum (FAQ)</h2>
+                <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">Informasi singkat seputar pengajuan sampel laboratorium di Telkom University.</p>
             </div>
         </div>
 
         <div class="lg:col-span-8 tu-reveal [--d:100ms]">
             <div id="faq-item-1" class="tu-faq-item">
                 <h3>
-                    <button type="button" onclick="toggleFaq(1)" id="faq-btn-1" aria-expanded="false" aria-controls="faq-content-1" class="group w-full flex items-start gap-5 py-6 text-left">
+                    <button type="button" onclick="toggleFaq(1)" id="faq-btn-1" aria-expanded="false" aria-controls="faq-content-1" class="group w-full flex items-start gap-5 py-5 text-left">
                         <span class="tu-mono pt-1 text-xs text-gray-400">01</span>
                         <span class="flex-1 text-base sm:text-lg font-semibold leading-snug text-gray-950 transition-colors group-hover:text-racing-red">Siapa saja yang dapat mengajukan pengujian sampel di Telyuji?</span>
                         <span class="tu-plus mt-0.5 text-gray-500" aria-hidden="true"><i></i><i></i></span>
                     </button>
                 </h3>
                 <div id="faq-content-1" class="tu-acc" role="region" aria-labelledby="faq-btn-1">
-                    <div><p class="pl-9 sm:pl-10 pr-10 pb-7 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Seluruh mahasiswa, dosen, dan peneliti aktif di lingkungan Telkom University dapat mendaftar dengan akun kampus untuk keperluan tugas akhir, riset mandiri, maupun penelitian hibah.</p></div>
+                    <div><p class="pl-9 sm:pl-10 pr-10 pb-6 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Seluruh mahasiswa, dosen, dan peneliti aktif Telkom University dapat mengajukan pengujian menggunakan akun kampus untuk tugas akhir maupun riset.</p></div>
                 </div>
             </div>
 
             <div id="faq-item-2" class="tu-faq-item">
                 <h3>
-                    <button type="button" onclick="toggleFaq(2)" id="faq-btn-2" aria-expanded="false" aria-controls="faq-content-2" class="group w-full flex items-start gap-5 py-6 text-left">
+                    <button type="button" onclick="toggleFaq(2)" id="faq-btn-2" aria-expanded="false" aria-controls="faq-content-2" class="group w-full flex items-start gap-5 py-5 text-left">
                         <span class="tu-mono pt-1 text-xs text-gray-400">02</span>
                         <span class="flex-1 text-base sm:text-lg font-semibold leading-snug text-gray-950 transition-colors group-hover:text-racing-red">Apakah layanan pengujian ini dikenakan biaya?</span>
                         <span class="tu-plus mt-0.5 text-gray-500" aria-hidden="true"><i></i><i></i></span>
                     </button>
                 </h3>
                 <div id="faq-content-2" class="tu-acc" role="region" aria-labelledby="faq-btn-2">
-                    <div><p class="pl-9 sm:pl-10 pr-10 pb-7 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Sesuai kebijakan kampus, pengujian laboratorium untuk keperluan akademik civitas internal Telkom University difasilitasi tanpa biaya (100% bebas biaya fasilitas lab kampus).</p></div>
+                    <div><p class="pl-9 sm:pl-10 pr-10 pb-6 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Gratis (100% bebas biaya) bagi seluruh sivitas akademika internal Telkom University sesuai kebijakan fasilitas riset kampus.</p></div>
                 </div>
             </div>
 
             <div id="faq-item-3" class="tu-faq-item">
                 <h3>
-                    <button type="button" onclick="toggleFaq(3)" id="faq-btn-3" aria-expanded="false" aria-controls="faq-content-3" class="group w-full flex items-start gap-5 py-6 text-left">
+                    <button type="button" onclick="toggleFaq(3)" id="faq-btn-3" aria-expanded="false" aria-controls="faq-content-3" class="group w-full flex items-start gap-5 py-5 text-left">
                         <span class="tu-mono pt-1 text-xs text-gray-400">03</span>
                         <span class="flex-1 text-base sm:text-lg font-semibold leading-snug text-gray-950 transition-colors group-hover:text-racing-red">Di mana lokasi penyerahan fisik sampel di kampus?</span>
                         <span class="tu-plus mt-0.5 text-gray-500" aria-hidden="true"><i></i><i></i></span>
                     </button>
                 </h3>
                 <div id="faq-content-3" class="tu-acc" role="region" aria-labelledby="faq-btn-3">
-                    <div><p class="pl-9 sm:pl-10 pr-10 pb-7 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Setelah pengajuan diverifikasi secara online, sampel diserahkan langsung ke Ruang Laboran pada laboratorium fakultas terkait atau Pusat Lab Terpadu TULT sesuai rincian pada E-Ticket Pengujian Anda.</p></div>
+                    <div><p class="pl-9 sm:pl-10 pr-10 pb-6 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Sampel diserahkan langsung ke Ruang Laboran di Gedung TULT atau laboratorium fakultas terkait sesuai lokasi yang tertera pada E-Ticket Anda.</p></div>
                 </div>
             </div>
 
             <div id="faq-item-4" class="tu-faq-item">
                 <h3>
-                    <button type="button" onclick="toggleFaq(4)" id="faq-btn-4" aria-expanded="false" aria-controls="faq-content-4" class="group w-full flex items-start gap-5 py-6 text-left">
+                    <button type="button" onclick="toggleFaq(4)" id="faq-btn-4" aria-expanded="false" aria-controls="faq-content-4" class="group w-full flex items-start gap-5 py-5 text-left">
                         <span class="tu-mono pt-1 text-xs text-gray-400">04</span>
                         <span class="flex-1 text-base sm:text-lg font-semibold leading-snug text-gray-950 transition-colors group-hover:text-racing-red">Berapa lama rata-rata durasi waktu pengujian sampel?</span>
                         <span class="tu-plus mt-0.5 text-gray-500" aria-hidden="true"><i></i><i></i></span>
                     </button>
                 </h3>
                 <div id="faq-content-4" class="tu-acc" role="region" aria-labelledby="faq-btn-4">
-                    <div><p class="pl-9 sm:pl-10 pr-10 pb-7 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Rata-rata waktu pengujian adalah 2&ndash;5 hari kerja terhitung sejak spesimen fisik diterima dan divalidasi oleh laboran, tergantung pada kompleksitas instrumen dan parameter uji yang dipilih.</p></div>
+                    <div><p class="pl-9 sm:pl-10 pr-10 pb-6 max-w-2xl text-sm sm:text-[15px] leading-relaxed text-gray-600">Rata-rata 2&ndash;5 hari kerja sejak sampel fisik divalidasi laboran, dan dokumen LHU resmi dapat langsung diunduh dari dashboard.</p></div>
                 </div>
             </div>
         </div>
@@ -244,11 +254,9 @@
 
 <!-- ============================ CTA ============================ -->
 <section class="relative mt-28 overflow-hidden bg-gray-950 text-white">
-    <div class="tu-grid-dark absolute inset-0 opacity-70" aria-hidden="true"></div>
-
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-20">
         <div class="max-w-4xl tu-reveal">
-            <h2 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.04]">Siap Melakukan Pengujian Sampel Riset <span class="text-racing-red">Anda?</span></h2>
+            <h2 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.06]">Siap Melakukan Pengujian Sampel Riset <span class="text-racing-red">Anda?</span></h2>
             <p class="mt-6 max-w-xl text-sm sm:text-base leading-relaxed text-gray-300">
                 Daftarkan akun dan ajukan pengujian instrumen laboratorium Anda hari ini melalui sistem Telyuji. Bebas biaya bagi seluruh civitas akademika Telkom University.
             </p>
@@ -264,36 +272,36 @@
         </div>
     </div>
 
-    <!-- Instrument marquee -->
-    <div class="relative border-t border-white/10 py-7 overflow-hidden" aria-hidden="true">
-        <div class="tu-marquee">
+    <!-- Instrument ribbon -->
+    <div id="instrumentRibbon" class="relative border-t border-white/10 py-7 overflow-x-hidden no-scrollbar select-none" aria-hidden="true">
+        <div class="flex w-max">
             <div class="flex shrink-0 items-center">
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">UV-Vis</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">FTIR</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">UTM</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">VNA</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Oscilloscope</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Anechoic Chamber</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Water Quality</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Incubator</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Centrifuge</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">HPC Cluster</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Edge AI Rig</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Biomedical Imaging</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">UV-Vis</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">FTIR</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">UTM</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">VNA</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Oscilloscope</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Anechoic Chamber</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Water Quality</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Incubator</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Centrifuge</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">HPC Cluster</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Edge AI Rig</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Biomedical Imaging</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
             </div>
             <div class="flex shrink-0 items-center">
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">UV-Vis</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">FTIR</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">UTM</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">VNA</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Oscilloscope</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Anechoic Chamber</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Water Quality</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Incubator</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Centrifuge</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">HPC Cluster</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Edge AI Rig</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
-                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-extrabold tracking-tight whitespace-nowrap">Biomedical Imaging</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">UV-Vis</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">FTIR</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">UTM</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">VNA</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Oscilloscope</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Anechoic Chamber</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Water Quality</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Incubator</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Centrifuge</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">HPC Cluster</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Edge AI Rig</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
+                <span class="tu-outline-text px-6 sm:px-9 text-5xl sm:text-7xl font-bold tracking-tight whitespace-nowrap">Biomedical Imaging</span><i class="inline-block h-2.5 w-2.5 shrink-0 bg-racing-red"></i>
             </div>
         </div>
     </div>
@@ -475,7 +483,7 @@
         var segments = trackingStages.map(function (_, i) {
             var on = i < d.stage;
             var current = i === d.stage - 1;
-            return '<span class="h-1.5 flex-1 ' + (current ? 'animate-pulse' : '') + '" style="background:' + (on ? trackingColors[i] : '#e5e7eb') + ';box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)"></span>';
+            return '<span class="h-1.5 flex-1 ' + (current ? 'animate-pulse' : '') + '" style="background:' + (on ? trackingColors[i] : '#e5e7eb') + '"></span>';
         }).join('');
 
         return '' +
@@ -568,8 +576,7 @@
                     '<div class="lg:col-span-5 flex flex-row lg:flex-col items-end lg:items-start justify-between gap-6 p-6 sm:p-10 lg:border-r border-gray-200" style="--sc:' + s.st + '">' +
                         '<div class="tu-numeral tu-item" style="--i:0">' + s.n + '</div>' +
                         '<div class="tu-item lg:mt-10 text-right lg:text-left" style="--i:1">' +
-                            '<p class="tu-eyebrow" style="color:' + s.st + '">Tahap ' + (i + 1) + ' / ' + flowSteps.length + '</p>' +
-                            '<h3 class="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-950">' + s.title + '</h3>' +
+                            '<h3 class="text-2xl sm:text-3xl font-bold tracking-tight text-gray-950">' + s.title + '</h3>' +
                             '<p class="mt-1 text-sm text-gray-500">' + s.sub + '</p>' +
                         '</div>' +
                     '</div>' +
@@ -648,22 +655,21 @@
 
         function renderCard(item, idx, total, clone) {
             return '' +
-                '<article class="tu-card group/card w-[280px] sm:w-[330px] shrink-0 flex flex-col justify-between min-h-[22rem] bg-white border border-gray-200 p-6"' + (clone ? ' aria-hidden="true"' : '') + '>' +
+                '<article class="tu-card group/card w-[300px] sm:w-[350px] shrink-0 flex flex-col justify-between min-h-[22.5rem] bg-white border border-gray-200 rounded-md p-6 sm:p-7"' + (clone ? ' aria-hidden="true"' : '') + '>' +
                     '<span class="tu-card-bar"></span>' +
                     '<div>' +
-                        '<div class="flex items-center justify-between gap-3">' +
-                            '<span class="tu-mono text-xs text-gray-400">' + pad(idx + 1) + ' / ' + pad(total) + '</span>' +
+                        '<div class="flex items-center justify-start">' +
                             '<span class="tu-chip tu-chip--cream">' + item.location + '</span>' +
                         '</div>' +
-                        '<h3 class="mt-6 min-h-[3.1rem] line-clamp-2 text-lg font-bold leading-snug tracking-tight text-gray-950 transition-colors duration-300 group-hover/card:text-white">' + item.title + '</h3>' +
-                        '<p class="mt-2.5 line-clamp-3 text-[13px] leading-relaxed text-gray-600 transition-colors duration-300 group-hover/card:text-gray-300">' + item.desc + '</p>' +
+                        '<h3 class="mt-5 min-h-[3.2rem] line-clamp-2 text-lg font-bold leading-snug tracking-tight text-gray-950 transition-colors duration-300 group-hover/card:text-white">' + item.title + '</h3>' +
+                        '<p class="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-600 transition-colors duration-300 group-hover/card:text-gray-300">' + item.desc + '</p>' +
                         '<dl class="mt-5 space-y-2 border-t border-gray-100 pt-4 text-xs transition-colors duration-300 group-hover/card:border-white/15">' +
-                            '<div class="flex gap-3"><dt class="tu-mono w-9 shrink-0 pt-0.5 text-[10px] uppercase text-gray-400">Spek</dt><dd class="text-gray-600 transition-colors duration-300 group-hover/card:text-gray-200">' + item.specs + '</dd></div>' +
-                            '<div class="flex gap-3"><dt class="tu-mono w-9 shrink-0 pt-0.5 text-[10px] uppercase text-gray-400">SLA</dt><dd class="text-gray-600 transition-colors duration-300 group-hover/card:text-gray-200">' + item.sla + '</dd></div>' +
+                            '<div class="flex gap-3"><dt class="tu-mono w-10 shrink-0 pt-0.5 text-[11px] font-semibold uppercase text-gray-500 transition-colors duration-300 group-hover/card:text-gray-400">Spek</dt><dd class="text-gray-700 font-medium transition-colors duration-300 group-hover/card:text-gray-200">' + item.specs + '</dd></div>' +
+                            '<div class="flex gap-3"><dt class="tu-mono w-10 shrink-0 pt-0.5 text-[11px] font-semibold uppercase text-gray-500 transition-colors duration-300 group-hover/card:text-gray-400">SLA</dt><dd class="text-gray-700 font-medium transition-colors duration-300 group-hover/card:text-gray-200">' + item.sla + '</dd></div>' +
                         '</dl>' +
                     '</div>' +
-                    '<div class="mt-6 flex items-center pt-4">' +
-                        '<a href="{{ route('register') }}" class="tu-card-go text-xs font-bold text-racing-red group-hover/card:text-white"' + (clone ? ' tabindex="-1"' : '') + '>Ajukan &rarr;</a>' +
+                    '<div class="mt-6 flex items-center justify-between border-t border-gray-100 pt-4 transition-colors duration-300 group-hover/card:border-white/15">' +
+                        '<a href="{{ route('register') }}" class="tu-card-go text-xs font-bold text-racing-red group-hover/card:text-tiger-flame hover:!text-white"' + (clone ? ' tabindex="-1"' : '') + '>Ajukan &rarr;</a>' +
                     '</div>' +
                 '</article>';
         }
@@ -754,6 +760,28 @@
 
         build('all');
         requestAnimationFrame(frame);
+    })();
+
+    // ------------------------------------------------------------------
+    // Instrument ribbon continuous drift (scrollLeft via rAF)
+    // ------------------------------------------------------------------
+    (function () {
+        var ribbon = document.getElementById('instrumentRibbon');
+        if (!ribbon || prefersReducedMotion) return;
+        var paused = false;
+        var pos = 0;
+        ribbon.addEventListener('mouseenter', function () { paused = true; });
+        ribbon.addEventListener('mouseleave', function () { paused = false; });
+        function tick() {
+            if (!paused) {
+                var half = ribbon.scrollWidth / 2;
+                pos += 0.65;
+                if (half > 0 && pos >= half) pos -= half;
+                ribbon.scrollLeft = pos;
+            }
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
     })();
 
     // ------------------------------------------------------------------

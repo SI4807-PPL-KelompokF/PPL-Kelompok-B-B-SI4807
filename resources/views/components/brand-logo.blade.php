@@ -20,9 +20,9 @@
     @endif
 
     <span class="flex flex-col leading-none">
-        <span class="font-extrabold text-[17px] tracking-tight {{ $dark ? 'text-white' : 'text-gray-950' }}">Telyuji</span>
+        <span class="font-bold text-[17px] tracking-tight {{ $dark ? 'text-white' : 'text-gray-950' }}">Telyuji</span>
         @if ($showTagline)
-            <span class="tu-eyebrow !text-[9.5px] !tracking-[.2em] {{ $dark ? 'text-gray-400' : 'text-gray-500' }} mt-1">Teliti dan Teruji</span>
+            <span class="text-[11px] font-medium {{ $dark ? 'text-gray-400' : 'text-gray-500' }} mt-1">Teliti dan Teruji</span>
         @endif
     </span>
 </span>

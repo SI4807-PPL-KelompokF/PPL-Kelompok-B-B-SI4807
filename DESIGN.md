@@ -14,35 +14,35 @@ colors:
   neutral-text-muted: "#6B7280"
 typography:
   display:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "clamp(2rem, 5vw, 3rem)"
-    fontWeight: 800
-    lineHeight: 1.15
-    letterSpacing: "-0.025em"
+    fontWeight: 700
+    lineHeight: 1.1
+    letterSpacing: "-0.015em"
   headline:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "1.5rem"
     fontWeight: 700
     lineHeight: 1.25
-    letterSpacing: "-0.02em"
+    letterSpacing: "-0.015em"
   title:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "1.125rem"
     fontWeight: 600
     lineHeight: 1.35
     letterSpacing: "normal"
   body:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: "normal"
   label:
-    fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
     fontSize: "0.75rem"
     fontWeight: 600
     lineHeight: 1.25
-    letterSpacing: "0.05em"
+    letterSpacing: "normal"
 rounded:
   sm: "4px"
   md: "6px"
@@ -73,7 +73,7 @@ Telyuji adalah sistem antarmuka berbasis web untuk manajemen pengujian laborator
 Setiap elemen visual dirancang fungsional: status sampel terlihat seketika melalui warna semantik yang terkontrol, data disajikan pada permukaan datar (flat surfaces) yang bersih, dan navigasi memberikan kepastian langkah bagi pemohon maupun laboran.
 
 **Key Characteristics:**
-- Tipografi murni menggunakan font Inter pada seluruh hierarki antarmuka.
+- Tipografi murni menggunakan font General Sans (Indian Type Foundry) pada seluruh hierarki antarmuka.
 - Pemanfaatan palet warna khas Telyuji untuk identitas brand dan status data.
 - Kepatuhan utilitas Tailwind CSS v3 tanpa tag `<style>` kustom.
 - Permukaan datar dengan border tipis (1px) berlayer lembut, tanpa efek gradien atau bayangan dramatis.
@@ -107,21 +107,21 @@ Palet warna Telyuji menggabungkan warna korporat Telkom University (merah & oran
 
 ## Typography
 
-**Display Font:** Inter (dengan fallback system sans)
-**Body Font:** Inter (dengan fallback system sans)
-**Label/Mono Font:** Inter (angka tabular `tabular-nums` untuk nilai numerik data uji)
+**Display Font:** General Sans (dengan fallback system sans)
+**Body Font:** General Sans (dengan fallback system sans)
+**Label/Mono Font:** General Sans (angka tabular `tabular-nums` untuk nilai numerik data uji)
 
 **Character:** Tipografi presisi, bersih, dan berbobot seimbang khas sistem instrumen modern.
 
 ### Hierarchy
-- **Display** (800 / Extrabold, 2.25rem - 3rem, line-height 1.15): Judul besar landing page dan angka metrik utama.
+- **Display** (700 / Bold, 2.25rem - 3rem, line-height 1.1): Judul besar landing page dan angka metrik utama.
 - **Headline** (700 / Bold, 1.5rem, line-height 1.25): Judul halaman modul dan nama bagian penting.
 - **Title** (600 / Semibold, 1.125rem, line-height 1.35): Judul kartu modul, nama tabel, dan modal header.
 - **Body** (400 / Regular, 0.875rem, line-height 1.5, max measure 65–75ch): Teks isi formulir, deskripsi sampel, dan keterangan alur kerja.
-- **Label** (600 / Semibold, 0.75rem, tracking 0.05em, uppercase): Label status, badge peran, dan header kolom tabel.
+- **Label** (600 / Semibold, 0.75rem, tracking normal): Label status, badge peran, dan header kolom tabel.
 
 ### Named Rules
-**The Single Family Rule.** Seluruh antarmuka menggunakan font Inter. Monospace hanya diperbolehkan untuk kode sampel/ID laboratorium unik jika diperlukan.
+**The Single Family Rule.** Seluruh antarmuka menggunakan font General Sans (Indian Type Foundry). Monospace hanya diperbolehkan untuk kode sampel/ID laboratorium unik jika diperlukan.
 
 ## Layout
 
@@ -176,5 +176,5 @@ Telyuji mengadopsi prinsip desain flat kontemporer. Kedalaman permukaan tidak di
 - **Don't** gunakan tag `<style>` kustom di dalam file Blade template.
 - **Don't** gunakan efek gradien dekoratif (gradient background / gradient text).
 - **Don't** gunakan bayangan gelap tebal atau efek glow halo pada elemen diam.
-- **Don't** gunakan font lain selain Inter di antarmuka sistem.
+- **Don't** gunakan font lain selain General Sans di antarmuka sistem.
 - **Don't** gunakan emoji sebagai ikon antarmuka; gunakan ikon SVG yang konsisten.

@@ -51,8 +51,27 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'regex:/^[a-zA-Z0-9._%+-]+@student\.telkomuniversity\.ac\.id$/i',
+                'unique:users',
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[^a-zA-Z0-9]/',
+                'confirmed',
+            ],
+        ], [
+            'email.regex' => 'Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.',
+            'password.min' => 'Kata sandi minimal harus 8 karakter.',
+            'password.regex' => 'Kata sandi wajib mengandung kombinasi huruf kecil, huruf besar, dan simbol.',
         ]);
     }
 

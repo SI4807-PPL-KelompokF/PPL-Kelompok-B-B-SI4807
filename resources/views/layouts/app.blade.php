@@ -13,15 +13,15 @@
     <title>{{ config('app.name', 'Telyuji') }} - Sistem Pengujian Laboratorium</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ mix('js/app.js') }}" defer></script>
 
-    <!-- Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Foundry Typeface: General Sans (Indian Type Foundry) -->
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
     <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -38,14 +38,14 @@
                         <x-brand-logo />
                     </a>
 
-                    <!-- Section links -->
+                    <!-- Section links (Desktop) -->
                     <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600" aria-label="Navigasi utama">
                         <a href="{{ url('/') }}#alur" class="tu-link">Alur</a>
                         <a href="{{ url('/') }}#katalog-lab" class="tu-link">Katalog</a>
                         <a href="{{ url('/') }}#faq" class="tu-link">FAQ</a>
                     </nav>
 
-                    <!-- Auth links -->
+                    <!-- Auth links + Mobile menu button -->
                     <div class="flex items-center gap-2 sm:gap-4">
                         @guest
                             @if (Route::has('login'))
@@ -64,8 +64,8 @@
                                 <span class="hidden sm:inline text-sm font-medium text-gray-700">
                                     {{ Auth::user()->name }}
                                 </span>
-                                <span class="tu-chip tu-chip--cream uppercase tracking-wider">
-                                    {{ Auth::user()->role ?? 'pemohon' }}
+                                <span class="tu-chip tu-chip--cream">
+                                    {{ ucfirst(Auth::user()->role ?? 'Pemohon') }}
                                 </span>
                                 <a href="{{ route('logout') }}"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -77,9 +77,37 @@
                                 </form>
                             </div>
                         @endguest
+
+                        <button type="button" id="mobileMenuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="Buka menu navigasi"
+                            class="md:hidden inline-grid place-items-center w-9 h-9 rounded-[3px] border border-gray-300 bg-white text-gray-700 transition-colors hover:border-tiger-flame hover:text-tiger-flame">
+                            <svg id="mobileMenuIconOpen" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                            <svg id="mobileMenuIconClose" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <!-- Mobile navigation drawer -->
+            <nav id="mobileMenu" class="md:hidden hidden border-t border-gray-200 bg-white" aria-label="Navigasi mobile">
+                <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col divide-y divide-gray-100 text-sm font-medium text-gray-700">
+                    <a href="{{ url('/') }}#alur" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
+                        <span>Alur Pengujian</span>
+                        <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                    </a>
+                    <a href="{{ url('/') }}#katalog-lab" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
+                        <span>Katalog Laboratorium</span>
+                        <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                    </a>
+                    <a href="{{ url('/') }}#faq" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
+                        <span>Pertanyaan Umum (FAQ)</span>
+                        <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                    </a>
+                </div>
+            </nav>
         </header>
 
         <main id="main" class="flex-1 w-full">
@@ -93,19 +121,19 @@
                         <div class="mb-4">
                             <x-brand-logo size="sm" />
                         </div>
-                        <p class="tu-eyebrow text-gray-500">Sistem Informasi Pengujian Laboratorium</p>
+                        <p class="text-xs font-semibold text-gray-500">Sistem Informasi Pengujian Laboratorium</p>
                         <p class="mt-3 max-w-md text-lg font-semibold tracking-tight text-gray-950 leading-snug">
                             Dari pengajuan sampel sampai LHU resmi, satu alur yang tercatat dan bisa dilacak.
                         </p>
                     </div>
                     <nav class="md:col-span-3 text-sm space-y-2.5" aria-label="Pintasan">
-                        <p class="tu-eyebrow text-gray-400 mb-4">Jelajahi</p>
+                        <p class="text-xs font-semibold text-gray-400 mb-4">Jelajahi</p>
                         <a href="{{ url('/') }}#alur" class="tu-link block w-fit text-gray-700">Alur pengujian</a>
                         <a href="{{ url('/') }}#katalog-lab" class="tu-link block w-fit text-gray-700">Katalog instrumen</a>
                         <a href="{{ url('/') }}#faq" class="tu-link block w-fit text-gray-700">Pertanyaan umum</a>
                     </nav>
                     <nav class="md:col-span-3 text-sm space-y-2.5" aria-label="Akun">
-                        <p class="tu-eyebrow text-gray-400 mb-4">Akun</p>
+                        <p class="text-xs font-semibold text-gray-400 mb-4">Akun</p>
                         @if (Route::has('login'))
                             <a href="{{ route('login') }}" class="tu-link block w-fit text-gray-700">Masuk</a>
                         @endif
@@ -119,8 +147,8 @@
             </div>
             <div class="relative z-10 border-t border-gray-200 bg-white">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-gray-500">
-                    <p>&copy; {{ date('Y') }} Telyuji &mdash; Sistem Informasi Pengujian Laboratorium Telkom University.</p>
-                    <p class="tu-mono">Teliti dan Teruji</p>
+                    <p>&copy; {{ date('Y') }} Telyuji &middot; Sistem Informasi Pengujian Laboratorium Telkom University.</p>
+                    <p class="font-medium text-gray-600">Teliti dan Teruji</p>
                 </div>
             </div>
         </footer>
@@ -141,6 +169,27 @@
             }
             window.addEventListener('scroll', onScroll, { passive: true });
             onScroll();
+
+            // Mobile navigation menu toggle
+            var mobileBtn = document.getElementById('mobileMenuBtn');
+            var mobileMenu = document.getElementById('mobileMenu');
+            var iconOpen = document.getElementById('mobileMenuIconOpen');
+            var iconClose = document.getElementById('mobileMenuIconClose');
+            function setMobileMenu(open) {
+                if (!mobileBtn || !mobileMenu) return;
+                mobileMenu.classList.toggle('hidden', !open);
+                mobileBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (iconOpen) iconOpen.classList.toggle('hidden', open);
+                if (iconClose) iconClose.classList.toggle('hidden', !open);
+            }
+            if (mobileBtn && mobileMenu) {
+                mobileBtn.addEventListener('click', function () {
+                    setMobileMenu(mobileMenu.classList.contains('hidden'));
+                });
+                [].forEach.call(mobileMenu.querySelectorAll('[data-mobile-link]'), function (link) {
+                    link.addEventListener('click', function () { setMobileMenu(false); });
+                });
+            }
 
             // Reveal on scroll
             var reveals = [].slice.call(document.querySelectorAll('.tu-reveal'));
@@ -193,6 +242,55 @@
                     btn.textContent = show ? 'Sembunyi' : 'Lihat';
                     btn.setAttribute('aria-pressed', show ? 'true' : 'false');
                 });
+            });
+
+            // Live password security requirements indicator
+            [].forEach.call(document.querySelectorAll('[data-password-rules]'), function (list) {
+                var input = document.getElementById(list.getAttribute('data-password-rules'));
+                if (!input) return;
+                function check() {
+                    var val = input.value || '';
+                    var checks = {
+                        length: val.length >= 8,
+                        case: /[a-z]/.test(val) && /[A-Z]/.test(val),
+                        symbol: /[^a-zA-Z0-9]/.test(val)
+                    };
+                    [].forEach.call(list.querySelectorAll('[data-rule]'), function (li) {
+                        var ok = !!checks[li.getAttribute('data-rule')];
+                        li.classList.toggle('text-emerald-700', ok);
+                        li.classList.toggle('font-medium', ok);
+                        li.classList.toggle('text-gray-500', !ok);
+                    });
+                }
+                input.addEventListener('input', check);
+                check();
+            });
+
+            // Live password confirmation match indicator
+            [].forEach.call(document.querySelectorAll('[data-password-match]'), function (hint) {
+                var passInput = document.getElementById(hint.getAttribute('data-password-match'));
+                var confInput = document.getElementById(hint.getAttribute('data-password-confirm'));
+                var textEl = hint.querySelector('[data-match-text]');
+                if (!passInput || !confInput || !textEl) return;
+                function checkMatch() {
+                    var confVal = confInput.value || '';
+                    if (!confVal) {
+                        hint.classList.add('hidden');
+                        hint.classList.remove('flex');
+                        confInput.classList.remove('is-invalid');
+                        return;
+                    }
+                    var matched = confVal === (passInput.value || '');
+                    hint.classList.remove('hidden');
+                    hint.classList.add('flex');
+                    hint.classList.toggle('text-emerald-700', matched);
+                    hint.classList.toggle('text-racing-red', !matched);
+                    confInput.classList.toggle('is-invalid', !matched);
+                    textEl.textContent = matched ? 'Konfirmasi kata sandi cocok' : 'Konfirmasi kata sandi belum cocok';
+                }
+                passInput.addEventListener('input', checkMatch);
+                confInput.addEventListener('input', checkMatch);
+                checkMatch();
             });
         })();
     </script>
