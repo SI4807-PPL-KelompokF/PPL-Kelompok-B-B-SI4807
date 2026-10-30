@@ -18,4 +18,3 @@
     >
     <button type="button" data-toggle-password="{{ $id }}" aria-pressed="false">Lihat</button>
 </div>
-
