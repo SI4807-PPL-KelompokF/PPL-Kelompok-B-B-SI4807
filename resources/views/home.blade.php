@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="relative">
+<div class="relative overflow-hidden">
+    <x-bg-pattern uid="home-pat" />
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
@@ -11,7 +12,13 @@
                     Selamat datang kembali, <span class="font-semibold text-gray-950">{{ Auth::user()->name }}</span>. Kelola pengujian laboratorium Anda di sini.
                 </p>
             </div>
-            <div class="tu-reveal [--d:120ms]">
+            <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-3">
+                @if (Route::has('laboran.pengujian.index'))
+                    <a href="{{ route('laboran.pengujian.index') }}" dusk="btn-buka-panel-laboran" class="tu-btn tu-btn--ghost">
+                        <span>Panel Laboran (Unggah &amp; Revisi Hasil Uji)</span>
+                        <span class="arr" aria-hidden="true">&rarr;</span>
+                    </a>
+                @endif
                 <a href="{{ url('/#katalog-lab') }}" class="tu-btn">
                     <span aria-hidden="true">+</span>
                     <span>Pengajuan Sampel Baru</span>

@@ -43,6 +43,13 @@
                         <a href="{{ url('/') }}#alur" class="tu-link">Alur</a>
                         <a href="{{ url('/') }}#katalog-lab" class="tu-link">Katalog</a>
                         <a href="{{ url('/') }}#faq" class="tu-link">FAQ</a>
+                        @auth
+                            @if (Route::has('laboran.pengujian.index'))
+                                <a href="{{ route('laboran.pengujian.index') }}" dusk="nav-laboran-pbi13" class="tu-link font-semibold text-gray-900">
+                                    Panel Laboran
+                                </a>
+                            @endif
+                        @endauth
                     </nav>
 
                     <!-- Auth links + Mobile menu button -->
@@ -106,6 +113,14 @@
                         <span>Pertanyaan Umum (FAQ)</span>
                         <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                     </a>
+                    @auth
+                        @if (Route::has('laboran.pengujian.index'))
+                            <a href="{{ route('laboran.pengujian.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                <span>Panel Laboran (Unggah &amp; Revisi Hasil Uji)</span>
+                                <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                            </a>
+                        @endif
+                    @endauth
                 </div>
             </nav>
         </header>
@@ -292,6 +307,25 @@
                 confInput.addEventListener('input', checkMatch);
                 checkMatch();
             });
+
+            // Subtle ambient parallax on peripheral background calibration layers
+            var patLayers = [].slice.call(document.querySelectorAll('[data-pat-parallax]'));
+            if (!reduce && patLayers.length > 0) {
+                var patTicking = false;
+                window.addEventListener('mousemove', function (e) {
+                    if (patTicking) return;
+                    patTicking = true;
+                    requestAnimationFrame(function () {
+                        var nx = (e.clientX / Math.max(window.innerWidth, 1)) - 0.5;
+                        var ny = (e.clientY / Math.max(window.innerHeight, 1)) - 0.5;
+                        patLayers.forEach(function (layer) {
+                            var amp = parseFloat(layer.getAttribute('data-pat-parallax')) || 8;
+                            layer.style.transform = 'translate3d(' + (nx * amp).toFixed(1) + 'px,' + (ny * amp).toFixed(1) + 'px,0)';
+                        });
+                        patTicking = false;
+                    });
+                }, { passive: true });
+            }
         })();
     </script>
 </body>
