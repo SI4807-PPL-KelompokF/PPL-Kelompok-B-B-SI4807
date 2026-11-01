@@ -7,6 +7,7 @@
 <div class="grid min-h-[calc(100vh-4rem)] lg:grid-cols-[5fr_6fr]">
     <!-- Brand panel -->
     <aside class="relative hidden lg:flex flex-col justify-center overflow-hidden bg-gray-950 p-12 xl:p-16 text-white" aria-hidden="true">
+        <x-bg-pattern variant="dark" uid="auth-dark-pat" />
         <div class="relative -mt-16">
             <h2 class="text-5xl xl:text-7xl font-bold tracking-tight leading-[1.04]">
                 <span class="tu-line [--d:100ms]"><span>Teliti</span></span>
@@ -32,7 +33,8 @@
     </aside>
 
     <!-- Form panel -->
-    <section class="relative flex items-center justify-center px-4 py-12 sm:px-10">
+    <section class="relative overflow-hidden flex items-center justify-center px-4 py-12 sm:px-10">
+        <x-bg-pattern uid="auth-light-pat" />
         <div class="relative w-full max-w-md bg-white border border-gray-200 p-6 sm:p-10 shadow-tu-auth tu-reveal">
             <h1 class="text-3xl font-bold tracking-tight text-gray-950">{{ $heading }}</h1>
             <p class="mt-2 text-sm leading-relaxed text-gray-600">{{ $subheading }}</p>

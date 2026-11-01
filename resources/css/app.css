@@ -107,6 +107,30 @@
   88% { opacity: .95; }
   100% { transform: translateY(0); opacity: 0; }
 }
+@keyframes lu-flash {
+  0%, 35% { background: var(--mint); }
+  100% { background: transparent; }
+}
+@keyframes lu-fade {
+  0% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes tu-pat-turn {
+  0%, 35% { transform: rotate(0deg); }
+  50%, 85% { transform: rotate(90deg); }
+  100% { transform: rotate(180deg); }
+}
+@keyframes tu-pat-breathe {
+  0%, 100% { opacity: .16; transform: scale(.96); }
+  50% { opacity: .42; transform: scale(1); }
+}
+@keyframes tu-pat-trace {
+  0% { stroke-dashoffset: 240; opacity: 0; }
+  15% { opacity: .65; }
+  85% { opacity: .65; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
 
 @layer components {
   .tu-eyebrow {
@@ -872,6 +896,300 @@
   }
   .is-auth .site-footer {
     display: none;
+  }
+
+  /* Laboran Hasil Uji (UC-13) */
+  .lu-chip--flame {
+    color: #9a3412;
+    background: rgba(242, 106, 45, .12);
+    border-color: rgba(242, 106, 45, .55);
+  }
+  .tu-dot--flame,
+  .tu-dot--flame::after {
+    background: var(--flame);
+  }
+  .lu-row .tu-btn {
+    white-space: nowrap;
+  }
+  .lu-row {
+    opacity: 0;
+    animation: tu-up .5s var(--ease) forwards;
+    animation-delay: calc(var(--i, 0) * 55ms);
+  }
+  .lu-row.no-anim {
+    animation: none;
+    opacity: 1;
+  }
+  .lu-row td {
+    border-bottom: 1px solid #f3f4f6;
+    transition: background-color .25s;
+  }
+  .lu-row:hover td {
+    background: #f8fafc;
+  }
+  .lu-row td:first-child {
+    transition: box-shadow .3s var(--ease), background-color .25s;
+  }
+  .lu-row:hover td:first-child {
+    box-shadow: inset 3px 0 0 var(--red);
+  }
+  .lu-row.is-flash td {
+    animation: lu-flash 1.8s var(--ease) both;
+  }
+  .lu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(10, 10, 11, .5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .45s var(--ease), visibility 0s linear .45s;
+  }
+  .lu-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .lu-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 34rem;
+    background: #fff;
+    border-left: 1px solid #d1d5db;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform .6s var(--ease-io), visibility 0s linear .6s;
+  }
+  .lu-drawer.is-open {
+    transform: none;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  .lu-drawer-body > * {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .lu-drawer.is-open .lu-drawer-body > * {
+    animation: tu-up .55s var(--ease) forwards;
+    animation-delay: calc(var(--k, 0) * 70ms + 260ms);
+  }
+  .lu-meta {
+    background: rgba(234, 239, 177, .38);
+    border: 1px solid rgba(190, 200, 100, .55);
+    border-radius: 3px;
+  }
+  .lu-drop {
+    position: relative;
+    overflow: hidden;
+    padding: 2.25rem 1.5rem;
+    text-align: center;
+    background: #f8fafc;
+    border: 1px dashed #94a3b8;
+    border-radius: 3px;
+    transition: background-color .3s, border-color .3s;
+  }
+  .lu-drop:focus-within {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+  }
+  .lu-drop .tu-bracket {
+    border-color: #94a3b8;
+    transition: transform .45s var(--ease), border-color .45s var(--ease);
+    width: 14px;
+    height: 14px;
+  }
+  .lu-drop.is-over {
+    background: rgba(234, 239, 177, .5);
+    border-color: var(--red);
+    border-style: solid;
+  }
+  .lu-drop.is-over .tu-bracket {
+    border-color: var(--red);
+  }
+  .lu-drop.is-over .tu-bracket--tl {
+    transform: translate(8px, 8px);
+  }
+  .lu-drop.is-over .tu-bracket--tr {
+    transform: translate(-8px, 8px);
+  }
+  .lu-drop.is-over .tu-bracket--bl {
+    transform: translate(8px, -8px);
+  }
+  .lu-drop.is-over .tu-bracket--br {
+    transform: translate(-8px, -8px);
+  }
+  .lu-drop.is-valid {
+    padding: 1.1rem;
+    text-align: left;
+    background: var(--mint);
+    border: 1px solid rgba(5, 150, 105, .45);
+  }
+  .lu-drop.is-error {
+    padding: 1.1rem;
+    text-align: left;
+    background: rgba(237, 30, 40, .04);
+    border: 1px solid var(--red);
+    animation: tu-shake .45s var(--ease);
+  }
+  .lu-drop.is-valid .tu-bracket,
+  .lu-drop.is-error .tu-bracket {
+    display: none;
+  }
+  .lu-drop-icon {
+    transition: transform .5s var(--ease);
+  }
+  .lu-drop.is-over .lu-drop-icon {
+    transform: translateY(-6px);
+  }
+  .lu-sweep {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 150, 105, .12);
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .lu-drop.is-scan .lu-sweep {
+    animation: tu-fill .95s var(--ease-io) both, lu-fade .95s linear both;
+  }
+  .lu-badge {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 52px;
+    color: #fff;
+    background: #6b7280;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    border-radius: 2px;
+  }
+  .lu-badge--pdf {
+    background: var(--red);
+  }
+  .lu-badge--xls {
+    background: #065f46;
+  }
+  .lu-check {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    padding: .7rem .85rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 3px;
+    transition: background-color .3s, border-color .3s;
+  }
+  .lu-check .ico {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    color: transparent;
+    border: 1px solid #9ca3af;
+    border-radius: 2px;
+    transition: background-color .3s var(--ease), border-color .3s var(--ease), color .3s var(--ease);
+  }
+  .lu-check .ico path {
+    display: none;
+  }
+  .lu-check[data-s="ok"] {
+    background: var(--mint);
+    border-color: rgba(5, 150, 105, .35);
+  }
+  .lu-check[data-s="ok"] .ico {
+    color: #fff;
+    background: #059669;
+    border-color: #059669;
+  }
+  .lu-check[data-s="ok"] .ico .p-ok {
+    display: block;
+  }
+  .lu-check[data-s="bad"] {
+    background: rgba(237, 30, 40, .05);
+    border-color: var(--red);
+  }
+  .lu-check[data-s="bad"] .ico {
+    color: #fff;
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .lu-check[data-s="bad"] .ico .p-bad {
+    display: block;
+  }
+  .lu-check[data-s="bad"] .lu-check-val {
+    color: var(--red);
+  }
+  .lu-submit:disabled,
+  .lu-submit:disabled:hover {
+    color: #9ca3af;
+    background: #e5e7eb;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .lu-submit:disabled::before {
+    display: none;
+  }
+  .lu-submit .lu-bar {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .lu-submit.is-busy {
+    pointer-events: none;
+  }
+  .lu-submit.is-busy .lu-bar {
+    animation: tu-fill 1.2s var(--ease-io) forwards;
+  }
+  .lu-done-mark path {
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: tu-draw .7s var(--ease) .25s forwards;
+  }
+  .lu-done-mark circle {
+    stroke-dasharray: 160;
+    stroke-dashoffset: 160;
+    animation: tu-draw .9s var(--ease) forwards;
+  }
+  .lu-audit-item {
+    animation: tu-up .5s var(--ease) both;
+  }
+
+  /* Ambient 2D Geometric Background Pattern Motion */
+  .tu-pat-node {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: tu-pat-turn 16s var(--ease-io) infinite;
+    animation-delay: var(--d, 0s);
+  }
+  .tu-pat-tile {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: tu-pat-breathe 11s var(--ease) infinite;
+    animation-delay: var(--d, 0s);
+  }
+  .tu-pat-trace {
+    stroke-dasharray: 28 212;
+    stroke-dashoffset: 240;
+    animation: tu-pat-trace 9s var(--ease-io) infinite;
+    animation-delay: var(--d, 0s);
+  }
+  .tu-pat-parallax {
+    transition: transform .6s var(--ease);
+    will-change: transform;
   }
 }
 

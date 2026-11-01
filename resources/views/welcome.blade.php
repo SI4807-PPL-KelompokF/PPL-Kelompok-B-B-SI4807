@@ -3,6 +3,7 @@
 @section('content')
 <!-- ============================ HERO ============================ -->
 <section class="relative overflow-hidden">
+    <x-bg-pattern uid="hero-pat" />
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 sm:pt-16 lg:pt-20 lg:pb-28">
         <div class="grid lg:grid-cols-12 gap-14 lg:gap-10 items-center">
             <!-- Copy -->
@@ -40,7 +41,6 @@
                 <div id="scanFrame" class="tu-frame aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5] select-none">
                     @php
                         $heroSlides = [
-                            ['src' => asset('images/tult.jpg'), 'alt' => 'Gedung Laboratorium Terpadu TULT Telkom University'],
                             ['src' => asset('images/buildings/tult-tower.jpg'), 'alt' => 'Fasad Menara TULT Telkom University'],
                             ['src' => asset('images/buildings/btp.jpg'), 'alt' => 'Kawasan Bandung Techno Park Telkom University'],
                             ['src' => asset('images/buildings/gku.jpg'), 'alt' => 'Gedung Kuliah Umum Telkom University'],
@@ -254,6 +254,7 @@
 
 <!-- ============================ CTA ============================ -->
 <section class="relative mt-28 overflow-hidden bg-gray-950 text-white">
+    <x-bg-pattern variant="dark" uid="cta-pat" />
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-20">
         <div class="max-w-4xl tu-reveal">
             <h2 class="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.06]">Siap Melakukan Pengujian Sampel Riset <span class="text-racing-red">Anda?</span></h2>
