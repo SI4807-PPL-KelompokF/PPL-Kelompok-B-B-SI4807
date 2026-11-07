@@ -23,7 +23,17 @@
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
-    <script>document.documentElement.classList.add('js');</script>
+    <script>
+        (function () {
+            var doc = document.documentElement;
+            doc.classList.add('js');
+            try {
+                if (localStorage.getItem('tu-theme') === 'dark') {
+                    doc.classList.add('dark');
+                }
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body class="h-full flex flex-col font-sans text-gray-900 antialiased selection:bg-racing-red selection:text-white @yield('body_class')">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-white focus:px-3 focus:py-2 focus:text-sm focus:font-semibold focus:text-racing-red">Lewati ke konten utama</a>
@@ -44,7 +54,8 @@
                         <a href="{{ url('/') }}#katalog-lab" class="tu-link">Katalog</a>
                         <a href="{{ url('/') }}#faq" class="tu-link">FAQ</a>
                         @auth
-                            @if (Route::has('laboran.pengujian.index'))
+                            <a href="{{ route('home') }}" class="tu-link">Dashboard</a>
+                            @if (Route::has('laboran.pengujian.index') && (Auth::user()->role ?? 'laboran') === 'laboran')
                                 <a href="{{ route('laboran.pengujian.index') }}" dusk="nav-laboran-pbi13" class="tu-link font-semibold text-gray-900">
                                     Panel Laboran
                                 </a>
@@ -52,8 +63,18 @@
                         @endauth
                     </nav>
 
-                    <!-- Auth links + Mobile menu button -->
-                    <div class="flex items-center gap-2 sm:gap-4">
+                    <!-- Auth links + Theme toggle + Mobile menu button -->
+                    <div class="flex items-center gap-2 sm:gap-3">
+                        <button type="button" id="themeToggleBtn" dusk="theme-toggle" aria-label="Ganti mode gelap atau terang" title="Mode Gelap / Terang" class="tu-theme-btn">
+                            <svg class="tu-theme-icon tu-theme-icon--sun w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="4" stroke-width="2" />
+                                <path stroke-linecap="round" stroke-width="2" d="M12 3v2m0 14v2M5.64 5.64l1.41 1.41m9.9 9.9l1.41 1.41M3 12h2m14 0h2M5.64 18.36l1.41-1.41m9.9-9.9l1.41-1.41" />
+                            </svg>
+                            <svg class="tu-theme-icon tu-theme-icon--moon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                            </svg>
+                        </button>
+
                         @guest
                             @if (Route::has('login'))
                                 <a href="{{ route('login') }}" class="tu-link text-sm font-medium text-gray-700">
@@ -114,7 +135,11 @@
                         <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                     </a>
                     @auth
-                        @if (Route::has('laboran.pengujian.index'))
+                        <a href="{{ route('home') }}" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
+                            <span>Dashboard Pengujian</span>
+                            <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                        </a>
+                        @if (Route::has('laboran.pengujian.index') && (Auth::user()->role ?? 'laboran') === 'laboran')
                             <a href="{{ route('laboran.pengujian.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
                                 <span>Panel Laboran (Unggah &amp; Revisi Hasil Uji)</span>
                                 <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
@@ -203,6 +228,24 @@
                 });
                 [].forEach.call(mobileMenu.querySelectorAll('[data-mobile-link]'), function (link) {
                     link.addEventListener('click', function () { setMobileMenu(false); });
+                });
+            }
+
+            // Dark mode toggle (persisted in localStorage)
+            var themeBtn = document.getElementById('themeToggleBtn');
+            function syncThemeBtn() {
+                if (!themeBtn) return;
+                var isDark = document.documentElement.classList.contains('dark');
+                themeBtn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+            }
+            if (themeBtn) {
+                syncThemeBtn();
+                themeBtn.addEventListener('click', function () {
+                    var isDark = document.documentElement.classList.toggle('dark');
+                    try {
+                        localStorage.setItem('tu-theme', isDark ? 'dark' : 'light');
+                    } catch (e) {}
+                    syncThemeBtn();
                 });
             }
 

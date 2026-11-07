@@ -2,27 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\Concerns\ValidatesTelkomCampusAuth;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Register Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles the registration of new users as well as their
-    | validation and creation. By default this controller uses a trait to
-    | provide this functionality without requiring any additional code.
-    |
-    */
-
-    use RegistersUsers;
+    use RegistersUsers, ValidatesTelkomCampusAuth;
 
     /**
      * Where to redirect users after registration.
@@ -51,28 +41,9 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                'regex:/^[a-zA-Z0-9._%+-]+@student\.telkomuniversity\.ac\.id$/i',
-                'unique:users',
-            ],
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[^a-zA-Z0-9]/',
-                'confirmed',
-            ],
-        ], [
-            'email.regex' => 'Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.',
-            'password.min' => 'Kata sandi minimal harus 8 karakter.',
-            'password.regex' => 'Kata sandi wajib mengandung kombinasi huruf kecil, huruf besar, dan simbol.',
-        ]);
+            'email' => $this->telkomEmailRules(['max:255', 'unique:users']),
+            'password' => $this->strongPasswordRules(),
+        ], $this->telkomAuthValidationMessages('email', true));
     }
 
     /**
@@ -87,6 +58,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'role' => User::ROLE_PEMOHON,
         ]);
     }
 }

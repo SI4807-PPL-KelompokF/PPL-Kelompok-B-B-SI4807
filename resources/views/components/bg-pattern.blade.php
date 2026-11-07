@@ -44,7 +44,7 @@
         </svg>
     </div>
 @else
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-[30rem] overflow-hidden select-none" aria-hidden="true">
+    <div class="tu-bg-pat-light pointer-events-none absolute inset-x-0 top-0 h-[30rem] overflow-hidden select-none" aria-hidden="true">
         <!-- Base Architectural 64px Grid -->
         <svg class="h-full w-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
             <defs>

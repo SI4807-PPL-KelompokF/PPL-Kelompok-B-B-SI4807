@@ -2,24 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Auth\Concerns\ValidatesTelkomCampusAuth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class ResetPasswordController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
-    |
-    */
-
-    use ResetsPasswords;
+    use ResetsPasswords, ValidatesTelkomCampusAuth;
 
     /**
      * Where to redirect users after resetting their password.
@@ -37,20 +27,8 @@ class ResetPasswordController extends Controller
     {
         return [
             'token' => 'required',
-            'email' => [
-                'required',
-                'email',
-                'regex:/^[a-zA-Z0-9._%+-]+@student\.telkomuniversity\.ac\.id$/i',
-            ],
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'regex:/[a-z]/',
-                'regex:/[A-Z]/',
-                'regex:/[^a-zA-Z0-9]/',
-                'confirmed',
-            ],
+            'email' => $this->telkomEmailRules(),
+            'password' => $this->strongPasswordRules(),
         ];
     }
 
@@ -61,10 +39,6 @@ class ResetPasswordController extends Controller
      */
     protected function validationErrorMessages()
     {
-        return [
-            'email.regex' => 'Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.',
-            'password.min' => 'Kata sandi minimal harus 8 karakter.',
-            'password.regex' => 'Kata sandi wajib mengandung kombinasi huruf kecil, huruf besar, dan simbol.',
-        ];
+        return $this->telkomAuthValidationMessages('email', true);
     }
 }
