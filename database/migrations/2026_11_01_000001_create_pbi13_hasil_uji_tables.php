@@ -26,6 +26,8 @@ class CreatePbi13HasilUjiTables extends Migration
             $table->enum('status', ['Menunggu Verifikasi', 'Sedang Diuji', 'Selesai'])->default('Sedang Diuji');
             $table->date('tanggal_uji');
             $table->timestamps();
+
+            $table->index('status');
         });
 
         Schema::create('dokumen_hasil', function (Blueprint $table) {
@@ -55,7 +57,10 @@ class CreatePbi13HasilUjiTables extends Migration
             $table->unsignedInteger('ukuran_bytes');
             $table->unsignedInteger('versi');
             $table->text('keterangan');
+            $table->string('ip_address', 45)->nullable();
             $table->timestamps();
+
+            $table->index('aksi');
         });
     }
 
