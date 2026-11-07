@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Http\Controllers\LaboranHasilUjiController;
 use App\Models\User;
+use App\Services\DokumenHasilUjiService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Raka Pratama, S.T.',
                 'password' => Hash::make('Telyuji#2026'),
-                'role' => 'laboran',
+                'role' => User::ROLE_LABORAN,
             ]
         );
 
@@ -30,10 +30,10 @@ class DatabaseSeeder extends Seeder
             [
                 'name' => 'Nadia Putri Rahmawati',
                 'password' => Hash::make('Telyuji#2026'),
-                'role' => 'pemohon',
+                'role' => User::ROLE_PEMOHON,
             ]
         );
 
-        app(LaboranHasilUjiController::class)->ensureInitialDataSeeded();
+        app(DokumenHasilUjiService::class)->ensureInitialDataSeeded();
     }
 }

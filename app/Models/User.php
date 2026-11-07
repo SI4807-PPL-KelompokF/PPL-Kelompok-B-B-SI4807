@@ -12,6 +12,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public const ROLE_LABORAN = 'laboran';
+    public const ROLE_PEMOHON = 'pemohon';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -42,4 +45,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isLaboran(): bool
+    {
+        return ($this->role ?? self::ROLE_PEMOHON) === self::ROLE_LABORAN;
+    }
+
+    public function isPemohon(): bool
+    {
+        return !$this->isLaboran();
+    }
+
+    public function tiketPengujian()
+    {
+        return $this->hasMany(TiketPengujian::class, 'user_id');
+    }
 }
