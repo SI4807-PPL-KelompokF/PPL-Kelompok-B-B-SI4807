@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\FormatsByteSize;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DokumenHasil extends Model
 {
-    use HasFactory;
+    use FormatsByteSize, HasFactory;
+
+    public const ENKRIPSI_DEFAULT = 'AES-256-CBC';
 
     protected $table = 'dokumen_hasil';
 
@@ -25,6 +28,11 @@ class DokumenHasil extends Model
         'sha256_checksum',
     ];
 
+    protected $casts = [
+        'ukuran_bytes' => 'integer',
+        'versi' => 'integer',
+    ];
+
     public function tiketPengujian()
     {
         return $this->belongsTo(TiketPengujian::class, 'tiket_pengujian_id');
@@ -33,14 +41,5 @@ class DokumenHasil extends Model
     public function uploader()
     {
         return $this->belongsTo(User::class, 'uploaded_by');
-    }
-
-    public function getUkuranFormattedAttribute(): string
-    {
-        $bytes = (int) $this->ukuran_bytes;
-        if ($bytes >= 1048576) {
-            return number_format($bytes / 1048576, 2, ',', '.') . ' MB';
-        }
-        return max(1, (int) round($bytes / 1024)) . ' KB';
     }
 }

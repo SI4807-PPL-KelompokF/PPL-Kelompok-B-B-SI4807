@@ -13,7 +13,7 @@
                 </p>
             </div>
             <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-3">
-                @if (Route::has('laboran.pengujian.index'))
+                @if (Route::has('laboran.pengujian.index') && Auth::user()->isLaboran())
                     <a href="{{ route('laboran.pengujian.index') }}" dusk="btn-buka-panel-laboran" class="tu-btn tu-btn--ghost">
                         <span>Panel Laboran (Unggah &amp; Revisi Hasil Uji)</span>
                         <span class="arr" aria-hidden="true">&rarr;</span>
@@ -38,25 +38,25 @@
                 <div class="tu-metric tu-reveal px-5 sm:px-7 py-8 border-r border-b lg:border-b-0 border-gray-200 [--c:#111827]">
                     <span class="tu-tick"></span>
                     <p class="tu-eyebrow mt-5 text-gray-500">Total Pengajuan</p>
-                    <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="0">0</span></p>
+                    <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="{{ $metrics['total'] ?? 0 }}">{{ $metrics['total'] ?? 0 }}</span></p>
                     <p class="mt-2 text-xs text-gray-500">Seluruh riwayat sampel</p>
                 </div>
                 <div class="tu-metric tu-reveal px-5 sm:px-7 py-8 border-b lg:border-b-0 lg:border-r border-gray-200 [--c:#F7D488] [--d:80ms]">
                     <span class="tu-tick"></span>
                     <p class="tu-eyebrow mt-5 text-amber-800">Menunggu Verifikasi</p>
-                    <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="0">0</span></p>
+                    <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="{{ $metrics['menunggu'] ?? 0 }}">{{ $metrics['menunggu'] ?? 0 }}</span></p>
                     <p class="mt-2 text-xs text-amber-700">Dalam antrean laboran</p>
                 </div>
                 <div class="tu-metric tu-reveal px-5 sm:px-7 py-8 border-r border-gray-200 [--c:#F26A2D] [--d:160ms]">
                     <span class="tu-tick"></span>
                     <p class="tu-eyebrow mt-5 text-tiger-flame">Sedang Diuji</p>
-                    <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="0">0</span></p>
+                    <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="{{ $metrics['sedang_diuji'] ?? 0 }}">{{ $metrics['sedang_diuji'] ?? 0 }}</span></p>
                     <p class="mt-2 text-xs text-gray-500">Proses instrumen lab</p>
                 </div>
                 <div class="tu-metric tu-reveal px-5 sm:px-7 py-8 [--c:#34d399] [--d:240ms]">
                     <span class="tu-tick"></span>
                     <p class="tu-eyebrow mt-5 text-emerald-800">Hasil Selesai</p>
-                    <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="0">0</span></p>
+                    <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="{{ $metrics['selesai'] ?? 0 }}">{{ $metrics['selesai'] ?? 0 }}</span></p>
                     <p class="mt-2 text-xs text-emerald-700">LHU siap diunduh</p>
                 </div>
             </div>
@@ -68,53 +68,101 @@
                 <h2 id="sample-heading" class="text-base font-bold tracking-tight text-gray-950">Daftar Pengujian Sampel Terkini</h2>
             </div>
 
-            <div class="relative">
-                <!-- Ghost table -->
-                <div class="hidden sm:grid grid-cols-12 gap-4 px-7 py-3 border-b border-gray-100 tu-eyebrow !text-[10px] text-gray-400" aria-hidden="true">
-                    <span class="col-span-3">ID Sampel</span>
-                    <span class="col-span-4">Instrumen</span>
-                    <span class="col-span-3">Status</span>
-                    <span class="col-span-2 text-right">Estimasi</span>
+            @if (isset($tiketSaya) && $tiketSaya->isNotEmpty())
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm" dusk="pemohon-ticket-table">
+                        <thead>
+                            <tr class="border-b border-gray-100 tu-eyebrow !text-[10px] text-gray-400">
+                                <th scope="col" class="px-5 sm:px-7 py-3 font-medium">ID Sampel</th>
+                                <th scope="col" class="px-3 py-3 font-medium">Instrumen &amp; Sampel</th>
+                                <th scope="col" class="px-3 py-3 font-medium">Status</th>
+                                <th scope="col" class="px-5 sm:px-7 py-3 text-right font-medium">Dokumen / Jadwal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach ($tiketSaya as $tiket)
+                                <tr class="lu-row no-anim">
+                                    <td class="px-5 sm:px-7 py-4 align-top whitespace-nowrap">
+                                        <span class="tu-mono text-sm font-semibold text-gray-950">{{ $tiket->nomor_tiket }}</span>
+                                    </td>
+                                    <td class="px-3 py-4 align-top">
+                                        <p class="font-semibold text-gray-950">{{ $tiket->instrumen }}</p>
+                                        <p class="mt-0.5 text-xs text-gray-500">{{ $tiket->nama_sampel }} &middot; {{ $tiket->laboratorium }}</p>
+                                    </td>
+                                    <td class="px-3 py-4 align-top whitespace-nowrap">
+                                        @if ($tiket->status === 'Selesai')
+                                            <span class="tu-chip tu-chip--mint">Selesai</span>
+                                        @elseif ($tiket->status === 'Sedang Diuji')
+                                            <span class="tu-chip lu-chip--flame">Sedang Diuji</span>
+                                        @else
+                                            <span class="tu-chip tu-chip--jasmine">Menunggu Verifikasi</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-5 sm:px-7 py-3 align-top text-right whitespace-nowrap">
+                                        @if ($tiket->isCompleted() && $tiket->dokumenHasil)
+                                            <a href="{{ route('pemohon.pengujian.download', $tiket->nomor_tiket) }}" dusk="download-lhu-{{ $tiket->nomor_tiket }}" class="tu-btn tu-btn--sm tu-btn--ghost">
+                                                <span>Unduh LHU</span>
+                                            </a>
+                                        @else
+                                            <span class="tu-mono text-xs text-gray-500">
+                                                {{ $tiket->tanggal_uji ? $tiket->tanggal_uji->format('d M Y') : '-' }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                <div class="px-5 sm:px-7" aria-hidden="true">
-                    <div class="grid grid-cols-12 items-center gap-4 border-b border-gray-100 py-5 opacity-90">
-                        <span class="tu-skel col-span-5 sm:col-span-3 h-3"></span>
-                        <span class="tu-skel hidden sm:block col-span-4 h-3"></span>
-                        <span class="tu-skel col-span-4 sm:col-span-3 h-5"></span>
-                        <span class="tu-skel col-span-3 sm:col-span-2 h-3"></span>
+            @else
+                <div class="relative">
+                    <!-- Ghost table -->
+                    <div class="hidden sm:grid grid-cols-12 gap-4 px-7 py-3 border-b border-gray-100 tu-eyebrow !text-[10px] text-gray-400" aria-hidden="true">
+                        <span class="col-span-3">ID Sampel</span>
+                        <span class="col-span-4">Instrumen</span>
+                        <span class="col-span-3">Status</span>
+                        <span class="col-span-2 text-right">Estimasi</span>
                     </div>
-                    <div class="grid grid-cols-12 items-center gap-4 border-b border-gray-100 py-5 opacity-60">
-                        <span class="tu-skel col-span-5 sm:col-span-3 h-3"></span>
-                        <span class="tu-skel hidden sm:block col-span-4 h-3"></span>
-                        <span class="tu-skel col-span-4 sm:col-span-3 h-5"></span>
-                        <span class="tu-skel col-span-3 sm:col-span-2 h-3"></span>
+                    <div class="px-5 sm:px-7" aria-hidden="true">
+                        <div class="grid grid-cols-12 items-center gap-4 border-b border-gray-100 py-5 opacity-90">
+                            <span class="tu-skel col-span-5 sm:col-span-3 h-3"></span>
+                            <span class="tu-skel hidden sm:block col-span-4 h-3"></span>
+                            <span class="tu-skel col-span-4 sm:col-span-3 h-5"></span>
+                            <span class="tu-skel col-span-3 sm:col-span-2 h-3"></span>
+                        </div>
+                        <div class="grid grid-cols-12 items-center gap-4 border-b border-gray-100 py-5 opacity-60">
+                            <span class="tu-skel col-span-5 sm:col-span-3 h-3"></span>
+                            <span class="tu-skel hidden sm:block col-span-4 h-3"></span>
+                            <span class="tu-skel col-span-4 sm:col-span-3 h-5"></span>
+                            <span class="tu-skel col-span-3 sm:col-span-2 h-3"></span>
+                        </div>
+                        <div class="grid grid-cols-12 items-center gap-4 py-5 opacity-30">
+                            <span class="tu-skel col-span-5 sm:col-span-3 h-3"></span>
+                            <span class="tu-skel hidden sm:block col-span-4 h-3"></span>
+                            <span class="tu-skel col-span-4 sm:col-span-3 h-5"></span>
+                            <span class="tu-skel col-span-3 sm:col-span-2 h-3"></span>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-12 items-center gap-4 py-5 opacity-30">
-                        <span class="tu-skel col-span-5 sm:col-span-3 h-3"></span>
-                        <span class="tu-skel hidden sm:block col-span-4 h-3"></span>
-                        <span class="tu-skel col-span-4 sm:col-span-3 h-5"></span>
-                        <span class="tu-skel col-span-3 sm:col-span-2 h-3"></span>
-                    </div>
-                </div>
 
-                <!-- Empty state -->
-                <div class="tu-empty-fade absolute inset-0 flex flex-col items-center justify-end px-6 pb-10 text-center">
-                    <div class="relative grid h-14 w-14 place-items-center overflow-hidden border border-dashed border-gray-400 bg-white text-gray-500">
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
-                        </svg>
-                        <span class="tu-scan-line absolute inset-x-0 h-px bg-racing-red"></span>
+                    <!-- Empty state -->
+                    <div class="tu-empty-fade absolute inset-0 flex flex-col items-center justify-end px-6 pb-10 text-center">
+                        <div class="relative grid h-14 w-14 place-items-center overflow-hidden border border-dashed border-gray-400 bg-white text-gray-500">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+                            </svg>
+                            <span class="tu-scan-line absolute inset-x-0 h-px bg-racing-red"></span>
+                        </div>
+                        <p class="mt-5 text-sm font-semibold text-gray-950">Belum ada pengujian sampel aktif</p>
+                        <p class="mt-1.5 max-w-sm text-xs leading-relaxed text-gray-500">Klik tombol pengajuan sampel baru untuk memulai proses pengujian laboratorium Anda.</p>
+                        <a href="{{ url('/#alur') }}" class="tu-btn tu-btn--ghost tu-btn--sm mt-6">
+                            <span>Pelajari Prosedur Pengujian &amp; Persyaratan Dokumen</span>
+                            <span class="arr" aria-hidden="true">&rarr;</span>
+                        </a>
                     </div>
-                    <p class="mt-5 text-sm font-semibold text-gray-950">Belum ada pengujian sampel aktif</p>
-                    <p class="mt-1.5 max-w-sm text-xs leading-relaxed text-gray-500">Klik tombol pengajuan sampel baru untuk memulai proses pengujian laboratorium Anda.</p>
-                    <a href="{{ url('/#alur') }}" class="tu-btn tu-btn--ghost tu-btn--sm mt-6">
-                        <span>Pelajari Prosedur Pengujian &amp; Persyaratan Dokumen</span>
-                        <span class="arr" aria-hidden="true">&rarr;</span>
-                    </a>
-                </div>
 
-                <div class="h-72 sm:h-64" aria-hidden="true"></div>
-            </div>
+                    <div class="h-72 sm:h-64" aria-hidden="true"></div>
+                </div>
+            @endif
         </section>
     </div>
 </div>

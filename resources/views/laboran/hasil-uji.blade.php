@@ -1,147 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@php
-    $fallbackTickets = [
-        [
-            'id' => 'TLY-20261015-089',
-            'name' => 'Rizky Aditya Pratama',
-            'prodi' => 'S1 Teknik Elektro · FTE',
-            'machine' => 'Spektrofotometer UV-Vis',
-            'status' => 'testing',
-            'upload_url' => route('laboran.pengujian.upload', 'TLY-20261015-089'),
-            'file' => null,
-        ],
-        [
-            'id' => 'TLY-20261015-092',
-            'name' => 'Dr. Maya Lestari, M.T.',
-            'prodi' => 'Dosen · Fak. Rekayasa Industri',
-            'machine' => 'Universal Testing Machine',
-            'status' => 'testing',
-            'upload_url' => route('laboran.pengujian.upload', 'TLY-20261015-092'),
-            'file' => null,
-        ],
-        [
-            'id' => 'TLY-20261014-071',
-            'name' => 'Nadia Putri Anjani',
-            'prodi' => 'S2 Informatika · FIF',
-            'machine' => 'Analyzer Spektrum RF',
-            'status' => 'testing',
-            'upload_url' => route('laboran.pengujian.upload', 'TLY-20261014-071'),
-            'file' => null,
-        ],
-        [
-            'id' => 'TLY-20261016-101',
-            'name' => 'Salsabila Rahma',
-            'prodi' => 'S1 Teknik Telekomunikasi · FTE',
-            'machine' => 'Lab Antena & Propagasi',
-            'status' => 'testing',
-            'upload_url' => route('laboran.pengujian.upload', 'TLY-20261016-101'),
-            'file' => null,
-        ],
-        [
-            'id' => 'TLY-20261013-054',
-            'name' => 'Fajar Maulana',
-            'prodi' => 'S1 Teknik Fisika · FTE',
-            'machine' => 'XRD Diffractometer',
-            'status' => 'done',
-            'upload_url' => route('laboran.pengujian.upload', 'TLY-20261013-054'),
-            'file' => [
-                'name' => 'LHU-TLY-20261013-054.pdf',
-                'size' => (int) round(1.8 * 1048576),
-                'at' => '14 Okt 2026, 09:12',
-                'by' => 'Budi Santoso',
-                'v' => 1,
-            ],
-        ],
-        [
-            'id' => 'TLY-20261012-038',
-            'name' => 'Prof. Hendra Gunawan',
-            'prodi' => 'Dosen · Fak. Ilmu Terapan',
-            'machine' => 'Spektrometer FTIR',
-            'status' => 'done',
-            'upload_url' => route('laboran.pengujian.upload', 'TLY-20261012-038'),
-            'file' => [
-                'name' => 'LHU-TLY-20261012-038.xlsx',
-                'size' => (int) round(0.9 * 1048576),
-                'at' => '13 Okt 2026, 15:30',
-                'by' => 'Budi Santoso',
-                'v' => 2,
-            ],
-        ],
-    ];
-
-    $ticketsPayload = ($tiketList && $tiketList->count() > 0)
-        ? $tiketList->map(function ($t) {
-            $doc = $t->dokumenHasil;
-            $latestAudit = $t->auditTrails ? $t->auditTrails->sortByDesc('id')->first() : null;
-            return [
-                'id' => $t->nomor_tiket,
-                'name' => $t->nama_pemohon,
-                'prodi' => $t->fakultas,
-                'machine' => $t->instrumen,
-                'status' => $t->status === 'Selesai' ? 'done' : 'testing',
-                'upload_url' => route('laboran.pengujian.upload', $t->nomor_tiket),
-                'file' => $doc ? [
-                    'name' => $doc->nama_berkas_asli,
-                    'size' => (int) $doc->ukuran_bytes,
-                    'at' => $doc->updated_at ? $doc->updated_at->format('d M Y, H:i') : '14 Okt 2026, 09:12',
-                    'by' => $latestAudit ? $latestAudit->nama_aktor : 'Budi Santoso',
-                    'v' => (int) $doc->versi,
-                ] : null,
-            ];
-        })->values()->all()
-        : $fallbackTickets;
-
-    $fallbackAudit = [
-        [
-            'id' => 'AUD-2026-0412',
-            'type' => 'upload',
-            'at' => '14 Okt 2026, 09:12',
-            'ticket' => 'TLY-20261013-054',
-            'detail' => 'LHU-TLY-20261013-054.pdf',
-            'actor' => 'Budi Santoso',
-        ],
-        [
-            'id' => 'AUD-2026-0405',
-            'type' => 'revisi',
-            'at' => '13 Okt 2026, 15:30',
-            'ticket' => 'TLY-20261012-038',
-            'detail' => 'LHU-TLY-20261012-038.xlsx (v2)',
-            'actor' => 'Budi Santoso',
-        ],
-        [
-            'id' => 'AUD-2026-0391',
-            'type' => 'upload',
-            'at' => '12 Okt 2026, 11:05',
-            'ticket' => 'TLY-20261012-038',
-            'detail' => 'LHU-TLY-20261012-038.xlsx (v1)',
-            'actor' => 'Sari Wulandari',
-        ],
-    ];
-
-    $auditPayload = ($auditTrails && $auditTrails->count() > 0)
-        ? $auditTrails->map(function ($a) {
-            $isRev = $a->aksi === 'REVISI_HASIL_UJI';
-            return [
-                'id' => 'AUD-2026-' . str_pad((string) (400 + $a->id), 4, '0', STR_PAD_LEFT),
-                'type' => $isRev ? 'revisi' : 'upload',
-                'at' => $a->created_at ? $a->created_at->format('d M Y, H:i') : 'Baru saja',
-                'ticket' => $a->tiketPengujian ? $a->tiketPengujian->nomor_tiket : '-',
-                'detail' => $a->berkas_baru . ($a->versi > 1 || $isRev ? ' (v' . $a->versi . ')' : ''),
-                'actor' => $a->nama_aktor,
-            ];
-        })->values()->all()
-        : $fallbackAudit;
-
-    $initialSelected = $selectedTiket ? $selectedTiket->nomor_tiket : null;
-    $initialDoc = $selectedTiket ? $selectedTiket->dokumenHasil : null;
-    $initialIsRev = $initialDoc !== null;
-    $testingCount = collect($ticketsPayload)->where('status', 'testing')->count();
-    $doneCount = collect($ticketsPayload)->where('status', 'done')->count();
-    $revCount = collect($auditPayload)->where('type', 'revisi')->count();
-@endphp
-
 <div class="relative overflow-hidden" id="lu-root" data-actor="{{ Auth::user()->name }}" data-initial-ticket="{{ $initialSelected ?? '' }}">
     <x-bg-pattern uid="laboran-pat" />
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
@@ -231,7 +90,6 @@
                     </thead>
                     <tbody id="rows">
                         @foreach ($ticketsPayload as $t)
-                            @php $done = $t['status'] === 'done'; @endphp
                             <tr class="lu-row no-anim" dusk="ticket-row-{{ $t['id'] }}">
                                 <td class="px-5 sm:px-7 py-4 align-top whitespace-nowrap">
                                     <span class="tu-mono text-sm font-semibold text-gray-950">{{ $t['id'] }}</span>
@@ -243,7 +101,7 @@
                                 </td>
                                 <td class="hidden md:table-cell px-3 py-4 align-top text-gray-700">{{ $t['machine'] }}</td>
                                 <td class="px-3 py-4 align-top whitespace-nowrap">
-                                    @if ($done)
+                                    @if ($t['status'] === 'done')
                                         <span class="tu-chip tu-chip--mint">Selesai</span>
                                         @if (!empty($t['file']) && $t['file']['v'] > 1)
                                             <span class="tu-mono ml-1 text-xs text-gray-500">v{{ $t['file']['v'] }}</span>
@@ -253,8 +111,8 @@
                                     @endif
                                 </td>
                                 <td class="px-5 sm:px-7 py-3 align-top text-right">
-                                    <button type="button" dusk="action-upload-{{ $t['id'] }}" class="tu-btn tu-btn--sm{{ $done ? ' tu-btn--ghost' : '' }}" data-open="{{ $t['id'] }}">
-                                        @if ($done)
+                                    <button type="button" dusk="action-upload-{{ $t['id'] }}" class="tu-btn tu-btn--sm{{ $t['status'] === 'done' ? ' tu-btn--ghost' : '' }}" data-open="{{ $t['id'] }}">
+                                        @if ($t['status'] === 'done')
                                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M5.6 15A8 8 0 0018.9 14M18.4 9A8 8 0 005.1 10"/></svg>
                                             <span>Revisi</span>
                                         @else
@@ -368,6 +226,14 @@
                             {{ $initialDoc ? 'v' . $initialDoc->versi . ' · ' . $initialDoc->ukuran_formatted : '' }}
                         </p>
                     </div>
+                    <a
+                        id="cur-download"
+                        dusk="download-existing-file"
+                        href="{{ $selectedTiket ? route('laboran.pengujian.download', $selectedTiket->nomor_tiket) : route('laboran.pengujian.download', 'TLY-20261013-054') }}"
+                        class="tu-btn tu-btn--ghost tu-btn--sm"
+                    >
+                        <span>Unduh</span>
+                    </a>
                     <span class="tu-chip tu-chip--mint">Aktif</span>
                 </div>
             </div>
@@ -542,7 +408,7 @@
     }
     function validate(f) {
         var e = ext(f.name);
-        return { e: e, fmtOk: OK_EXT.indexOf(e) > -1, sizeOk: f.size <= MAX };
+        return { e: e, fmtOk: OK_EXT.indexOf(e) > -1, sizeOk: f.size > 0 && f.size <= MAX };
     }
     function renderFile() {
         var drop = $('#drop'), f = state.file;
@@ -558,7 +424,8 @@
         }
         var v = validate(f), errs = [];
         if (!v.fmtOk) errs.push('Format ".' + (v.e || '?') + '" tidak didukung. Gunakan PDF atau Excel (.xlsx / .xls).');
-        if (!v.sizeOk) errs.push('Ukuran ' + fmtSize(f.size) + ' melebihi batas 5 MB.');
+        if (f.size <= 0) errs.push('Berkas hasil uji kosong atau rusak.');
+        else if (!v.sizeOk) errs.push('Ukuran ' + fmtSize(f.size) + ' melebihi batas 5 MB.');
         $('#drop-idle').classList.add('hidden');
         $('#drop-file').classList.remove('hidden');
         $('#f-badge').className = badgeClass(v.fmtOk ? v.e : '');
@@ -610,6 +477,8 @@
             $('#cur-badge').textContent = e.toUpperCase();
             $('#cur-name').textContent = t.file.name;
             $('#cur-meta').textContent = 'v' + t.file.v + ' · ' + fmtSize(t.file.size) + ' · ' + t.file.at + ' oleh ' + t.file.by;
+            var dl = $('#cur-download');
+            if (dl && t.download_url) dl.setAttribute('href', t.download_url);
         }
         $('#pane-form').classList.remove('hidden');
         $('#pane-done').classList.add('hidden');
@@ -639,19 +508,34 @@
         state.id = null;
     }
 
-    function completeUploadUI(t, rev, fileName, fileSize, auditId) {
+    function failUploadUI(rev, message) {
+        state.busy = false;
+        $('#submit').classList.remove('is-busy');
+        $('#submit-label').textContent = rev ? 'Ganti file & catat revisi' : 'Unggah & tandai selesai';
+        var drop = $('#drop');
+        drop.classList.remove('is-valid', 'is-scan');
+        drop.classList.add('is-error');
+        var box = $('#f-errors');
+        box.innerHTML = '<p>' + esc(message || 'Gagal mengunggah berkas hasil uji.') + '</p>';
+        box.classList.remove('hidden');
+        $('#live').textContent = message || 'Gagal mengunggah berkas hasil uji.';
+    }
+
+    function completeUploadUI(t, rev, fileName, fileSize, auditId, serverVersion, serverActor, downloadUrl) {
         var at = nowLabel();
-        var version = rev && t.file ? t.file.v + 1 : 1;
+        var version = serverVersion || (rev && t.file ? t.file.v + 1 : 1);
+        var byActor = serverActor || actor;
         var entry = {
             id: auditId || ('AUD-2026-' + String(412 + audit.length + 1).padStart(4, '0')),
             type: rev ? 'revisi' : 'upload',
             at: at,
             ticket: t.id,
             detail: fileName + (version > 1 || rev ? ' (v' + version + ')' : ''),
-            actor: actor
+            actor: byActor
         };
         t.status = 'done';
-        t.file = { name: fileName, size: fileSize, at: at, by: actor, v: version };
+        t.file = { name: fileName, size: fileSize, at: at, by: byActor, v: version };
+        if (downloadUrl) t.download_url = downloadUrl;
         audit.unshift(entry);
 
         $('#done-title').textContent = rev ? 'Revisi tersimpan' : 'Hasil uji tersimpan';
@@ -698,17 +582,33 @@
                 },
                 body: fd
             }).then(function (res) {
-                return res.json().catch(function () { return {}; });
-            }).then(function (data) {
-                completeUploadUI(t, rev, state.file.name, state.file.size, data && data.audit_id);
+                return res.json().catch(function () { return {}; }).then(function (data) {
+                    return { ok: res.ok, status: res.status, data: data };
+                });
+            }).then(function (resp) {
+                if (!resp.ok) {
+                    failUploadUI(rev, (resp.data && resp.data.message) ? resp.data.message : 'Validasi berkas ditolak oleh server.');
+                    return;
+                }
+                var d = resp.data || {};
+                completeUploadUI(
+                    t,
+                    rev,
+                    d.file_name || state.file.name,
+                    d.file_size || state.file.size,
+                    d.audit_id,
+                    d.version,
+                    d.actor,
+                    d.download_url
+                );
             }).catch(function () {
-                completeUploadUI(t, rev, state.file.name, state.file.size, null);
+                failUploadUI(rev, 'Gagal terhubung ke peladen Telyuji. Silakan coba lagi.');
             });
             return;
         }
 
         setTimeout(function () {
-            completeUploadUI(t, rev, state.file.name, state.file.size, null);
+            completeUploadUI(t, rev, state.file.name, state.file.size, null, null, null, null);
         }, 1200);
     }
 
