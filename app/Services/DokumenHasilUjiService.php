@@ -400,7 +400,7 @@ class DokumenHasilUjiService
         }
 
         $pemohonDefault = Schema::hasTable('users')
-            ? User::where('email', 'pemohon@student.telkomuniversity.ac.id')->first()
+            ? User::whereIn('email', ['pemohon@telkomuniversity.ac.id', 'pemohon@student.telkomuniversity.ac.id'])->first()
             : null;
 
         TiketPengujian::create([
