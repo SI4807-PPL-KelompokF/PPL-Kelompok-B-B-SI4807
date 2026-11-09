@@ -13,12 +13,6 @@
                 </p>
             </div>
             <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-3">
-                @if (Route::has('laboran.pengujian.index') && Auth::user()->isLaboran())
-                    <a href="{{ route('laboran.pengujian.index') }}" dusk="btn-buka-panel-laboran" class="tu-btn tu-btn--ghost">
-                        <span>Panel Laboran (Unggah &amp; Revisi Hasil Uji)</span>
-                        <span class="arr" aria-hidden="true">&rarr;</span>
-                    </a>
-                @endif
                 <a href="{{ url('/#katalog-lab') }}" class="tu-btn">
                     <span aria-hidden="true">+</span>
                     <span>Pengajuan Sampel Baru</span>

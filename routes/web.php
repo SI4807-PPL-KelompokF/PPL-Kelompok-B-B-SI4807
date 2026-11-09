@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboranHasilUjiController;
 use App\Http\Controllers\LandingController;
@@ -39,4 +40,12 @@ Route::prefix('laboran')->name('laboran.')->middleware(['auth', 'laboran'])->gro
     Route::get('/pengujian/{nomorTiket}/unduh-hasil', [LaboranHasilUjiController::class, 'download'])
         ->where('nomorTiket', '[A-Za-z0-9\-_]+')
         ->name('pengujian.download');
+});
+
+// Manajemen Pengguna oleh Administrator
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/pengguna', [AdminUserController::class, 'index'])->name('users.index');
+    Route::post('/pengguna', [AdminUserController::class, 'store'])->name('users.store');
+    Route::put('/pengguna/{user}', [AdminUserController::class, 'update'])->name('users.update');
+    Route::delete('/pengguna/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
 });
