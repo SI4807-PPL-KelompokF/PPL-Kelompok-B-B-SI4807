@@ -46,7 +46,7 @@ class RedesignUiViewsTest extends TestCase
         $loginResponse = $this->get('/login');
         $loginResponse->assertStatus(200)
             ->assertSee('Masuk ke Telyuji')
-            ->assertSee('placeholder="nama@student.telkomuniversity.ac.id"', false)
+            ->assertSee('placeholder="nama@telkomuniversity.ac.id"', false)
             ->assertDontSee('id="email-hint"', false)
             ->assertDontSee('Minimal 8 karakter')
             ->assertSee('data-toggle-password="password"', false)
@@ -56,7 +56,7 @@ class RedesignUiViewsTest extends TestCase
         $this->get('/register')
             ->assertStatus(200)
             ->assertSee('Pendaftaran Akun')
-            ->assertSee('placeholder="nama@student.telkomuniversity.ac.id"', false)
+            ->assertSee('placeholder="nama@telkomuniversity.ac.id"', false)
             ->assertDontSee('id="email-hint"', false)
             ->assertSee('Minimal 8 karakter')
             ->assertSee('Kombinasi huruf kecil &amp; huruf besar', false)
@@ -69,12 +69,12 @@ class RedesignUiViewsTest extends TestCase
         $this->get('/password/reset')
             ->assertStatus(200)
             ->assertSee('Atur Ulang Kata Sandi')
-            ->assertSee('placeholder="nama@student.telkomuniversity.ac.id"', false)
+            ->assertSee('placeholder="nama@telkomuniversity.ac.id"', false)
             ->assertDontSee('id="email-hint"', false)
             ->assertDontSee('<style>', false);
     }
 
-    public function test_auth_validation_enforces_student_email_and_strong_password()
+    public function test_auth_validation_enforces_telkom_university_email_and_strong_password()
     {
         $this->from('/login')->post('/login', [
             'email' => 'user@gmail.com',
@@ -90,6 +90,25 @@ class RedesignUiViewsTest extends TestCase
         ])->assertRedirect('/register')
           ->assertSessionHasErrors(['email', 'password']);
 
+        // Baik @telkomuniversity.ac.id (dosen/laboran) maupun @student.telkomuniversity.ac.id (mahasiswa) lolos validasi regex email
+        $this->from('/password/reset/sample-token')->post('/password/reset', [
+            'token' => 'sample-token',
+            'email' => 'dosen@telkomuniversity.ac.id',
+            'password' => 'tanpasimbol123A',
+            'password_confirmation' => 'tanpasimbol123A',
+        ])->assertRedirect('/password/reset/sample-token')
+          ->assertSessionDoesntHaveErrors(['email'])
+          ->assertSessionHasErrors(['password']);
+
+        $this->from('/password/reset/sample-token')->post('/password/reset', [
+            'token' => 'sample-token',
+            'email' => 'mahasiswa@student.telkomuniversity.ac.id',
+            'password' => 'tanpasimbol123A',
+            'password_confirmation' => 'tanpasimbol123A',
+        ])->assertRedirect('/password/reset/sample-token')
+          ->assertSessionDoesntHaveErrors(['email'])
+          ->assertSessionHasErrors(['password']);
+
         $this->from('/password/reset')->post('/password/email', [
             'email' => 'mahasiswa@gmail.com',
         ])->assertRedirect('/password/reset')
@@ -99,15 +118,15 @@ class RedesignUiViewsTest extends TestCase
     public function test_dashboard_home_renders_redesigned_metrics_and_empty_state()
     {
         $user = User::factory()->make([
-            'name' => 'Mahasiswa Uji',
-            'email' => 'mahasiswa@student.telkomuniversity.ac.id',
+            'name' => 'Dosen Uji',
+            'email' => 'dosen@telkomuniversity.ac.id',
         ]);
 
         $this->actingAs($user)
             ->get('/home')
             ->assertStatus(200)
             ->assertSee('Dashboard Layanan Pengujian')
-            ->assertSee('Mahasiswa Uji')
+            ->assertSee('Dosen Uji')
             ->assertSee('Belum ada pengujian sampel aktif')
             ->assertSee('#katalog-lab', false)
             ->assertSee('#alur', false)
@@ -117,16 +136,16 @@ class RedesignUiViewsTest extends TestCase
 
     public function test_remaining_auth_views_render_cleanly()
     {
-        $this->get('/password/reset/sample-token?email=test%40student.telkomuniversity.ac.id')
+        $this->get('/password/reset/sample-token?email=test%40telkomuniversity.ac.id')
             ->assertStatus(200)
             ->assertSee('Perbarui Kata Sandi')
-            ->assertSee('placeholder="nama@student.telkomuniversity.ac.id"', false)
+            ->assertSee('placeholder="nama@telkomuniversity.ac.id"', false)
             ->assertDontSee('id="email-hint"', false)
             ->assertDontSee('<style>', false);
 
         $user = User::factory()->make([
-            'name' => 'Mahasiswa Uji',
-            'email' => 'mahasiswa@student.telkomuniversity.ac.id',
+            'name' => 'Dosen Uji',
+            'email' => 'dosen@telkomuniversity.ac.id',
         ]);
 
         $this->actingAs($user)
