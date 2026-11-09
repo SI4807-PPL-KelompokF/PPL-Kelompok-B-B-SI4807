@@ -74,66 +74,63 @@ Telyuji hadir sebagai solusi sistem informasi manajemen layanan laboratorium ter
 | PBI-10 | Validasi & Status Antrean | Laboran memvalidasi penerimaan fisik sampel dan memperbarui status antrean pengujian. |
 | PBI-11 | Penugasan Operator Lab | Penugasan laboran/operator spesifik sebagai penanggung jawab pengujian instrumen. |
 | PBI-12 | Penolakan Pengajuan Sampel | Fitur penolakan sampel yang cacat atau melanggar SOP disertai pencatatan alasan resmi. |
-| PBI-13 | Kelola Dokumen Hasil Uji | Fasilitas bagi laboran untuk mengunggah berkas Laporan Hasil Uji (LHU) resmi. |
-| PBI-14 | Portal Unduh Dokumen Terproteksi | Gerbang unduh berkas hasil pengujian yang terenkripsi dan hanya dapat diakses akun pemilik tiket. |
-| PBI-15 | Log Aktivitas & Audit Trail | Pencatatan riwayat setiap perubahan status dan aksi operator untuk transparansi pengawasan. |
+| PBI-13 | Kelola Dokumen Hasil Uji | Fasilitas bagi laboran untuk mengunggah dan merevisi berkas Laporan Hasil Uji (LHU) resmi. |
+| PBI-14 | Portal Unduh Dokumen Terproteksi | Gerbang unduh berkas hasil pengujian yang terenkripsi (AES-256-CBC) dan hanya dapat diakses akun pemilik tiket atau laboran. |
+| PBI-15 | Log Aktivitas & Audit Trail | Pencatatan riwayat setiap unggahan dan revisi berkas hasil uji untuk transparansi pengawasan. |
 | PBI-16 | Dasbor Analitik & Grafik | Visualisasi grafik statistik penggunaan alat laboratorium pada dasbor manajerial. |
 | PBI-17 | Ruang Diskusi Tiket | Fitur pesan interaktif dua arah antara pemohon dan laboran pada setiap nomor tiket pengujian. |
 | PBI-18 | Ekspor Laporan Operasional | Fitur filter tanggal untuk mengekspor rekapitulasi data pengujian ke format Excel dan PDF. |
 
 ---
 
-## Karakteristik Pengguna (Aktor Sistem)
+## Karakteristik Pengguna, Hak Akses & Rute Utama
 
-1. Admin / Kepala Laboratorium:
-   - Mengelola master data institusi (Fakultas dan Program Studi).
-   - Mengatur katalog alat, kuota pengujian harian, dan SLA.
-   - Memantau log audit trail dan mengekspor laporan kinerja operasional laboratorium.
-2. Laboran / Teknisi Laboratorium:
-   - Mengelola dokumen SOP penyiapan sampel.
-   - Memvalidasi sampel fisik, memperbarui status antrean, dan menugaskan operator pengujian.
-   - Berdiskusi via catatan tiket dan mengunggah dokumen hasil uji resmi.
-   - Memberikan sanksi suspensi akun bagi pemohon yang melanggar aturan operasional.
-3. Pemohon (Mahasiswa dan Dosen):
-   - Melengkapi profil dan mengunggah berkas verifikasi identitas (KTM).
-   - Mengajukan permohonan pengujian instrumen lab secara mandiri.
-   - Mengunduh E-Ticket PDF untuk penyerahan sampel.
-   - Melacak linimasa pengujian secara real-time dan mengunduh berkas LHU resmi.
+1. **Admin (`admin` — `/admin/pengguna`):**
+   - Mengelola akun pengguna civitas akademika (tambah, ubah peran, perbarui data, dan hapus akun Pemohon, Laboran, maupun Admin).
+   - Mengelola master data institusi serta pengawasan sistem.
+2. **Laboran (`laboran` — `/laboran/pengujian`):**
+   - Mengelola antrean pengujian sampel laboratorium.
+   - Mengunggah dan merevisi dokumen Laporan Hasil Uji (LHU) berformat `.pdf`, `.xlsx`, atau `.xls` (maks. 5 MB) dengan validasi *magic bytes*, penyimpanan terenkripsi `AES-256-CBC` di *private storage*, checksum `SHA-256`, serta pencatatan otomatis ke *Audit Trail*.
+3. **Pemohon (`pemohon` — `/home`):**
+   - Mahasiswa (`@student.telkomuniversity.ac.id`) maupun Dosen/Staf (`@telkomuniversity.ac.id`) yang mengajukan sampel pengujian.
+   - Memantau progres pengujian sampel secara *real-time* dan mengunduh dokumen LHU resmi miliknya sendiri melalui `/pengajuan/{nomorTiket}/unduh-lhu`.
 
 ---
 
 ## Arsitektur & Kebutuhan Teknis
 
-- Bahasa Pemrograman: PHP 8.2 (Backend), JavaScript, HTML5, CSS3 (Frontend)
-- Framework Backend: Laravel 8 (Pola Arsitektur Model-View-Controller)
-- Framework Frontend & Styling: Tailwind CSS 3 (Utility-First) dan Laravel Mix 6 (Webpack 5)
-- Basis Data: MySQL / JawsDB (Produksi), SQLite (Testing Otomatis)
-- Pustaka Pendukung: DomPDF (Generator E-Ticket PDF), DataTables (Manajemen Antrean), Chart.js (Grafik Analitik)
-- Pengujian Otomatis: PHPUnit (Unit & Feature Testing), Laravel Dusk (Browser Automation Testing)
-- Otomasi CI/CD: GitHub Actions (Workflow Laravel CI)
-- Web Server & Platform Hosting: Apache2 pada Heroku Cloud Platform
+- Bahasa Pemrograman: PHP 8.2 (Backend), JavaScript ES6, HTML5, CSS3 (Frontend)
+- Framework Backend: Laravel 8 (Arsitektur Clean Code: Controller, Service Layer, FormRequest, Middleware, & Domain Model)
+- Framework Frontend & Styling: Tailwind CSS 3 (Utility-First, mendukung **Light & Dark Mode** tanpa tag `<style>` inline) dan Laravel Mix 6 (Webpack 5)
+- Basis Data: MySQL / JawsDB (Pengembangan & Produksi), SQLite (Isolasi Pengujian Otomatis di CI)
+- Keamanan Berkas & Autentikasi:
+  - Validasi email resmi civitas akademika Telkom University (`@telkomuniversity.ac.id` beserta subdomainnya) dan kombinasi kata sandi kuat.
+  - Enkripsi dokumen hasil uji `AES-256-CBC` pada *private storage* disertai verifikasi integritas `SHA-256`.
+  - Pemisahan hak akses ketat berbasis peran melalui middleware `admin` dan `laboran`.
+- **Pengujian Otomatis:** PHPUnit (Feature Testing: 19 skenario pengujian) & Laravel Dusk (Browser Automation Testing)
+- Otomasi CI/CD: GitHub Actions (`.github/workflows/laravel.yml` — job `laravel-tests`) & Heroku Automatic Deploys
 
 ---
 
 ## Standar Desain Sistem (Protokol Telyuji)
 
-Antarmuka sistem Telyuji menerapkan panduan palet warna dan tipografi resmi:
-- Font: Inter untuk seluruh elemen antarmuka, judul, form, dan data tabel.
-- Racing Red (#ED1E28): Identitas brand utama, sidebar, tombol aksi primer (Simpan/Kirim), penanda status aktif.
-- Tiger Flame (#F26A2D): Efek hover tombol aksi, aksen pendukung sekunder, kartu ringkasan data.
-- Jasmine (#F7D488): Kartu peringatan, badge informasi, penanda status pending/menunggu.
-- Cream (#EAEFB1): Latar belakang panel ringkasan, baris selang-seling tabel (zebra striping).
-- Frosted Mint (#E9F7CA): Indikator status sukses/selesai, metrik positif, konfirmasi penerimaan.
+Antarmuka sistem Telyuji menerapkan gaya **2D flat, minimalis, dan geometris** (*solid color blocking*, anti AI-slop) dengan panduan tipografi dan palet warna resmi:
+- **Tipografi:** **General Sans** (Indian Type Foundry) dengan *system-font fallback* (`-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif`) dan angka tabular (`tabular-nums`).
+- **Racing Red (`#ED1E28`):** Identitas brand utama, tombol aksi primer (Simpan/Kirim/Unggah), dan penanda status aktif.
+- **Tiger Flame (`#F26A2D`):** Efek hover tombol aksi, metrik pengujian berlangsung (`Sedang Diuji`), dan aksen sekunder.
+- **Jasmine (`#F7D488`):** Kartu peringatan mode revisi, badge peran Admin, dan status menunggu verifikasi.
+- **Cream (`#EAEFB1`):** Latar belakang panel ringkasan, badge peran Pemohon, dan aksen permukaan ringan.
+- **Frosted Mint (`#E9F7CA`):** Indikator status pengujian `Selesai`, validasi berkas berhasil, dan konfirmasi positif.
 
 ---
 
 ## Panduan Menjalankan Sistem di Lingkungan Lokal
 
 ### 1. Prasyarat Sistem
-- PHP >= 8.2 (ekstensi: pdo, pdo_mysql, sqlite3, pdo_sqlite, mbstring, curl, libxml, zip, pcntl)
+- PHP >= 8.2 (ekstensi: pdo, pdo_mysql, sqlite3, pdo_sqlite, mbstring, curl, libxml, zip, fileinfo)
 - Composer >= 2.0
 - Node.js >= 18.x dan NPM >= 9.x
-- Google Chrome Browser
+- Google Chrome Browser (untuk pengujian Laravel Dusk)
 
 ### 2. Kloning Repositori
 ```bash
@@ -141,11 +138,11 @@ git clone https://github.com/SI4807-PPL-KelompokF/PPL-Kelompok-B-B-SI4807.git
 cd PPL-Kelompok-B-B-SI4807
 ```
 
-### 3. Instalasi Dependensi
+### 3. Instalasi Dependensi & Kompilasi Aset
 ```bash
 composer install
 npm install --legacy-peer-deps
-npm run dev
+npm run prod
 ```
 
 ### 4. Konfigurasi Environment File
@@ -164,10 +161,18 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 5. Migrasi Skema Database
+### 5. Migrasi Skema Database & Seeding Akun Default
 ```bash
-php artisan migrate
+php artisan migrate --seed
 ```
+
+Perintah `--seed` akan menyiapkan sampel antrean pengujian awal beserta 3 akun default sesuai peran:
+
+| Peran | Email Login | Kata Sandi | Halaman Tujuan |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@telkomuniversity.ac.id` | `Telyuji#2026` | `/admin/pengguna` |
+| **Laboran** | `laboran@telkomuniversity.ac.id` | `Telyuji#2026` | `/laboran/pengujian` |
+| **Pemohon** | `pemohon@telkomuniversity.ac.id` | `Telyuji#2026` | `/home` |
 
 ### 6. Menjalankan Server Pengembangan
 ```bash
@@ -179,7 +184,7 @@ Aplikasi dapat diakses melalui peramban pada alamat: `http://127.0.0.1:8000`
 
 ## Eksekusi Pengujian Otomatis (Automated Testing)
 
-### Unit & Feature Tests (PHPUnit)
+### Feature Tests (PHPUnit)
 ```bash
 php artisan test
 ```
@@ -197,7 +202,6 @@ php artisan dusk
 Aplikasi dikonfigurasi menggunakan file `Procfile`:
 ```Procfile
 web: vendor/bin/heroku-php-apache2 public/
-release: php artisan migrate --force
 ```
 
 Konfigurasi Environment Heroku (Config Vars):
