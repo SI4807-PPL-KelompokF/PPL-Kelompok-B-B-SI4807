@@ -16,7 +16,7 @@ class Pbi13LaboranHasilUjiDuskTest extends DuskTestCase
     public function testLaboranCanInspectQueueAndOpenRevisionDrawer()
     {
         $laboran = User::updateOrCreate(
-            ['email' => 'laboran@student.telkomuniversity.ac.id'],
+            ['email' => 'laboran@telkomuniversity.ac.id'],
             [
                 'name' => 'Raka Pratama, S.T.',
                 'password' => Hash::make('Telyuji#2026'),

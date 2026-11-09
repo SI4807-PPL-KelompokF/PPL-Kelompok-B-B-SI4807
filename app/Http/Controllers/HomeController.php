@@ -16,11 +16,15 @@ class HomeController extends Controller
     }
 
     /**
-     * Tampilkan dashboard pengujian sesuai peran pengguna.
+     * Tampilkan halaman kerja sesuai peran pengguna (Admin / Laboran / Pemohon).
      */
     public function index(Request $request)
     {
         $user = Auth::user();
+
+        if ($user && $user->isAdmin()) {
+            return app(AdminUserController::class)->index();
+        }
 
         if ($user && $user->isLaboran()) {
             return app(LaboranHasilUjiController::class)->index($request);

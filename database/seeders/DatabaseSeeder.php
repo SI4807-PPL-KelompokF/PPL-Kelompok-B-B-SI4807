@@ -16,8 +16,34 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        // Migrasi otomatis akun lama berdomain @student.telkomuniversity.ac.id ke @telkomuniversity.ac.id
+        if (
+            User::where('email', 'laboran@student.telkomuniversity.ac.id')->exists()
+            && !User::where('email', 'laboran@telkomuniversity.ac.id')->exists()
+        ) {
+            User::where('email', 'laboran@student.telkomuniversity.ac.id')
+                ->update(['email' => 'laboran@telkomuniversity.ac.id']);
+        }
+
+        if (
+            User::where('email', 'pemohon@student.telkomuniversity.ac.id')->exists()
+            && !User::where('email', 'pemohon@telkomuniversity.ac.id')->exists()
+        ) {
+            User::where('email', 'pemohon@student.telkomuniversity.ac.id')
+                ->update(['email' => 'pemohon@telkomuniversity.ac.id']);
+        }
+
         User::updateOrCreate(
-            ['email' => 'laboran@student.telkomuniversity.ac.id'],
+            ['email' => 'admin@telkomuniversity.ac.id'],
+            [
+                'name' => 'Administrator Telyuji',
+                'password' => Hash::make('Telyuji#2026'),
+                'role' => User::ROLE_ADMIN,
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'laboran@telkomuniversity.ac.id'],
             [
                 'name' => 'Raka Pratama, S.T.',
                 'password' => Hash::make('Telyuji#2026'),
@@ -26,7 +52,7 @@ class DatabaseSeeder extends Seeder
         );
 
         User::updateOrCreate(
-            ['email' => 'pemohon@student.telkomuniversity.ac.id'],
+            ['email' => 'pemohon@telkomuniversity.ac.id'],
             [
                 'name' => 'Nadia Putri Rahmawati',
                 'password' => Hash::make('Telyuji#2026'),
