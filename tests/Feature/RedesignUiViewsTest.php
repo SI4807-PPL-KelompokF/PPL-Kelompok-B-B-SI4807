@@ -158,4 +158,25 @@ class RedesignUiViewsTest extends TestCase
         $this->assertStringContainsString('Verifikasi Email Anda', $verifyHtml);
         $this->assertStringNotContainsString('<style>', $verifyHtml);
     }
+
+    public function test_custom_error_pages_render_lab_diagnostic_ui_without_inline_style_tags()
+    {
+        $this->get('/halaman-tidak-terdaftar-404')
+            ->assertStatus(404)
+            ->assertSee('dusk="error-page-404"', false)
+            ->assertSee('tu-numeral', false)
+            ->assertSee('404')
+            ->assertSee('Halaman Tidak Ditemukan')
+            ->assertDontSee('Lab System', false)
+            ->assertDontSee('<style>', false);
+
+        foreach (['403', '419', '429', '500', '503'] as $code) {
+            $html = view('errors.' . $code)->render();
+            $this->assertStringContainsString('dusk="error-page-' . $code . '"', $html);
+            $this->assertStringContainsString('tu-numeral', $html);
+            $this->assertStringContainsString($code, $html);
+            $this->assertStringNotContainsString('Lab System', $html);
+            $this->assertStringNotContainsString('<style>', $html);
+        }
+    }
 }
