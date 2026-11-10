@@ -107,7 +107,7 @@ Telyuji hadir sebagai solusi sistem informasi manajemen layanan laboratorium ter
   - Validasi email resmi civitas akademika Telkom University (`@telkomuniversity.ac.id` beserta subdomainnya) dan kombinasi kata sandi kuat.
   - Enkripsi dokumen hasil uji `AES-256-CBC` pada *private storage* disertai verifikasi integritas `SHA-256`.
   - Pemisahan hak akses ketat berbasis peran melalui middleware `admin` dan `laboran`.
-- **Pengujian Otomatis:** PHPUnit (Feature Testing: 19 skenario pengujian) & Laravel Dusk (Browser Automation Testing)
+- **Pengujian Otomatis:** PHPUnit (Feature Testing: 20 skenario pengujian) & Laravel Dusk (Browser Automation Testing)
 - Otomasi CI/CD: GitHub Actions (`.github/workflows/laravel.yml` — job `laravel-tests`) & Heroku Automatic Deploys
 
 ---
@@ -121,6 +121,7 @@ Antarmuka sistem Telyuji menerapkan gaya **2D flat, minimalis, dan geometris** (
 - **Jasmine (`#F7D488`):** Kartu peringatan mode revisi, badge peran Admin, dan status menunggu verifikasi.
 - **Cream (`#EAEFB1`):** Latar belakang panel ringkasan, badge peran Pemohon, dan aksen permukaan ringan.
 - **Frosted Mint (`#E9F7CA`):** Indikator status pengujian `Selesai`, validasi berkas berhasil, dan konfirmasi positif.
+- **Halaman Diagnostik Error Kustom:** Tampilan minimalis bertema instrumen laboratorium untuk status HTTP `404`, `403`, `419`, `429`, `500`, dan `503`.
 
 ---
 
