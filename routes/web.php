@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboranHasilUjiController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PengajuanUjiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,25 @@ Route::get('/lacak-sampel/{nomorTiket}', [LandingController::class, 'track'])
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+// Modul Pengajuan (PBI-07, PBI-08, PBI-09 - Giri Pulung Nugroho)
+Route::middleware('auth')->group(function () {
+    Route::get('/pengajuan/buat', [PengajuanUjiController::class, 'create'])->name('pengajuan.create');
+    Route::post('/pengajuan', [PengajuanUjiController::class, 'store'])->name('pengajuan.store');
+    Route::get('/pengajuan/{nomorTiket}', [PengajuanUjiController::class, 'show'])
+        ->where('nomorTiket', '[A-Za-z0-9\-_]+')
+        ->name('pengajuan.show');
+    Route::get('/pengajuan/{nomorTiket}/resi/unduh', [PengajuanUjiController::class, 'downloadResi'])
+        ->where('nomorTiket', '[A-Za-z0-9\-_]+')
+        ->name('pengajuan.resi.download');
+    Route::get('/pengajuan/{nomorTiket}/resi/preview', [PengajuanUjiController::class, 'previewResi'])
+        ->where('nomorTiket', '[A-Za-z0-9\-_]+')
+        ->name('pengajuan.resi.preview');
+    Route::get('/pengajuan/{nomorTiket}/resi/cetak', [PengajuanUjiController::class, 'printResi'])
+        ->where('nomorTiket', '[A-Za-z0-9\-_]+')
+        ->name('pengajuan.resi.print');
+});
+
 Route::get('/pengajuan/{nomorTiket}/unduh-lhu', [HomeController::class, 'downloadHasil'])
     ->where('nomorTiket', '[A-Za-z0-9\-_]+')
     ->middleware('auth')

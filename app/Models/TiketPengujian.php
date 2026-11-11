@@ -10,13 +10,17 @@ class TiketPengujian extends Model
     use HasFactory;
 
     public const STATUS_MENUNGGU = 'Menunggu Verifikasi';
+    public const STATUS_DALAM_ANTREAN = 'Dalam Antrean';
     public const STATUS_SEDANG_DIUJI = 'Sedang Diuji';
     public const STATUS_SELESAI = 'Selesai';
+    public const STATUS_DITOLAK = 'Ditolak';
 
     private const STAGE_MAP = [
         self::STATUS_MENUNGGU => 2,
+        self::STATUS_DALAM_ANTREAN => 3,
         self::STATUS_SEDANG_DIUJI => 4,
         self::STATUS_SELESAI => 5,
+        self::STATUS_DITOLAK => 0,
     ];
 
     protected $table = 'tiket_pengujian';
@@ -27,15 +31,34 @@ class TiketPengujian extends Model
         'nama_pemohon',
         'nim_nip',
         'fakultas',
+        'prodi',
+        'mesin_lab_id',
         'nama_sampel',
+        'deskripsi_sampel',
+        'tujuan_pengujian',
+        'jenis_sampel',
+        'tautan_file_cloud',
         'instrumen',
         'laboratorium',
         'status',
         'tanggal_uji',
+        'barcode_token',
+        'barcode_path',
+        'submitted_at',
+        'received_at',
+        'testing_at',
+        'completed_at',
+        'rejected_at',
+        'alasan_penolakan',
     ];
 
     protected $casts = [
         'tanggal_uji' => 'date',
+        'submitted_at' => 'datetime',
+        'received_at' => 'datetime',
+        'testing_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'rejected_at' => 'datetime',
     ];
 
     /**
@@ -44,6 +67,14 @@ class TiketPengujian extends Model
     public function pemohon()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Relasi ke mesin lab yang dipilih.
+     */
+    public function mesinLab()
+    {
+        return $this->belongsTo(MesinLab::class, 'mesin_lab_id');
     }
 
     /**
@@ -76,9 +107,42 @@ class TiketPengujian extends Model
         return $this->status === self::STATUS_SELESAI;
     }
 
+    public function isDitolak(): bool
+    {
+        return $this->status === self::STATUS_DITOLAK;
+    }
+
     public function stageNumber(): int
     {
-        return self::STAGE_MAP[$this->status] ?? 2;
+        return self::STAGE_MAP[$this->status] ?? 1;
+    }
+
+    /**
+     * Generate nomor tiket unik: TLY-YYYYMMDD-XXX
+     */
+    public static function generateNomorTiket(): string
+    {
+        $prefix = 'TLY-' . now()->format('Ymd') . '-';
+        $lastToday = static::where('nomor_tiket', 'like', $prefix . '%')
+            ->orderByDesc('id')
+            ->value('nomor_tiket');
+
+        if ($lastToday) {
+            $lastNum = (int) substr($lastToday, -3);
+            $nextNum = $lastNum + 1;
+        } else {
+            $nextNum = 1;
+        }
+
+        return $prefix . str_pad((string) $nextNum, 3, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Generate barcode token unik.
+     */
+    public static function generateBarcodeToken(): string
+    {
+        return strtoupper(bin2hex(random_bytes(16)));
     }
 
     /**
@@ -92,6 +156,65 @@ class TiketPengujian extends Model
 
         return $user->isLaboran()
             || ($this->user_id !== null && (int) $this->user_id === (int) $user->id);
+    }
+
+    /**
+     * Data timeline untuk tampilan tracking PBI-09.
+     */
+    public function getTimelineData(): array
+    {
+        $stages = [
+            [
+                'key' => 'submitted',
+                'label' => 'Terdaftar',
+                'desc' => 'Pengajuan diterima sistem',
+                'timestamp' => $this->submitted_at,
+                'active' => true,
+            ],
+            [
+                'key' => 'resi',
+                'label' => 'Resi Terbit',
+                'desc' => 'Resi E-Ticket PDF ber-barcode terbit',
+                'timestamp' => $this->submitted_at,
+                'active' => $this->barcode_token !== null,
+            ],
+            [
+                'key' => 'antrean',
+                'label' => 'Dalam Antrean',
+                'desc' => 'Sampel diterima laboran',
+                'timestamp' => $this->received_at,
+                'active' => in_array($this->status, [
+                    self::STATUS_DALAM_ANTREAN,
+                    self::STATUS_SEDANG_DIUJI,
+                    self::STATUS_SELESAI,
+                ]),
+            ],
+            [
+                'key' => 'diuji',
+                'label' => 'Sedang Diuji',
+                'desc' => 'Proses pengujian di instrumen lab',
+                'timestamp' => $this->testing_at,
+                'active' => in_array($this->status, [
+                    self::STATUS_SEDANG_DIUJI,
+                    self::STATUS_SELESAI,
+                ]),
+            ],
+            [
+                'key' => 'selesai',
+                'label' => 'Selesai & Unduh',
+                'desc' => 'LHU resmi terbit, siap unduh',
+                'timestamp' => $this->completed_at,
+                'active' => $this->status === self::STATUS_SELESAI,
+            ],
+        ];
+
+        return [
+            'stages' => $stages,
+            'current_stage' => $this->stageNumber(),
+            'is_rejected' => $this->isDitolak(),
+            'rejection_reason' => $this->alasan_penolakan,
+            'rejected_at' => $this->rejected_at,
+        ];
     }
 
     /**

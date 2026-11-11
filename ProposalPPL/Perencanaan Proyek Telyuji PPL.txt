@@ -1,0 +1,35 @@
+﻿PROJECT CHARTER: TELYUJI
+1. Identitas Proyek
+* Nama Aplikasi: Telyuji (Sistem Informasi Manajemen Layanan Pengujian Laboratorium Terintegrasi)
+* Tagline: "Teliti dan Teruji"
+* Konsep Inti: Sistem tiket digital untuk pendaftaran, pelacakan antrean, dan penyerahan hasil pengujian sampel lab (fisik maupun file digital) lintas fakultas.
+* Aktor (Role): Pemohon (Pemohon), Laboran (Operator), Admin/Kepala Lab (Supervisor).
+2. Batasan
+Agar proyek kita pasti selesai dalam 2 Sprint dan terhindar dari scope creep, dilarang keras membuat fitur di luar batasan ini:
+*  NO PAYMENT: Tidak ada fitur bayar-bayar, billing, atau payment gateway. Semua layanan lab dianggap gratis/fasilitas kampus.
+*  NO PEMINJAMAN ALAT: Aplikasi ini murni untuk pengujian di dalam lab. Tidak ada fitur pinjam kamera/alat untuk dibawa pulang ke kosan.
+*  NO IOT / SENSOR: Aplikasi tidak dikoneksikan dengan kabel/sensor ke mesin lab. Perubahan status (Mulai Diuji, Selesai) ditekan secara manual oleh Laboran.
+*  NO PENGIRIMAN KURIR: Aplikasi hanya mencetak resi PDF. Sampel fisik diantar dan diambil sendiri oleh Pemohon.
+3. Alur Kerja Utama (The Core Flow)
+Pastikan semua anggota paham alur data dari awal sampai akhir ini:
+1. Pemohon login, melihat katalog mesin, dan mengisi form pengajuan uji.
+2. Sistem men-generate Resi Barcode (PDF).
+3. Pemohon menempel resi di wadah sampel (beton/cairan/hardisk) dan menyerahkannya ke Lab. (Bila sampel berupa link/file kecil, resi berfungsi sebagai E-Ticket).
+4. Laboran menekan "Terima Fisik" di sistem ➔ Status berubah menjadi Dalam Antrean.
+5. Laboran memproses sampel di mesin lab ➔ Status berubah menjadi Sedang Diuji.
+6. Selesai diuji, Laboran mengunggah dokumen (PDF/Excel) hasil lab ke sistem ➔ Status Selesai.
+7. Pemohon mengunduh file hasil lab dari dashboard mereka masing-masing.
+4. Tech Stack
+* Bahasa & Framework: PHP 8.x + Laravel (Arsitektur MVC)
+* Database: MySQL / PostgreSQL
+* Automated Testing: Laravel Dusk (Wajib untuk semua fitur fungsional)
+* UI/UX: Blade Template (Bebas menggunakan Bootstrap/Tailwind)
+5. Distribusi Tanggung Jawab (Berdasarkan Modul PBI)
+Setiap orang memegang 3 PBI (skala menengah) dan bertanggung jawab penuh secara Full-Stack (Front-End & Back-End) pada modulnya:
+* Anggota 1 (Akses & Institusi): Mengurus sistem Role, Profil Pemohon, Master Data Fakultas/Prodi.
+* Anggota 2 (Katalog Lab): Mengurus CRUD Data Mesin/Server, Kategori SLA Waktu, dan SOP Lab.
+* Anggota 3 (Pengajuan): Mengurus Form Pengajuan Pemohon, Generate PDF Resi, dan UI Linimasa (Timeline).
+* Anggota 4 (Antrean & Validasi): Mengurus tombol aksi Laboran (Terima Fisik, Tolak Sampel, Ubah Status Mesin).
+* Anggota 5 (Hasil & Keamanan): Mengurus fitur Upload Laboran, gerbang Download aman Pemohon, dan Audit Trail (Log Sistem).
+* Anggota 6 (Dashboard & Laporan): Mengurus Widget notifikasi, grafik statistik pemakaian mesin, dan ekspor data history ke Excel/PDF.
+* (Catatan: Fitur Login/Register dasar dikerjakan bersama di awal, tidak masuk hitungan PBI individu).
