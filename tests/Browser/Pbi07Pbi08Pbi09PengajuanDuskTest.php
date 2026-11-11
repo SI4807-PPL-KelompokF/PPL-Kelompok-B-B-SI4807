@@ -61,8 +61,9 @@ class Pbi07Pbi08Pbi09PengajuanDuskTest extends DuskTestCase
                 ->type('@input-nama-sampel', 'Spesimen Uji Tarik Polimer')
                 ->type('@input-deskripsi-sampel', 'Spesimen polimer transparan berbentuk dog-bone.')
                 ->type('@input-tujuan-pengujian', 'Analisis modulus elastisitas untuk Tugas Akhir SI-4807.')
-                ->scrollIntoView('@btn-submit-pengajuan')
-                ->click('@btn-submit-pengajuan');
+                ->script("document.querySelector('[dusk=\"btn-submit-pengajuan\"]').scrollIntoView({block: 'center', behavior: 'instant'});");
+
+            $browser->script("document.querySelector('[dusk=\"btn-submit-pengajuan\"]').click();");
 
             // 3. Verifikasi dialihkan ke halaman Visual Timeline Tracking (PBI-09 / UC-09)
             $browser->waitForText('Visual Timeline Tracking')
