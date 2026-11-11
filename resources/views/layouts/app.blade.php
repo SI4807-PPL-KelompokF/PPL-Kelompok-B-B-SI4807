@@ -66,6 +66,9 @@
                                 <a href="{{ route('home') }}" dusk="nav-pemohon-dashboard" class="tu-link font-semibold text-gray-900">
                                     Dashboard
                                 </a>
+                                <a href="{{ route('pengajuan.create') }}" dusk="nav-buat-pengajuan" class="tu-link font-semibold text-racing-red">
+                                    + Buat Pengajuan
+                                </a>
                             @endif
                         @endauth
                     </nav>
@@ -156,6 +159,10 @@
                             <a href="{{ route('home') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
                                 <span>Dashboard Pengujian</span>
                                 <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                            </a>
+                            <a href="{{ route('pengajuan.create') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-racing-red transition-colors hover:text-tiger-flame">
+                                <span>+ Buat Pengajuan Uji Baru</span>
+                                <span class="text-xs text-racing-red" aria-hidden="true">&rarr;</span>
                             </a>
                         @endif
                     @endauth

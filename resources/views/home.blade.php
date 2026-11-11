@@ -13,9 +13,9 @@
                 </p>
             </div>
             <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-3">
-                <a href="{{ url('/#katalog-lab') }}" class="tu-btn">
+                <a href="{{ route('pengajuan.create') }}" dusk="btn-tambah-pengajuan-baru" class="tu-btn">
                     <span aria-hidden="true">+</span>
-                    <span>Pengajuan Sampel Baru</span>
+                    <span>Buat Pengajuan Sampel Baru</span>
                 </a>
             </div>
         </div>
@@ -67,17 +67,23 @@
                     <table class="w-full text-left text-sm" dusk="pemohon-ticket-table">
                         <thead>
                             <tr class="border-b border-gray-100 tu-eyebrow !text-[10px] text-gray-400">
-                                <th scope="col" class="px-5 sm:px-7 py-3 font-medium">ID Sampel</th>
+                                <th scope="col" class="px-5 sm:px-7 py-3 font-medium">ID Sampel &amp; Linimasa</th>
                                 <th scope="col" class="px-3 py-3 font-medium">Instrumen &amp; Sampel</th>
-                                <th scope="col" class="px-3 py-3 font-medium">Status</th>
-                                <th scope="col" class="px-5 sm:px-7 py-3 text-right font-medium">Dokumen / Jadwal</th>
+                                <th scope="col" class="px-3 py-3 font-medium">Status Pengujian</th>
+                                <th scope="col" class="px-5 sm:px-7 py-3 text-right font-medium">Aksi Dokumen</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @foreach ($tiketSaya as $tiket)
                                 <tr class="lu-row no-anim">
                                     <td class="px-5 sm:px-7 py-4 align-top whitespace-nowrap">
-                                        <span class="tu-mono text-sm font-semibold text-gray-950">{{ $tiket->nomor_tiket }}</span>
+                                        <a href="{{ route('pengajuan.show', $tiket->nomor_tiket) }}" dusk="link-linimasa-{{ $tiket->nomor_tiket }}" class="tu-mono text-sm font-bold text-racing-red hover:underline block">
+                                            {{ $tiket->nomor_tiket }}
+                                        </a>
+                                        <a href="{{ route('pengajuan.show', $tiket->nomor_tiket) }}" class="inline-flex items-center gap-1 text-[11px] text-gray-500 hover:text-gray-900 mt-0.5">
+                                            <span>Visual Timeline</span>
+                                            <span aria-hidden="true">&rarr;</span>
+                                        </a>
                                     </td>
                                     <td class="px-3 py-4 align-top">
                                         <p class="font-semibold text-gray-950">{{ $tiket->instrumen }}</p>
@@ -88,20 +94,25 @@
                                             <span class="tu-chip tu-chip--mint">Selesai</span>
                                         @elseif ($tiket->status === 'Sedang Diuji')
                                             <span class="tu-chip lu-chip--flame">Sedang Diuji</span>
+                                        @elseif ($tiket->status === 'Dalam Antrean')
+                                            <span class="tu-chip tu-chip--jasmine">Dalam Antrean</span>
+                                        @elseif ($tiket->status === 'Ditolak')
+                                            <span class="tu-chip bg-red-100 text-red-800 border-red-200">Ditolak</span>
                                         @else
-                                            <span class="tu-chip tu-chip--jasmine">Menunggu Verifikasi</span>
+                                            <span class="tu-chip tu-chip--cream">Menunggu Fisik</span>
                                         @endif
                                     </td>
                                     <td class="px-5 sm:px-7 py-3 align-top text-right whitespace-nowrap">
-                                        @if ($tiket->isCompleted() && $tiket->dokumenHasil)
-                                            <a href="{{ route('pemohon.pengujian.download', $tiket->nomor_tiket) }}" dusk="download-lhu-{{ $tiket->nomor_tiket }}" class="tu-btn tu-btn--sm tu-btn--ghost">
-                                                <span>Unduh LHU</span>
+                                        <div class="flex items-center justify-end gap-2">
+                                            <a href="{{ route('pengajuan.resi.download', $tiket->nomor_tiket) }}" dusk="download-resi-{{ $tiket->nomor_tiket }}" title="Unduh Resi E-Ticket Barcode" class="tu-btn tu-btn--sm tu-btn--ghost !py-1 !px-2.5 text-xs">
+                                                <span>Resi PDF</span>
                                             </a>
-                                        @else
-                                            <span class="tu-mono text-xs text-gray-500">
-                                                {{ $tiket->tanggal_uji ? $tiket->tanggal_uji->format('d M Y') : '-' }}
-                                            </span>
-                                        @endif
+                                            @if ($tiket->isCompleted() && $tiket->dokumenHasil)
+                                                <a href="{{ route('pemohon.pengujian.download', $tiket->nomor_tiket) }}" dusk="download-lhu-{{ $tiket->nomor_tiket }}" class="tu-btn tu-btn--sm !py-1 !px-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600">
+                                                    <span>Unduh LHU</span>
+                                                </a>
+                                            @endif
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
