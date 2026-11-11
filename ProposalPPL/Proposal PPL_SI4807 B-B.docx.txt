@@ -1,0 +1,1256 @@
+﻿PROPOSAL PENGEMBANGAN PRODUK
+
+
+TELYUJI: SISTEM INFORMASI MANAJEMEN LAYANAN PENGUJIAN LABORATORIUM TERINTEGRASI
+
+
+Disusun oleh 
+102022430032 - Hainur Fadillah
+102022400131 - Galuh Shafa Auliana Rahman
+102022400211 - Helmi Fauzan
+102022400284 - Giri Pulung Nugroho
+102022400228 - Syalfa Oktaviana Wijaya
+102022400061 - Nabila Rizky Putri
+
+
+
+
+
+
+
+
+07-10-2026
+Daftar Isi
+
+
+Daftar Isi        2
+1. Pendahuluan        1
+1.1 Latar Belakang        1
+1.2 Tujuan        1
+1.3 Output        1
+2. Deskripsi Produk        3
+2.1 Usulan Solusi        3
+2.2 Deskripsi Produk        3
+2.3 Proses Bisnis        4
+2.3.1 Proses Bisnis Eksisting        4
+2.3.2 Proses Bisnis Targeting        7
+3. Kebutuhan Sistem        1
+3.1 Kebutuhan Fungsional        1
+3.1.1 Daftar Kebutuhan        1
+3.1.2 Karakteristik Pengguna        3
+3.2 Kebutuhan Non Fungsional        4
+3.3 Kebutuhan Teknis        7
+4. Rancangan Sistem        9
+4.1 Use Case Diagram        9
+4.2 Arsitektur Sistem        30
+4.3 Rancangan ERD        31
+4.4 Class Diagram        32
+4.5 Mockup        34
+5. Metode Pengembangan        37
+5.1 Jadwal Pengembangan        37
+5.2 Tim Pengembang        40
+
+
+1. Pendahuluan
+   1. Latar Belakang
+Layanan pengujian laboratorium di lingkungan kampus merupakan fasilitas esensial bagi sivitas akademika (mahasiswa dan dosen) dalam menjalankan aktivitas riset. Namun, proses operasional yang berjalan saat ini masih bersifat konvensional. Pendaftaran antrean masih menggunakan pencatatan kertas, pemohon tidak memiliki kepastian waktu penyelesaian (Service Level Agreement / SLA), dan pendistribusian dokumen hasil riset rentan mengalami kehilangan atau kerusakan karena masih mengandalkan dokumen fisik. Oleh karena itu, dibutuhkan sebuah sistem informasi manajemen layanan laboratorium terintegrasi yang mampu mendigitalisasi pencatatan logistik pengujian secara transparan, nirkertas (paperless), dan aman.
+   2. Tujuan
+Tujuan:
+1. Memberikan kepastian waktu penyelesaian pengujian kepada pemohon riset.
+2. Menyediakan visual tracking (linimasa) untuk memantau pergerakan sampel uji secara real-time.
+3. Mengamankan distribusi data hasil riset agar hanya dapat diakses oleh pihak yang terotorisasi.
+   1. Output
+Hasil akhir dari produk yang dikembangkan adalah Telyuji, sebuah aplikasi berbasis web yang berfungsi sebagai pusat manajemen layanan pengujian laboratorium. Aplikasi ini akan menghasilkan luaran berupa dokumen E-Ticket (Resi PDF ber-barcode) untuk pelacakan spesimen dan portal pengunduhan dokumen hasil pengujian (PDF/Excel) yang terenkripsi.
+Pengembangan produk ini dibatasi oleh beberapa ketentuan (out-of-scope):
+
+
+1. Tanpa Modul Pembayaran: Tidak ada integrasi payment gateway karena layanan merupakan fasilitas kampus.
+2. Tanpa Peminjaman Eksternal: Aplikasi murni untuk operasional di dalam laboratorium, tidak melayani peminjaman alat ke luar kampus.
+3. Tanpa Integrasi IoT: Sistem tidak terhubung langsung ke mesin lab menggunakan sensor; pembaruan status dilakukan secara manual oleh laboran.
+4. Tanpa Logistik Kurir: Tidak ada integrasi dengan pihak ekspedisi untuk pengiriman spesimen.
+
+
+
+
+________________
+
+
+2. Deskripsi Produk
+   1. Usulan Solusi
+Permasalahan terkait hilangnya dokumen, ketidakpastian antrean, dan pelacakan manual diselesaikan melalui pengembangan Sistem Informasi Web "Telyuji". Sistem ini menggantikan buku tamu fisik dengan formulir pengajuan digital yang secara otomatis menghitung Service Level Agreement (SLA) berdasarkan ketersediaan mesin. Solusi ini secara langsung mengatasi kebingungan pemohon melalui fitur Visual Timeline Tracking di dasbor mereka, dan mengeliminasi hilangnya berkas dengan memusatkan penyimpanan dokumen hasil laboratorium pada cloud storage lokal terenkripsi.
+
+
+   2. Deskripsi Produk
+Telyuji (Teliti dan Teruji) adalah sistem informasi logistik dan manajemen layanan laboratorium berbasis website. Fungsi utamanya mencakup: manajemen katalog dan kuota mesin uji, pendaftaran antrean secara mandiri, penerbitan tiket elektronik ber-barcode (PDF) sebagai penanda fisik sampel, pelacakan proses uji (tracking) secara waktu nyata, hingga pendistribusian dokumen hasil akhir. Keunggulan utama Telyuji adalah kemampuannya menangani spesimen fisik maupun digital (jalur hybrid), serta penerapan akses berbasis otorisasi ketat yang menjamin keamanan data riset sivitas akademika.
+
+
+   3. Proses Bisnis
+2.3.1        Proses Bisnis Eksisting  
+Berdasarkan diagram BPMN Eksisting, proses bisnis layanan pengujian laboratorium saat ini melibatkan dua pihak utama, yaitu Pemohon (mahasiswa atau dosen peneliti) dan Laboratorium yang diwakili oleh Laboran. Proses masih mengandalkan pencatatan fisik dan komunikasi secara manual sehingga belum tersedia sistem terintegrasi untuk mengelola antrean, memantau progres pengujian, dan mengakses hasil pengujian.
+Proses dimulai ketika pemohon datang ke laboratorium untuk mengajukan layanan pengujian dengan membawa spesimen. Selanjutnya, laboran melakukan proses administrasi antrean dengan meminta dan menerima data antrean dari pemohon. Informasi antrean dicatat menggunakan buku tamu fisik sebagai media pencatatan dan penyimpanan data. Setelah itu, pemohon menyerahkan spesimen kepada laboran untuk diperiksa kesesuaiannya dengan Standar Operasional Prosedur (SOP) laboratorium.
+Pada tahap pemeriksaan, apabila spesimen tidak sesuai SOP, laboran menyampaikan penolakan pengujian kepada pemohon dan proses pengujian berakhir. Sebaliknya, apabila spesimen sesuai SOP, laboran melanjutkan proses dengan melakukan pengujian spesimen.
+Selama proses pengujian berlangsung, pemohon tidak mendapatkan kepastian waktu penyelesaian (Service Level Agreement atau SLA) yang jelas. Kondisi tersebut mendorong pemohon untuk berulang kali menghubungi laboran melalui WhatsApp guna menanyakan perkembangan pengujian. Laboran kemudian menerima pertanyaan dan memberikan jawaban mengenai progres pengujian secara manual. Aktivitas komunikasi ini dapat berulang selama pemohon belum memperoleh kepastian bahwa pengujian telah selesai.
+Selanjutnya, apabila pengujian belum selesai, proses pengujian berlanjut dan pemohon dapat kembali menanyakan perkembangannya. Apabila pengujian sudah selesai, laboran membuat dokumen hasil uji. Pemohon kemudian meminta hasil pengujian dan laboran menyerahkan hasil tersebut kepada pemohon. Berdasarkan kondisi proses saat ini, hasil pengujian diberikan dalam bentuk dokumen cetak sehingga pemohon perlu datang kembali ke laboratorium untuk mengambilnya.
+Secara keseluruhan, proses bisnis eksisting masih memiliki keterbatasan berupa pencatatan antrean secara fisik, tidak adanya informasi SLA yang pasti, komunikasi progres yang bergantung pada inisiatif pemohon, serta penyerahan hasil pengujian dalam bentuk cetak. Oleh karena itu, diperlukan pengembangan sistem informasi untuk meningkatkan efisiensi administrasi, transparansi progres, dan kemudahan akses terhadap hasil pengujian.
+Berdasarkan permasalahan yang ditemukan dalam proses bisnis eksisting, beberapa aktivitas dapat dikembangkan menjadi fitur dalam sistem informasi layanan pengujian laboratorium sebagai berikut.
+No
+	Aktivitas
+	Pengembangan dalam Sistem Informasi
+	Analisis
+	1.
+	Pencatatan data antrean menggunakan buku tamu fisik.
+	Registrasi dan pengajuan secara digital. Pemohon mengisi formulir pengajuan melalui sistem, sedangkan sistem menyimpan data dan menghasilkan nomor antrean.
+	Pencatatan manual berisiko menyebabkan data sulit dicari, tidak terorganisasi, atau tercatat berulang. Digitalisasi membuat data pengajuan lebih terstruktur dan memudahkan laboran mengelola antrean.
+	2.
+	Pemeriksaan kesesuaian spesimen dengan SOP dan penyampaian penolakan secara manual.
+	Validasi spesimen dan pengelolaan status pengajuan. Laboran dapat mencatat hasil pemeriksaan, menentukan apakah spesimen diterima atau ditolak, serta memasukkan alasan penolakan ke dalam sistem
+	Pencatatan hasil validasi secara digital membuat keputusan lebih terdokumentasi dan memudahkan pemohon mengetahui alasan pengajuan ditolak. Pemeriksaan fisik spesimen tetap dilakukan oleh laboran. 
+	3.
+	Pelaksanaan pengujian tanpa kepastian SLA yang jelas.
+	Pengelolaan progres pengujian dan SLA. Sistem menyimpan status pengujian, estimasi waktu penyelesaian berdasarkan jenis pengujian, serta target waktu penyelesaian yang ditetapkan laboratorium.
+	Ketiadaan SLA yang jelas membuat pemohon kesulitan memperkirakan waktu pengambilan hasil. Informasi status dan estimasi waktu pada sistem meningkatkan transparansi dan membantu laboran memantau pengujian yang sedang berlangsung atau terlambat.
+	4.
+	Pemohon berulang kali menanyakan progres melalui WhatsApp dan laboran membalas secara manual.
+	Pemantauan progres dan notifikasi. Pemohon dapat melihat status pengujian melalui akun masing-masing, sementara sistem dapat memberikan notifikasi ketika status berubah atau ketika status selesai.
+	Komunikasi manual menghabiskan waktu laboran untuk menjawab pertanyaan yang sama. Fitur pemantauan mandiri mengurangi kebutuhan pertanyaan berulang dan membuat informasi progres lebih mudah diakses.
+	5.
+	Laboran membuat dokumen hasil uji dan menyimpannya dalam bentuk cetak.
+	Pengelolaan dokumen hasil pengujian secara digital. Laboran dapat mengunggah atau menghasilkan dokumen hasil uji dalam format digital, seperti PDF, yang terhubung dengan pengajuan terkait.
+	Dokumen cetak berisiko hilang atau rusak. Penyimpanan digital membantu pengarsipan dan pencarian dokumen, serta mengurangi ketergantungan terhadap penyimpanan fisik.
+	6.
+	Pemohon meminta dan mengambil hasil pengujian secara langsung di laboratorium.
+	Akses dan pengunduhan hasil pengujian. Sistem menyediakan akses hasil uji bagi pemohon yang berwenang setelah laboran menyatakan hasil tersedia dan proses verifikasi yang diperlukan selesai.
+	Keharusan datang kembali ke laboratorium menambah waktu dan biaya bagi pemohon. Akses digital memungkinkan hasil diterima dengan lebih praktis serta mengurangi kebutuhan pengambilan dokumen secara fisik.
+	
+
+2.3.2        Proses Bisnis Targeting
+  
+
+Berdasarkan diagram BPMN Targeting, proses bisnis layanan pengujian laboratorium dirancang dengan mengintegrasikan aktivitas Pemohon, Laboran, dan Sistem Informasi Telyuji. Berbeda dengan proses bisnis eksisting yang masih mengandalkan pencatatan antrean secara fisik, komunikasi manual, dan penyerahan dokumen cetak, proses targeting memanfaatkan sistem berbasis web untuk mengelola pengajuan, memantau status pengujian, serta menyimpan dan mendistribusikan dokumen hasil uji secara digital.
+Proses diawali ketika pemohon mengakses portal web Telyuji dan melakukan validasi identitas. Apabila identitas sesuai, maka pemohon bisa mengirimkan formulir pendaftaran pengujian. Setelah formulir diterima, sistem menyediakan mekanisme pengajuan sesuai dengan bentuk spesimen yang akan diuji. Untuk spesimen fisik, sistem menerbitkan resi dengan barcode yang digunakan sebagai identitas sampel, kemudian pemohon menyerahkan spesimen yang telah ditempeli resi kepada laboratorium. Sementara itu, untuk pengajuan yang tidak melibatkan spesimen fisik, sistem menerbitkan e-ticket dalam format PDF dan mengirimkan tautan kepada pemohon sebagai bukti pengajuan.
+Selanjutnya, sistem memperbarui status pengajuan menjadi masuk antrean, sehingga data pengajuan dapat dikelola secara terpusat. Laboran kemudian melakukan validasi awal terhadap spesimen berdasarkan Standar Operasional Prosedur (SOP) yang berlaku. Apabila spesimen tidak memenuhi persyaratan dan pemohon melakukan pelanggaran berat, maka laboran akan melakukan suspend akun pemohon. Namun, jika hanya tidak sesuai SOP, sistem menyampaikan informasi penolakan kepada pemohon dan proses pengujian dihentikan. Sebaliknya, apabila spesimen memenuhi persyaratan, laboran melanjutkan proses pengujian dan memperbarui status menjadi sedang diuji. Perubahan status tersebut diteruskan melalui sistem agar pemohon dapat memantau perkembangan pengujian tanpa perlu menanyakan progres secara manual kepada laboran. Jika dalam pengujian terdapat kendala teknis, maka laboran dapat berdiskusi dengan pemohon hingga kendala terselesaikan.
+Setelah pengujian selesai, laboran mengunggah dokumen hasil akhir ke dalam sistem. Telyuji kemudian menyimpan dokumen tersebut pada penyimpanan digital yang terhubung dengan data pengajuan, memperbarui status menjadi selesai, dan mengirimkan notifikasi kepada pemohon. Pemohon selanjutnya dapat mengakses dan mengunduh dokumen hasil uji melalui sistem sesuai dengan hak akses yang dimiliki. Dengan demikian, proses targeting diharapkan dapat meningkatkan efisiensi administrasi laboratorium, memperjelas informasi progres dan estimasi penyelesaian pengujian, serta mengurangi risiko kehilangan dokumen melalui pengelolaan data dan hasil pengujian secara terpusat.
+Berdasarkan rancangan tersebut, pengembangan proses bisnis ke dalam Sistem Informasi Telyuji berfokus pada digitalisasi pendaftaran dan pengelolaan antrean, validasi spesimen yang terdokumentasi, pembaruan status pengujian, notifikasi otomatis, serta pengarsipan dan pendistribusian dokumen hasil uji secara digital. Rancangan ini mempertahankan peran laboran dalam melakukan validasi dan pengujian secara langsung, sementara aktivitas administratif dan penyampaian informasi kepada pemohon dibantu oleh sistem.
+3. Kebutuhan Sistem
+   1. Kebutuhan Fungsional
+      1. Daftar Kebutuhan
+Berikut adalah rincian fungsionalitas sistem yang diturunkan dari Product Backlog Items (PBI).
+
+
+ID
+	Kebutuhan Fungsional
+	Deskripsi
+	KF-01
+	Autentikasi dan Manajemen Akun Dasar
+	Sistem menyediakan fondasi keamanan (login/logout) dan manajemen data akun pengguna dasar (seperti inisiasi akun otomatis dari sistem kampus) sebagai prasyarat sebelum aktor dapat mengakses fitur dasbor utama.
+	KF-02
+	Kelola Profil & Validasi Identitas
+	Sistem memungkinkan Pemohon untuk melengkapi profil akademik dan mengunggah dokumen identitas (KTM/ID) beserta surat pengantar riset untuk divalidasi (PBI-01).
+	KF-03
+	Manajemen Sanksi Pengguna
+	Sistem memungkinkan Laboran untuk menangguhkan (suspend) sementara akun Pemohon yang melakukan pelanggaran (seperti no-show atau merusak alat) (PBI-02).
+	KF-04
+	Kelola Master Data & Parameter
+	Sistem memungkinkan Admin mengelola data Fakultas dan Prodi (PBI-03), katalog status mesin lab (PBI-04), serta mengatur parameter batas kuota harian dan waktu penyelesaian/SLA (PBI-05).
+	KF-05
+	Kelola SOP Laboratorium
+	Sistem menyediakan rich-text editor bagi Laboran untuk menulis dan memperbarui panduan SOP penyiapan sampel (PBI-06).
+	KF-06
+	Buat Pengajuan Uji Lab
+	Sistem menyediakan formulir dinamis bagi Pemohon untuk memilih layanan lab dan mengirimkan deskripsi sampel (termasuk tautan unggahan untuk sampel digital) (PBI-07).
+	KF-07
+	Cetak Resi PDF (E-Ticket)
+	Sistem secara otomatis menerbitkan Resi PDF ber-barcode sebagai tiket logistik fisik atau E-Ticket setelah pengajuan berhasil disubmit oleh Pemohon (PBI-08).
+	KF-08
+	Lacak Linimasa (Timeline Tracking)
+	Sistem menampilkan visualisasi linimasa tahapan antrean secara real-time di halaman dasbor Pemohon untuk memantau pergerakan sampel (PBI-09).
+	KF-09
+	Validasi & Pembaruan Status Antrean
+	Sistem memungkinkan Laboran memvalidasi penerimaan fisik sampel lalu mengubah status ke "Sedang Diuji" (PBI-10), atau menolak pengajuan sampel yang cacat/melanggar waktu beserta alasan penolakannya (PBI-12).
+	KF-10
+	Penugasan (Assign) Operator
+	Sistem memungkinkan Laboran/Admin untuk menugaskan (assign) operator penanggung jawab pada setiap tiket pengajuan uji (PBI-11).
+	KF-11
+	Kelola Dokumen Hasil Uji
+	Sistem menyediakan fasilitas bagi Laboran untuk mengunggah/merevisi file hasil uji (PDF/Excel) (PBI-13), dan menyediakan gerbang portal aman bagi Pemohon untuk mengunduhnya (PBI-14).
+	KF-12
+	Pencatatan Log & Audit Trail
+	Sistem secara otomatis merekam jejak aktivitas (Audit Trail) pada setiap pembaruan status pengajuan yang dapat dipantau langsung oleh Admin (PBI-15).
+	KF-13
+	Laporan & Dasbor Analitik
+	Sistem menampilkan grafik statistik pemakaian mesin di dasbor Admin (PBI-16), serta menyediakan fitur filter tanggal untuk mengekspor riwayat pengajuan ke format Excel/PDF (PBI-18).
+	KF-14
+	Diskusi & Catatan Tiket
+	Sistem menyediakan ruang pesan interaktif/diskusi dua arah pada halaman detail pengajuan agar Pemohon dan Laboran dapat saling berkomunikasi (PBI-17).
+	
+
+      2. Karakteristik Pengguna
+Berikut adalah kategori pengguna yang berinteraksi dengan Telyuji.
+Tabel 1 Karakteristik Pengguna
+Kategori Pengguna
+	Deskripsi
+	Hak Akses
+	Admin/Kepala Lab
+	Pengguna yang berperan sebagai pengawas manajerial. Bertugas mengelola master data institusi (Fakultas/Prodi) dan katalog mesin (batas kuota/SLA), serta memantau Audit Trail dan laporan operasional lab.
+	CRUD Master Data Institusi & Katalog Mesin, View Audit Trail, View & Export Dasbor Statistik/Laporan.
+	Laboran
+	Operator teknis yang mengelola dokumen SOP penyiapan sampel, memberikan sanksi (suspend) kepada pemohon pelanggar, memvalidasi & memproses antrean, menugaskan operator, berdiskusi di tiket, dan mengunggah dokumen hasil uji.
+	CRUD SOP Lab & Diskusi Tiket, Update Status Akun Pemohon (Suspend), View & Update Status Pengajuan, Assign Operator, Insert/Update Berkas Hasil Uji.
+	Pemohon (Mahasiswa/Dosen)
+	Klien layanan lab yang memvalidasi profil akademik (KTM), mengajukan tiket layanan lab, mencetak resi E-Ticket, melacak linimasa, berdiskusi dengan laboran, dan mengunduh berkas hasil uji terotorisasi.
+	Update Profil (Validasi KTM), Insert Pengajuan Uji Lab, View Linimasa & Resi, CRUD Pesan Diskusi Tiket, Download Berkas Hasil Terotorisasi.
+	
+
+   2. Kebutuhan Non Fungsional
+
+
+ID
+	Kebutuhan Non Fungsional
+	Deskripsi
+	KNF-01
+	Keamanan (Security)
+	Direktori penyimpanan berkas hasil pengujian harus dienkripsi menggunakan private storage dan divalidasi berdasarkan sesi (Session ID) agar tidak dapat diunduh menggunakan metode URL Bypass oleh pihak yang tidak berwenang.
+	KNF-02
+	Kinerja (Performance)
+	Sistem harus mampu merender dan meng-generate resi PDF (E-Ticket) dalam waktu kurang dari 5 detik pada kondisi jaringan internet stabil.
+	KNF-03
+	Kapasitas (Capacity)
+	Sistem harus membatasi ukuran maksimal berkas identitas (KTM) dan dokumen hasil uji (PDF/Excel) yang diunggah maksimal 5 MB per berkas untuk menjaga efisiensi ruang penyimpanan server.
+	KNF-04
+	Ketersediaan (Availability)
+	Sistem merupakan aplikasi berbasis web (zero install) yang dirancang untuk dapat diakses 24 jam sehari, 7 hari seminggu (24/7) selama mesin server aktif.
+	KNF-05
+	Ketergunaan (Usability)
+	Antarmuka pengguna harus mengimplementasikan responsive design sehingga tabel antrean maupun visual timeline tracking tetap proporsional dan mudah dibaca ketika diakses melalui perangkat seluler (smartphone).
+	KNF-06
+	Pemeliharaan (Maintainability)
+	Sistem harus dibangun dengan pemisahan struktur kode yang tegas (Model-View-Controller) agar pemeliharaan, penelusuran bug, dan pengembangan fitur baru di masa depan dapat dilakukan dengan mudah.
+	KNF-07
+	Keandalan & Pengujian (Testability)
+	Seluruh fungsionalitas utama (Product Backlog Item) wajib memiliki skrip pengujian fungsional otomatis yang berjalan menggunakan Laravel Dusk guna menjamin aplikasi bebas dari bug sebelum dirilis.
+	
+
+
+
+
+
+
+
+
+
+   3. Kebutuhan Teknis
+
+
+ID
+	Kebutuhan Teknis
+	Deskripsi
+	KT-01
+	Bahasa Pemrograman
+	PHP 8.x untuk sisi Back-End dan HTML/CSS/JavaScript terintegrasi mesin Blade Templating untuk antarmuka Front-End.
+	KT-02
+	Framework Utama
+	Laravel, digunakan karena mengimplementasikan pola arsitektur MVC (Model-View-Controller) yang solid untuk pengembangan skala menengah.
+	KT-03
+	Basis Data
+	MySQL (Relational Database Management System) untuk menyimpan data transaksional (antrean) dan referensi master data secara efisien.
+	KT-04
+	Automated Testing
+	Laravel Dusk untuk mengeksekusi skenario uji otomatis (functional testing / browser automation) pada seluruh alur PBI utama aplikasi.
+	KT-05
+	Pustaka Tambahan
+	Pustaka DomPDF (untuk generate resi E-Ticket), DataTables (untuk manajemen antrean & Audit Trail), dan Chart.js (untuk visualisasi statistik dasbor).
+	KT-06
+	Manajemen Versi (VCS)
+	Git dan GitHub (Public Repository) sebagai pusat kolaborasi kode (version control) agar sistem dapat dievaluasi dan diakses oleh AI Agent saat Sprint Review.
+	KT-07
+	AI Development Tools
+	Integrasi tool kecerdasan buatan seperti GitHub Copilot, Cursor AI, dan Gemini sebagai asisten penulisan kode, testing, dan perancangan SCRUM.
+	
+
+
+
+4. Rancangan Sistem
+   1. Use Case Diagram   
+  
+
+
+
+
+
+
+
+
+
+Spesifikasi Use Case Telyuji
+Ringkasan
+ID
+	Use Case
+	Aktor
+	PBI
+	UC-01
+	Login
+	Admin, Pemohon, Laboran
+	Autentikasi dasar
+	UC-02
+	Kelola Profil & Validasi Identitas (KTM)
+	Pemohon
+	PBI-01
+	UC-03
+	Tangguhkan (Suspend) Akun Pemohon
+	Laboran
+	PBI-02
+	UC-04
+	Kelola Master Data Fakultas & Prodi
+	Admin
+	PBI-03
+	UC-05
+	Kelola Katalog Mesin & Parameter Kuota/SLA
+	Admin
+	PBI-04, PBI-05
+	UC-06
+	Kelola SOP Laboratorium
+	Laboran
+	PBI-06
+	UC-07
+	Buat Pengajuan Uji Lab
+	Pemohon
+	PBI-07
+	UC-08
+	Cetak Resi PDF Ber-barcode (E-Ticket)
+	Sistem (di-include UC-07)
+	PBI-08
+	UC-09
+	Lacak Linimasa (Timeline Tracking)
+	Pemohon
+	PBI-09
+	UC-10
+	Validasi & Perbarui Status Antrean
+	Laboran
+	PBI-10
+	UC-11
+	Assign Operator Laboran
+	Laboran
+	PBI-11
+	UC-12
+	Tolak Pengajuan & Input Alasan
+	Laboran
+	PBI-12
+	UC-13
+	Kelola Unggahan Dokumen Hasil Uji
+	Laboran
+	PBI-13
+	UC-14
+	Unduh Dokumen Hasil Uji Terotorisasi
+	Pemohon
+	PBI-14
+	UC-15
+	Lihat Tabel Riwayat Audit Trail
+	Admin
+	PBI-15
+	UC-16
+	Lihat Grafik Statistik & Ekspor Laporan
+	Admin
+	PBI-16, PBI-18
+	UC-17
+	Diskusi / Catatan Tiket Pengajuan
+	Pemohon, Laboran
+	PBI-17
+	UC-01 Login
+Aktor: Admin, Pemohon, Laboran
+Deskripsi: Aktor masuk ke sistem menggunakan Nomor Induk (NIM/NIDN/NIP) dan kata sandi.
+Prasyarat: Akun sudah terdaftar.
+Alur utama:
+1.      Aktor membuka halaman login Telyuji.
+2.      Aktor mengisi Nomor Induk dan Kata Sandi, lalu menekan "Masuk".
+3.      Sistem memvalidasi kredensial.
+4.      Sistem mengarahkan aktor ke dasbor sesuai role (Admin, Laboran, atau Pemohon).
+Alur alternatif:
+•       3a. Kredensial salah: sistem menampilkan pesan kesalahan dan aktor mengulang dari langkah 2.
+Pascakondisi: Sesi aktif dan akses menu dibatasi sesuai role.
+UC-02 Kelola Profil & Validasi Identitas (KTM)
+Aktor: Pemohon | PBI: PBI-01
+Deskripsi: Pemohon melengkapi profil akademik dan mengunggah KTM/ID agar kelayakannya tervalidasi sebelum mengajukan pengujian.
+Prasyarat: Pemohon sudah login.
+Alur utama:
+1.      Pemohon membuka menu "Profil & Validasi KTM".
+2.      Pemohon mengisi atau memperbarui data profil (termasuk Fakultas dan Prodi dari master data).
+3.      Pemohon mengunggah foto KTM/ID.
+4.      Sistem memvalidasi ukuran dan format berkas.
+5.      Sistem menyimpan profil dan dokumen identitas.
+Alur alternatif:
+•       4a. Ukuran atau format berkas tidak sesuai: sistem menolak unggahan dan menampilkan pesan kesalahan.
+Pascakondisi: Data profil dan dokumen identitas tersimpan; Pemohon layak membuat pengajuan.
+
+
+UC-03 Tangguhkan (Suspend) Akun Pemohon
+Aktor: Laboran | PBI: PBI-02
+Deskripsi: Laboran mencatat pelanggaran dan menangguhkan sementara akun Pemohon yang melanggar aturan lab (misalnya ghosting).
+Prasyarat: Laboran sudah login; akun Pemohon aktif dan tercatat melanggar.
+Alur utama:
+1.      Laboran membuka menu "Kelola Sanksi/Suspend Pemohon".
+2.      Sistem menampilkan tabel daftar Pemohon.
+3.      Laboran memilih Pemohon dan mengisi form sanksi beserta alasan.
+4.      Laboran mengonfirmasi penangguhan.
+5.      Sistem menandai akun sebagai suspended dan menyimpan alasannya.
+Alur alternatif:
+•       3a. Alasan sanksi kosong: sistem meminta alasan diisi.
+•       5a. Laboran mencabut penangguhan: sistem mengembalikan akses pengajuan Pemohon.
+Pascakondisi: Pemohon yang disuspend tidak dapat membuat pengajuan baru (diperiksa di UC-07).
+UC-04 Kelola Master Data Fakultas & Prodi
+Aktor: Admin | PBI: PBI-03
+Deskripsi: Admin mengelola data Fakultas dan Program Studi agar pilihan asal unit pada formulir bersifat dinamis.
+Prasyarat: Admin sudah login.
+Alur utama:
+1.      Admin membuka menu "Master Fakultas & Prodi".
+2.      Sistem menampilkan daftar Fakultas dan Prodi.
+3.      Admin menambah, mengubah, atau menghapus data.
+4.      Sistem memvalidasi dan menyimpan perubahan.
+Alur alternatif:
+•       3a. Data dihapus padahal masih dipakai data lain: sistem menolak penghapusan dan menampilkan pesan.
+Pascakondisi: Dropdown Fakultas dan Prodi pada form mencerminkan data terbaru.
+
+
+UC-05 Kelola Katalog Mesin & Parameter Kuota/SLA
+Aktor: Admin | PBI: PBI-04, PBI-05
+Deskripsi: Admin mengelola data mesin/server lab, status operasionalnya (Aktif/Maintenance), serta kategori layanan, kuota harian, dan estimasi SLA per mesin.
+Prasyarat: Admin sudah login.
+Alur utama:
+1.      Admin membuka menu "Katalog Mesin & Kuota SLA".
+2.      Admin menambah, mengubah, atau menghapus data mesin.
+3.      Admin mengubah status ketersediaan mesin (Aktif/Maintenance).
+4.      Admin mengatur kategori layanan, batas kuota harian, dan estimasi SLA mesin.
+5.      Sistem menyimpan konfigurasi.
+Alur alternatif:
+•       4a. Nilai kuota atau SLA tidak valid: sistem menolak dan meminta perbaikan.
+Pascakondisi: Katalog dan parameter terbaru dipakai pada form pengajuan dan pembatasan kuota.
+UC-06 Kelola SOP Laboratorium
+Aktor: Laboran | PBI: PBI-06
+Deskripsi: Laboran menyusun SOP penyiapan sampel per mesin melalui rich-text editor. SOP memuat klausul baku pengambilan sampel maksimal 7 hari kerja setelah uji.
+Prasyarat: Laboran sudah login; mesin sudah ada di katalog.
+Alur utama:
+1.      Laboran membuka menu "Kelola SOP Lab".
+2.      Laboran memilih mesin.
+3.      Laboran menulis atau mengubah SOP pada rich-text editor.
+4.      Sistem menyimpan SOP.
+5.      SOP ditampilkan sebagai panel baca pada form pengajuan Pemohon.
+Alur alternatif:
+•       3a. Laboran menghapus SOP: sistem meminta konfirmasi sebelum menghapus.
+Pascakondisi: SOP terbaru tampil pada form pengajuan mesin terkait.
+
+
+
+
+UC-07 Buat Pengajuan Uji Lab
+Aktor: Pemohon | PBI: PBI-07 | Include: UC-08
+Deskripsi: Pemohon mengajukan permohonan uji sampel fisik atau digital melalui formulir dinamis.
+Prasyarat: Pemohon sudah login, KTM tervalidasi (UC-02), dan akun tidak sedang suspended.
+Alur utama:
+1.      Pemohon membuka menu "Buat Pengajuan".
+2.      Pemohon memilih Fakultas/Prodi dan mesin lab.
+3.      Sistem menampilkan estimasi SLA, sisa kuota harian, dan SOP penyiapan sampel.
+4.      Pemohon mengisi deskripsi sampel dan tujuan pengujian.
+5.      Jika sampel digital, Pemohon mengisi tautan file cloud.
+6.      Pemohon menekan "Konfirmasi & Generate Resi".
+7.      Sistem memvalidasi kuota, menyimpan pengajuan dengan status "Menunggu Fisik", dan menjalankan UC-08.
+Alur alternatif:
+•       1a. Akun suspended: sistem menolak akses form dan menampilkan alasan.
+•       7a. Kuota harian mesin habis atau mesin berstatus Maintenance: sistem menolak pengajuan dan menyarankan memilih mesin atau hari lain.
+Pascakondisi: Pengajuan tersimpan dan masuk proses antrean.
+UC-08 Cetak Resi PDF Ber-barcode (E-Ticket)
+Aktor: Sistem (dipicu oleh UC-07); diunduh oleh Pemohon | PBI: PBI-08
+Deskripsi: Sistem menerbitkan resi PDF ber-barcode unik. Untuk sampel fisik, resi dicetak dan ditempel pada wadah. Untuk sampel digital, resi berfungsi sebagai E-Ticket tanpa dicetak.
+Prasyarat: Pengajuan berhasil disimpan.
+Alur utama:
+1.      Sistem membuat barcode unik untuk pengajuan.
+2.      Sistem men-generate PDF resi.
+3.      Sistem menampilkan pratinjau tiket.
+4.      Pemohon mengunduh resi.
+Alur alternatif:
+•       4a. Sampel digital: Pemohon cukup menyimpan resi sebagai E-Ticket dan tidak perlu mencetaknya.
+Pascakondisi: Resi tersedia dan dapat diunduh ulang dari dasbor.
+UC-09 Lacak Linimasa (Timeline Tracking)
+Aktor: Pemohon | PBI: PBI-09
+Deskripsi: Pemohon memantau posisi pengajuan melalui progress bar 4 tahap: Menunggu Fisik, Dalam Antrean, Sedang Diuji, Selesai.
+Prasyarat: Pemohon memiliki minimal satu pengajuan.
+Alur utama:
+1.      Pemohon membuka "Beranda & Linimasa".
+2.      Sistem menampilkan kartu pengajuan aktif beserta progress bar.
+3.      Sistem menampilkan waktu riwayat tiap perubahan status.
+Alur alternatif:
+•       2a. Pengajuan ditolak: linimasa menampilkan status "Ditolak" beserta alasan penolakan.
+Pascakondisi: Pemohon mengetahui status terkini tanpa menghubungi Laboran secara manual.
+UC-10 Validasi & Perbarui Status Antrean
+Aktor: Laboran | PBI: PBI-10
+Deskripsi: Laboran memvalidasi penerimaan sampel ("Terima Fisik/Akses") dan memperbarui status secara berurutan sampai "Sedang Diuji". Setiap perubahan dicatat otomatis ke Audit Trail.
+Prasyarat: Laboran sudah login; ada pengajuan berstatus "Menunggu Fisik".
+Alur utama:
+1.      Laboran membuka tabel "Antrean Aktif".
+2.      Laboran memeriksa kesesuaian sampel fisik atau tautan digital dengan SOP.
+3.      Laboran menekan "Terima Fisik".
+4.      Sistem mengubah status menjadi "Dalam Antrean" dan mencatat log.
+5.      Saat sampel mulai diproses di mesin, Laboran menekan "Ubah ke Sedang Diuji".
+6.      Sistem mengubah status menjadi "Sedang Diuji" dan mencatat log.
+Alur alternatif:
+•       2a. Sampel tidak sesuai SOP atau melewati batas 3x24 jam: Laboran menjalankan UC-12.
+Pascakondisi: Status pengajuan terbarui dan tampil di linimasa Pemohon.
+UC-11 Assign Operator Laboran
+Aktor: Laboran | PBI: PBI-11
+Deskripsi: Laboran menugaskan operator penanggung jawab pada tiket agar pembagian beban kerja jelas.
+Prasyarat: Laboran sudah login; tiket sudah diterima (status "Dalam Antrean").
+Alur utama:
+1.      Laboran membuka tabel antrean.
+2.      Laboran memilih operator pada dropdown "Operator PIC" di baris tiket.
+3.      Sistem menyimpan penugasan.
+4.      Antrean dapat difilter berdasarkan penanggung jawab.
+Alur alternatif:
+•       2a. Laboran mengganti operator: sistem memperbarui penugasan dan mencatatnya.
+Pascakondisi: Tiket memiliki operator penanggung jawab.
+UC-12 Tolak Pengajuan & Input Alasan
+Aktor: Laboran | PBI: PBI-12
+Deskripsi: Laboran menolak pengajuan yang cacat, tidak sesuai SOP, atau tidak diserahkan dalam 3x24 jam sejak resi dicetak (no-show).
+Prasyarat: Laboran sudah login; tiket berstatus "Menunggu Fisik".
+Alur utama:
+1.      Laboran menekan tombol "Tolak Sampel & Input Alasan" pada baris tiket.
+2.      Sistem menampilkan modal form penolakan.
+3.      Laboran mengisi alasan penolakan (wajib).
+4.      Laboran mengonfirmasi.
+5.      Sistem mengubah status menjadi "Ditolak" dan mencatat log.
+6.      Pemohon melihat status dan alasan penolakan di linimasa.
+Alur alternatif:
+•       3a. Alasan kosong: sistem tidak memproses penolakan dan meminta alasan diisi.
+•       5a. Pelanggaran berat atau ghosting: Laboran dapat melanjutkan ke UC-03.
+Pascakondisi: Tiket keluar dari antrean aktif.
+
+
+UC-13 Kelola Unggahan Dokumen Hasil Uji
+Aktor: Laboran | PBI: PBI-13
+Deskripsi: Laboran mengunggah atau merevisi dokumen hasil uji (PDF/Excel, maksimal 5 MB) pada tiket yang pengujiannya selesai.
+Prasyarat: Laboran sudah login; tiket berstatus "Sedang Diuji" dan pengujian di mesin telah selesai.
+Alur utama:
+1.      Laboran menekan ikon "Unggah/Revisi PDF Hasil" pada baris tiket.
+2.      Laboran memilih berkas hasil uji.
+3.      Sistem memvalidasi format dan ukuran (maksimal 5 MB).
+4.      Sistem menyimpan berkas pada private storage dengan path terenkripsi.
+5.      Sistem mengubah status menjadi "Selesai" dan mencatat log.
+Alur alternatif:
+•       3a. Format atau ukuran tidak sesuai: sistem menolak unggahan dan menampilkan pesan.
+•       2a. Laboran merevisi hasil: berkas baru menggantikan berkas lama dan perubahan dicatat.
+Pascakondisi: Hasil uji tersedia bagi Pemohon pemilik tiket.
+UC-14 Unduh Dokumen Hasil Uji Terotorisasi
+Aktor: Pemohon | PBI: PBI-14
+Deskripsi: Pemohon mengunduh hasil uji melalui portal terotorisasi sehingga hanya pemilik tiket yang dapat mengakses berkas.
+Prasyarat: Pemohon sudah login; tiket berstatus "Selesai" dan berkas hasil sudah diunggah.
+Alur utama:
+1.      Pemohon membuka menu "Arsip Hasil Uji".
+2.      Sistem menampilkan daftar tiket selesai milik Pemohon.
+3.      Pemohon menekan "Unduh Hasil Lab".
+4.      Sistem memverifikasi bahwa ID Pemohon yang login sama dengan pemilik tiket.
+5.      Sistem mengirim berkas dari private storage.
+Alur alternatif:
+•       4a. Pemohon bukan pemilik tiket: sistem menolak akses.
+Pascakondisi: Pemohon memperoleh dokumen hasil uji.
+UC-15 Lihat Tabel Riwayat Audit Trail
+Aktor: Admin | PBI: PBI-15
+Deskripsi: Admin menelusuri log aktivitas yang dicatat otomatis pada setiap perubahan status pengajuan sebagai bukti operasional.
+Prasyarat: Admin sudah login; log tercatat oleh UC-10, UC-12, dan UC-13.
+Alur utama:
+1.      Admin membuka menu "Log Audit Trail".
+2.      Sistem menampilkan tabel log (pengajuan, pelaku, status sebelumnya, status baru, keterangan, waktu).
+3.      Admin mencari atau memfilter log.
+4.      Sistem menampilkan hasil penyaringan.
+Alur alternatif:
+•       4a. Tidak ada log yang cocok: sistem menampilkan pesan data kosong.
+Pascakondisi: Admin memperoleh bukti rekam jejak aktivitas lab.
+UC-16 Lihat Grafik Statistik & Ekspor Laporan
+Aktor: Admin | PBI: PBI-16, PBI-18
+Deskripsi: Admin melihat grafik utilitas pemakaian mesin, memfilter riwayat pengujian berdasarkan rentang tanggal, dan mengekspornya ke Excel atau PDF.
+Prasyarat: Admin sudah login; terdapat data riwayat pengujian.
+Alur utama:
+1.      Admin membuka "Dashboard Statistik".
+2.      Sistem menampilkan grafik pemakaian per mesin/fakultas dan ringkasan metrik.
+3.      Admin membuka "Laporan & Ekspor".
+4.      Admin menentukan rentang tanggal (dan status).
+5.      Sistem menampilkan tabel riwayat sesuai filter.
+6.      Admin menekan "Export Excel" atau "Export PDF".
+7.      Sistem menghasilkan dan mengunduhkan dokumen laporan.
+Alur alternatif:
+•       5a. Tidak ada data pada rentang tersebut: sistem menampilkan pesan data kosong dan ekspor dinonaktifkan.
+Pascakondisi: Laporan periodik tersedia dalam format Excel/PDF.
+UC-17 Diskusi / Catatan Tiket Pengajuan
+Aktor: Pemohon, Laboran | PBI: PBI-17
+Deskripsi: Pemohon dan Laboran berkomunikasi dua arah pada halaman detail pengajuan untuk mengklarifikasi hal teknis tanpa aplikasi eksternal.
+Prasyarat: Aktor sudah login; pengajuan sudah ada.
+Alur utama:
+1.      Aktor membuka detail pengajuan (Laboran lewat ikon "Buka Diskusi Tiket").
+2.      Sistem menampilkan riwayat percakapan tiket.
+3.      Aktor menulis pesan dan menekan "Kirim Catatan".
+4.      Sistem menyimpan pesan beserta pengirim dan waktunya.
+5.      Pesan tampil pada riwayat percakapan kedua pihak.
+Alur alternatif:
+•       3a. Pesan kosong: sistem tidak mengirim pesan.
+Pascakondisi: Riwayat diskusi melekat pada tiket pengajuan.
+Skenario Use Case (Aksi Aktor dan Respon Sistem)
+Bagian ini menyajikan skenario tiap use case dalam format dua kolom. Seluruh use case selain UC-08 didahului UC-01 (Login), sehingga langkah login tidak diulang.
+SC-01 Login
+Aktor: Admin, Pemohon, Laboran
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka halaman login Telyuji
+	Menampilkan form Nomor Induk dan Kata Sandi
+	2
+	Mengisi Nomor Induk dan Kata Sandi, menekan "Masuk"
+	Memvalidasi kredensial
+	3
+	-
+	Mengarahkan aktor ke dasbor sesuai role
+	Alternatif: Kredensial salah, sistem menampilkan pesan kesalahan dan aktor kembali ke langkah 2.
+
+
+
+
+
+
+SC-02 Kelola Profil dan Validasi Identitas (KTM)
+Aktor: Pemohon
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka menu "Profil & Validasi KTM"
+	Menampilkan form profil akademik
+	2
+	Mengisi atau memperbarui data profil, memilih Fakultas dan Prodi
+	Memuat pilihan Fakultas dan Prodi dari master data
+	3
+	Mengunggah foto KTM/ID
+	Memvalidasi ukuran dan format berkas
+	4
+	Menekan "Simpan"
+	Menyimpan profil dan dokumen identitas, menampilkan konfirmasi
+	Alternatif: Ukuran atau format berkas tidak sesuai, sistem menolak unggahan dan menampilkan pesan kesalahan.
+SC-03 Tangguhkan (Suspend) Akun Pemohon
+Aktor: Laboran
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka menu "Kelola Sanksi/Suspend Pemohon"
+	Menampilkan tabel daftar Pemohon
+	2
+	Memilih Pemohon yang melanggar
+	Menampilkan form input sanksi
+	3
+	Mengisi alasan sanksi, menekan "Suspend"
+	Memvalidasi isian alasan
+	4
+	-
+	Menandai akun sebagai suspended dan menyimpan alasan, menampilkan konfirmasi
+	Alternatif: Alasan kosong, sistem meminta alasan diisi. Untuk mencabut penangguhan, Laboran menekan "Cabut Suspend" dan sistem memulihkan akses pengajuan Pemohon.
+
+
+
+
+
+
+
+
+SC-04 Kelola Master Data Fakultas dan Prodi
+Aktor: Admin
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka menu "Master Fakultas & Prodi"
+	Menampilkan daftar Fakultas dan Prodi
+	2
+	Memilih Tambah, Ubah, atau Hapus
+	Menampilkan form atau dialog konfirmasi
+	3
+	Mengisi data lalu menyimpan
+	Memvalidasi dan menyimpan perubahan
+	4
+	-
+	Memperbarui daftar dan dropdown pada form pengajuan
+	Alternatif: Data yang masih dipakai tidak dapat dihapus, sistem menampilkan pesan penolakan.
+SC-05 Kelola Katalog Mesin dan Parameter Kuota/SLA
+Aktor: Admin
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka menu "Katalog Mesin & Kuota SLA"
+	Menampilkan daftar mesin beserta status dan parameternya
+	2
+	Menambah, mengubah, atau menghapus data mesin
+	Memvalidasi dan menyimpan data mesin
+	3
+	Mengubah status mesin (Aktif atau Maintenance)
+	Memperbarui status ketersediaan mesin
+	4
+	Mengatur kategori layanan, kuota harian, dan estimasi SLA
+	Memvalidasi nilai dan menyimpan parameter
+	Alternatif: Nilai kuota atau SLA tidak valid, sistem menolak dan meminta perbaikan.
+SC-06 Kelola SOP Laboratorium
+Aktor: Laboran
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka menu "Kelola SOP Lab" dan memilih mesin
+	Menampilkan SOP mesin pada rich-text editor
+	2
+	Menulis atau mengubah SOP, termasuk klausul pengambilan sampel maksimal 7 hari kerja
+	-
+	3
+	Menekan "Simpan"
+	Menyimpan SOP dan menampilkannya sebagai panel baca pada form pengajuan
+	Alternatif: Penghapusan SOP didahului dialog konfirmasi.
+SC-07 Buat Pengajuan Uji Lab
+Aktor: Pemohon
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka menu "Buat Pengajuan"
+	Memeriksa KTM tervalidasi dan akun tidak suspended, lalu menampilkan form
+	2
+	Memilih Fakultas/Prodi dan mesin lab
+	Menampilkan estimasi SLA, sisa kuota harian, dan SOP penyiapan sampel
+	3
+	Mengisi deskripsi sampel dan tujuan pengujian
+	-
+	4
+	Untuk sampel digital, mengisi tautan file cloud
+	-
+	5
+	Menekan "Konfirmasi & Generate Resi"
+	Memvalidasi kuota, menyimpan pengajuan berstatus "Menunggu Fisik"
+	6
+	-
+	Menjalankan SC-08 (penerbitan resi)
+	Alternatif: Akun suspended, sistem menolak akses form. Kuota habis atau mesin Maintenance, sistem menolak pengajuan dan menyarankan mesin atau hari lain.
+SC-08 Cetak Resi PDF Ber-barcode (E-Ticket)
+Aktor: Sistem (dipicu SC-07), Pemohon
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	-
+	Membuat barcode unik dan men-generate PDF resi
+	2
+	-
+	Menampilkan pratinjau tiket
+	3
+	Menekan "Unduh Resi Barcode (PDF)"
+	Mengirim berkas PDF resi
+	4
+	Sampel fisik: mencetak dan menempel resi pada wadah. Sampel digital: menyimpan sebagai E-Ticket
+	-
+	Alternatif: Resi dapat diunduh ulang kapan saja dari dasbor.
+SC-09 Lacak Linimasa (Timeline Tracking)
+Aktor: Pemohon
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka "Beranda & Linimasa"
+	Menampilkan kartu pengajuan aktif
+	2
+	-
+	Menampilkan progress bar 4 tahap (Menunggu Fisik, Dalam Antrean, Sedang Diuji, Selesai) beserta waktu riwayat status
+	Alternatif: Pengajuan ditolak, linimasa menampilkan status "Ditolak" dan alasan penolakan.
+SC-10 Validasi dan Perbarui Status Antrean
+Aktor: Laboran
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka tabel "Antrean Aktif"
+	Menampilkan tiket beserta status dan aksi
+	2
+	Memeriksa kesesuaian sampel atau tautan dengan SOP
+	-
+	3
+	Menekan "Terima Fisik"
+	Mengubah status menjadi "Dalam Antrean" dan mencatat Audit Trail
+	4
+	Menekan "Ubah ke Sedang Diuji" saat sampel diproses di mesin
+	Mengubah status menjadi "Sedang Diuji" dan mencatat Audit Trail
+	Alternatif: Sampel tidak sesuai SOP atau melewati 3x24 jam, Laboran menjalankan SC-12.
+
+
+
+
+
+
+
+
+SC-11 Assign Operator Laboran
+Aktor: Laboran
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka tabel antrean
+	Menampilkan kolom "Operator PIC" pada tiap baris
+	2
+	Memilih operator pada dropdown di baris tiket
+	Menyimpan penugasan
+	3
+	Memfilter antrean per penanggung jawab
+	Menampilkan tiket sesuai operator terpilih
+	Alternatif: Operator dapat diganti, sistem memperbarui penugasan.
+SC-12 Tolak Pengajuan dan Input Alasan
+Aktor: Laboran
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Menekan tombol "Tolak Sampel & Input Alasan" pada baris tiket
+	Menampilkan modal form penolakan
+	2
+	Mengisi alasan penolakan, menekan "Konfirmasi"
+	Memvalidasi alasan wajib diisi
+	3
+	-
+	Mengubah status menjadi "Ditolak" dan mencatat Audit Trail
+	4
+	-
+	Menampilkan status dan alasan penolakan pada linimasa Pemohon
+	Alternatif: Alasan kosong, penolakan tidak diproses. Untuk pelanggaran berat atau ghosting, Laboran dapat melanjutkan ke SC-03.
+SC-13 Kelola Unggahan Dokumen Hasil Uji
+Aktor: Laboran
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Menekan ikon "Unggah/Revisi PDF Hasil" pada baris tiket
+	Menampilkan form unggah
+	2
+	Memilih berkas hasil uji (PDF/Excel)
+	Memvalidasi format dan ukuran (maksimal 5 MB)
+	3
+	Menekan "Unggah"
+	Menyimpan berkas pada private storage dengan path terenkripsi
+	4
+	-
+	Mengubah status menjadi "Selesai" dan mencatat Audit Trail
+	Alternatif: Format atau ukuran tidak sesuai, sistem menolak unggahan. Pada revisi, berkas baru menggantikan berkas lama dan perubahan dicatat.
+SC-14 Unduh Dokumen Hasil Uji Terotorisasi
+Aktor: Pemohon
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka menu "Arsip Hasil Uji"
+	Menampilkan daftar tiket selesai milik Pemohon
+	2
+	Menekan "Unduh Hasil Lab"
+	Memverifikasi ID Pemohon yang login sama dengan pemilik tiket
+	3
+	-
+	Mengirim berkas dari private storage
+	Alternatif: Pemohon bukan pemilik tiket, sistem menolak akses.
+SC-15 Lihat Tabel Riwayat Audit Trail
+Aktor: Admin
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka menu "Log Audit Trail"
+	Menampilkan tabel log (pengajuan, pelaku, status sebelumnya, status baru, keterangan, waktu)
+	2
+	Mencari atau memfilter log
+	Menampilkan log sesuai kriteria
+	Alternatif: Tidak ada log yang cocok, sistem menampilkan pesan data kosong.
+SC-16 Lihat Grafik Statistik dan Ekspor Laporan
+Aktor: Admin
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka "Dashboard Statistik"
+	Menampilkan grafik pemakaian mesin/fakultas dan ringkasan metrik
+	2
+	Membuka "Laporan & Ekspor", menentukan rentang tanggal dan status
+	Menampilkan tabel riwayat pengujian sesuai filter
+	3
+	Menekan "Export Excel" atau "Export PDF"
+	Menghasilkan dan mengunduhkan dokumen laporan
+	Alternatif: Tidak ada data pada rentang tersebut, sistem menampilkan pesan data kosong dan ekspor dinonaktifkan.
+SC-17 Diskusi / Catatan Tiket Pengajuan
+Aktor: Pemohon, Laboran
+No
+	Aksi Aktor
+	Respon Sistem
+	1
+	Membuka detail pengajuan (Laboran melalui ikon "Buka Diskusi Tiket")
+	Menampilkan riwayat percakapan tiket
+	2
+	Menulis pesan, menekan "Kirim Catatan"
+	Menyimpan pesan beserta pengirim dan waktu kirim
+	3
+	-
+	Menampilkan pesan pada riwayat percakapan kedua pihak
+	Alternatif: Pesan kosong, sistem tidak mengirim pesan.
+Skenario Use Case
+1. Skenario Use Case: Buat Pengajuan Uji Lab
+* Aktor Utama: Pemohon (Mahasiswa/Dosen)
+* Tujuan: Pemohon mendaftarkan sampel uji (fisik/digital) ke dalam sistem dan memperoleh resi pelacakan (Resi PDF/E-Ticket).
+* Pre-condition: Pemohon sudah login, profil sudah lengkap dengan KTM/ID tervalidasi, dan akun tidak sedang disuspend.
+* Post-condition: Pengajuan tersimpan di database dengan status "Menunggu Fisik" dan sistem menerbitkan Resi PDF ber-barcode.
+Main Success Scenario (Alur Normal):
+1.  Pemohon memilih menu "Buat Pengajuan" di dashboard.
+2. Sistem menampilkan formulir pengajuan beserta pilihan Fakultas/Prodi dan daftar mesin laboratorium.
+3. Pemohon memilih mesin, lalu sistem menampilkan estimasi SLA, sisa kuota harian, dan panel SOP penyiapan sampel.
+4. Pemohon membaca SOP, mengisi deskripsi kondisi sampel, dan memasukkan tautan cloud jika sampel digital.
+5. Pemohon menekan tombol "Konfirmasi & Generate Resi".
+6. Sistem memvalidasi ketersediaan kuota mesin.
+7. Sistem menyimpan data pengajuan dengan status "Menunggu Fisik" dan menerbitkan Resi PDF ber-barcode.
+8. Pemohon mengunduh resi. Untuk sampel fisik, resi dicetak dan ditempelkan pada wadah sampel. Untuk sampel digital, resi disimpan sebagai E-Ticket tanpa dicetak.
+Alternative Flow (Alur Pengecualian):
+* 1a. Jika akun Pemohon sedang disuspend, sistem menolak akses ke formulir dan menampilkan alasan penangguhan.
+* 6a. Jika kuota mesin pada hari tersebut penuh, sistem menampilkan notifikasi error dan meminta Pemohon mengajukan di hari lain.
+* 6b. Jika mesin berstatus Maintenance, sistem menolak pengajuan dan meminta Pemohon memilih mesin lain.
+2. Skenario Use Case: Validasi & Perbarui Status Antrean
+* Aktor Utama: Laboran
+* Tujuan: Laboran mengonfirmasi penerimaan sampel fisik atau akses tautan digital, lalu memperbarui progres pengujian.
+* Pre-condition: Laboran sudah login dan terdapat tiket berstatus "Menunggu Fisik" yang sampel fisiknya sudah diserahkan beserta resi, atau tautan digitalnya sudah terdaftar.
+* Post-condition: Status tiket berubah menjadi "Dalam Antrean" lalu "Sedang Diuji", setiap perubahan tercatat di Audit Trail, dan linimasa Pemohon terbarui.
+Main Success Scenario (Alur Normal):
+1. Laboran membuka tabel "Antrean Aktif".
+2. Laboran menerima sampel fisik atau mengakses tautan digital, lalu memeriksa kesesuaiannya dengan SOP.
+3. Jika sesuai, Laboran menekan tombol "Terima Fisik".
+4. Sistem mengubah status menjadi "Dalam Antrean" dan mencatat Audit Trail.
+5. Saat sampel mulai diproses di mesin, Laboran menekan "Ubah ke Sedang Diuji".
+6. Sistem mengubah status menjadi "Sedang Diuji" dan mencatat Audit Trail.
+7. Sistem memperbarui linimasa pada dashboard Pemohon.
+Alternative Flow (Alur Pengecualian):
+* 2a. Jika sampel cacat, tidak sesuai SOP, atau tidak diserahkan dalam 3x24 jam (no-show), Laboran menjalankan skenario "Tolak Pengajuan".
+3. Skenario Use Case: Tolak Pengajuan & Input Alasan
+* Aktor Utama: Laboran
+* Tujuan: Laboran menolak pengajuan yang tidak valid agar antrean tetap bersih dari tiket semu.
+* Pre-condition: Laboran sudah login dan tiket berstatus "Menunggu Fisik", dengan sampel cacat atau tidak sesuai SOP, atau melewati batas penyerahan 3x24 jam.
+* Post-condition: Status tiket menjadi "Ditolak", alasan penolakan tersimpan, perubahan tercatat di Audit Trail, dan Pemohon dapat melihat alasannya di linimasa.
+Main Success Scenario (Alur Normal):
+1. Laboran menekan tombol "Tolak Sampel & Input Alasan" pada baris tiket.
+2. Sistem menampilkan modal form penolakan.
+3. Laboran mengisi alasan penolakan dan menekan "Konfirmasi".
+4. Sistem memvalidasi bahwa alasan sudah diisi.
+5. Sistem mengubah status menjadi "Ditolak" dan mencatat Audit Trail.
+6. Pemohon melihat status "Ditolak" beserta alasannya di linimasa dashboard.
+Alternative Flow (Alur Pengecualian):
+*  4a. Jika alasan penolakan kosong, sistem tidak memproses penolakan dan meminta alasan diisi.
+* 5a. Jika Pemohon melakukan pelanggaran berat atau ghosting, Laboran dapat melanjutkan ke skenario "Tangguhkan (Suspend) Akun Pemohon".
+4. Skenario Use Case: Kelola Unggahan Dokumen Hasil Uji
+* Aktor Utama: Laboran
+* Tujuan: Laboran menyerahkan hasil pengujian secara digital tanpa perantara kertas.
+* Pre-condition: Laboran sudah login, tiket berstatus "Sedang Diuji", dan mesin lab telah selesai memproses sampel.
+* Post-condition: Dokumen hasil uji (PDF/Excel) tersimpan terenkripsi di private storage, status tiket menjadi "Selesai", dan perubahan tercatat di Audit Trail.
+Main Success Scenario (Alur Normal):
+1. Laboran memilih tiket berstatus "Sedang Diuji" dan menekan ikon "Unggah/Revisi PDF Hasil".
+2. Sistem menampilkan form unggah.
+3. Laboran memilih berkas hasil uji (PDF/Excel) dan menekan tombol submit.
+4. Sistem memvalidasi format dan ukuran berkas (maksimal 5 MB).
+5. Sistem menyimpan berkas secara terenkripsi di private storage.
+6. Sistem mengubah status menjadi "Selesai" dan mencatat Audit Trail.
+Alternative Flow (Alur Pengecualian):
+* 4a. Jika format atau ukuran berkas tidak sesuai, sistem menolak unggahan dan menampilkan pesan kesalahan.
+* 1a. Jika Laboran perlu merevisi hasil, berkas baru menggantikan berkas lama dan perubahan dicatat.
+5. Skenario Use Case: Unduh Dokumen Hasil Uji Terotorisasi
+* Aktor Utama: Pemohon
+* Tujuan: Pemohon memperoleh hasil pengujian secara aman melalui portal terotorisasi.
+* Pre-condition: Pemohon sudah login dan tiket miliknya berstatus "Selesai" dengan berkas hasil uji sudah diunggah.
+* Post-condition: Pemohon berhasil mengunduh dokumen hasil uji ke perangkatnya.
+Main Success Scenario (Alur Normal):
+1. Pemohon melihat status "Selesai" pada linimasa di dashboard.
+2. Pemohon membuka menu "Arsip Hasil Uji".
+3. Sistem menampilkan daftar tiket selesai milik Pemohon.
+4. Pemohon menekan tombol "Unduh Hasil Lab".
+5. Sistem memverifikasi bahwa ID Pemohon yang login sama dengan pemilik tiket.
+6. Sistem mengirim berkas dari private storage ke perangkat Pemohon.
+Alternative Flow (Alur Pengecualian):
+* 5a. Jika Pemohon yang login bukan pemilik tiket, sistem menolak akses unduhan.
+
+
+
+
+
+
+   2. Arsitektur Sistem
+  
+
+Penjelasan Arsitektur:
+Sistem Telyuji dirancang menggunakan pola arsitektur Model-View-Controller (MVC) bawaan framework Laravel. Pemilihan arsitektur ini berdasarkan literatur rekayasa perangkat lunak modern guna memisahkan logika bisnis dari representasi antarmuka. Klien mengirimkan permintaan melalui peramban web yang ditangkap oleh Router dan diteruskan ke Controller. Manipulasi dan pengambilan data dilakukan oleh Model menggunakan Eloquent ORM dari basis data MySQL. Hasilnya kemudian diserahkan kepada View menggunakan Blade Templating untuk dirender menjadi antarmuka HTML. Pengelolaan berkas rahasia (file hasil lab) diproses di level Controller dan disimpan pada subsistem Storage lokal untuk mencegah akses URL publik.
+   3. Rancangan ERD
+  
+
+
+
+ERD pada sistem Telyuji terdiri dari sembilan tabel yang saling terhubung untuk mendukung proses layanan pengujian laboratorium. Tabel role menyimpan jenis peran pengguna, seperti Admin, Laboran, dan Pemohon, sedangkan tabel user menyimpan informasi pengguna yang terdaftar di sistem. Tabel fakultas dan prodi digunakan untuk menyimpan data fakultas dan program studi pengguna. Sementara itu, tabel mesin_lab menyimpan informasi mengenai alat laboratorium, kategori layanan, status mesin, kuota harian, estimasi waktu pengerjaan, serta SOP penyiapan sampel.
+Tabel pengajuan menjadi tabel utama yang mencatat permintaan pengujian dari pengguna. Informasi yang disimpan meliputi pemohon, mesin yang dipilih, laboran yang bertanggung jawab, tanggal pengajuan, deskripsi sampel, dan status proses pengujian. Tabel dokumen_hasil digunakan untuk menyimpan informasi file hasil pengujian yang berkaitan dengan pengajuan tertentu. Selain itu, tabel audit_logs mencatat perubahan status pengajuan beserta waktu dan pengguna yang melakukannya. Dengan begitu, proses pengujian dapat dipantau dan riwayat perubahannya dapat ditelusuri kembali.
+Tabel diskusi_pengajuan digunakan untuk menyimpan pesan antara pengguna dan pihak yang terlibat dalam pengajuan. Setiap pesan terhubung dengan pengajuan tertentu dan pengguna yang mengirimkannya. Hubungan antartabel dibentuk menggunakan primary key (PK) dan foreign key (FK) agar data dapat saling terhubung dengan baik. Sebagian besar relasi menggunakan kardinalitas one-to-many (1:N), seperti satu pengguna yang dapat membuat beberapa pengajuan. Sementara itu, hubungan antara pengajuan dan dokumen_hasil dibatasi agar satu pengajuan maksimal memiliki satu dokumen hasil. Secara keseluruhan, ERD ini dirancang agar pengelolaan data layanan pengujian laboratorium menjadi lebih terstruktur dan mudah ditelusuri.
+
+
+   4. Class Diagram
+Gambarkan rancangan class diagram dari aplikasi yang mau dibuat dan berikan penjelasan dari design class tersebut
+  
+
+________________
+
+
+
+
+   5. Mockup
+User Interface Mockup pada Sistem Informasi Manajemen Layanan Pengujian Laboratorium Terintegrasi (Telyuji) menggunakan pendekatan modern dark enterprise dashboard berbasis Laravel. Seluruh rancangan antarmuka telah menerapkan prinsip Responsive Web Design agar dapat diakses secara optimal baik melalui layar komputer desktop maupun Mobile
+
+
+A. Rancangan Visual Antarmuka Utama
+1. Mockup Dasbor Pemohon & Visual Timeline Tracking, Versi Web Desktop
+  
+
+* Deskripsi Antarmuka: Halaman ini meruppakan beranda utama bagi pengguna dengan peran Pemohon (Mahasiswa/Dosen) saat diakses melalui perangkat komputer/desktop. Komponen utama pada layar ini meliputi:
+   * Panel Navigasi Samping (Sidebar): Menampilkan identitas pengguna untuk profil yang sedang aktif beserta menu navigasi utama berisikan dasbor dan lain-lain.
+   * Kartu Ringkasan Status: Menampilkan empat indikator statistik pengujian milik pemohon secara real-time, yaitu Total Pengajuan, jumlah sampel Sedang Antre, Sedang Diuji, dan Selesai.
+   * Komponen Pelacakan Linimasa Horizontal (Visual Timeline Tracker - PBI-09): Menampilkan progres pengujian aktif (contoh: kode tiket TLY-20261015-089) dalam bentuk tahapan berurutan secara horizontal mulai dari status 1. Terdaftar  2. Resi Terbit  3. Dalam Antrean  4. Sedang Diuji  5. Selesai & Unduh.
+   * Aksi Cepat Dokumen Resi: Tersedia tombol Lihat E-Ticket PDF dan Cetak Barcode langsung pada kartu pelacakan untuk mengunduh ulang bukti pendaftaran sampel fisik.
+   * Panel Informasi SLA, Kuota & Ketentuan Layanan: Menampilkan sisa slot kuota harian mesin (3/5 Slot Tersedia), estimasi SLA (3 Hari), serta pengingat aturan layanan laboratorium kampus (tanpa biaya/pembayaran, tanpa peminjaman alat keluar, pembaruan status manual oleh laboran, serta pengantaran sampel mandiri).
+.
+2. Mockup Dasbor Pemohon & Visual Timeline Tracking, Versi Mobile Responsif
+  
+
+   * Deskripsi Antarmuka: Halaman ini merupakan adaptasi tampilan mobile web. Penyesuaian tata letak pada versi mobile meliputi:
+   * Header Kompak & Menu Hamburger: Navigasi samping (sidebar) disembunyikan ke dalam ikon hamburger menu di sudut kanan atas untuk memaksimalkan ruang baca vertikal.
+   * Grid Ringkasan di tengah: Kartu statistik ringkasan pengajuan untuk Total, Antre, Diuji, Selesai disusun dalam kolom yang ringkas.
+   * Linimasa Vertikal: Komponen Visual Timeline Tracking otomatis bertransformasi dari orientasi horizontal menjadi vertikal dari atas ke bawah lengkap dengan penanda waktu di setiap tahapan statu agar mudah dipantau menggunakan layar sentuh ponsel.
+   * Tombol Aksi Lebar Penuh: Tombol Lihat E-Ticket PDF dan Cetak Barcode ditempatkan secara vertikal dengan ukuran penuh agar ramah terhadap interaksi jari pengguna.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+________________
+
+
+   5. Metode Pengembangan
+Metode pengembangan perangkat lunak yang digunakan adalah kerangka kerja Scrum (Agile Methodology). Metode ini dipilih agar tim dapat beradaptasi terhadap perubahan kebutuhan pengguna melalui pengiriman perangkat lunak secara bertahap dan iteratif.
+   6. Jadwal Pengembangan
+Proyek ini dibagi menjadi 2 iterasi (Sprint) utama. Setiap Sprint diakhiri dengan Sprint Review dan Retrospective untuk mengevaluasi produk dan performa tim.
+
+
+Tabel Jadwal Pengembangan (Sprint 1 & Sprint 2)
+
+
+Sprint & Tahapan
+	Waktu Pelaksanaan
+	Modul / Aktivitas (PBI)
+	Penanggung Jawab (PIC)
+	Persiapan & Proposal
+	Minggu 4 - 5
+
+
+(5 Okt - 16 Okt)
+	Finalisasi Dokumen Proposal, Review Progress, dan Presentasi Proposal.
+	Seluruh Tim
+	SPRINT 1
+
+
+Planning
+	Minggu 6
+
+
+(19 Okt - 23 Okt)
+	Sprint Planning, Setup Versioning Control (Git), & Inisialisasi Database (Seeder Akun Dasar).
+	Seluruh Tim
+	SPRINT 1
+
+
+Execution
+	Minggu 7 - 9
+
+
+(26 Okt - 13 Nov)
+	PBI-01, PBI-03 (Profil KTM & Master Fakultas)
+
+
+PBI-04, PBI-06 (Katalog Mesin & SOP Lab)
+
+
+PBI-07 (Form Pengajuan Uji)
+
+
+PBI-10 (Validasi Terima Sampel)
+
+
+PBI-13 (Unggah Dokumen Hasil Uji)
+
+
+PBI-16 (Grafik Analitik Dasbor)
+	Anggota 1
+
+
+
+
+Anggota 2
+
+
+Anggota 3
+
+
+Anggota 4
+
+
+
+
+Hainur Fadillah (PM)
+
+
+Anggota 6
+	SPRINT 1
+
+
+Testing & Review
+	Minggu 10
+
+
+(16 Nov - 20 Nov)
+	Praktikum Testing (Laravel Dusk), Sprint Review, dan Sprint Retrospective.
+	Seluruh Tim
+	SPRINT 2
+
+
+Planning & Awal Execution
+	Minggu 11 - 12
+
+
+(23 Nov - 4 Des)
+	Sprint Planning 2.
+
+
+PBI-02 (Suspend Akun Pemohon)
+
+
+PBI-05 (Parameter Kuota & SLA)
+
+
+PBI-08 (Generator Resi E-Ticket PDF)
+	Seluruh Tim
+
+
+Anggota 1
+
+
+
+
+Anggota 2
+
+
+Anggota 3
+	SPRINT 2
+
+
+Lanjutan Execution
+	Minggu 13 - 14
+
+
+(7 Des - 18 Des)
+	PBI-09 (Visual Timeline Tracking)
+
+
+PBI-11, PBI-12 (Assign Operator & Tolak Sampel)
+
+
+PBI-14, PBI-15 (Unduh Hasil Terotorisasi & Audit Trail)
+
+
+PBI-17, PBI-18 (Diskusi Tiket & Ekspor Laporan)
+	Anggota 3
+
+
+Anggota 4
+
+
+Hainur Fadillah (PM)
+
+
+Anggota 6
+	SPRINT 2
+
+
+Review & Finalisasi
+	Minggu 15 - 16
+
+
+(28 Des - 8 Jan)
+	Monitoring Testing, Sprint Review (Pemeriksaan Repositori oleh AI Agent), Retrospective Akhir, dan Penilaian.
+	Seluruh Tim
+	
+
+   7. Tim Pengembang
+Tim pengembang Telyuji terdiri dari 6 individu lintas fungsi (Full-Stack Developers) dengan tanggung jawab spesifik pada tiap modul (PBI):
+
+
+No
+	Nama Lengkap
+	NIM
+	Peran Utama
+	Tanggung Jawab Modul & Fitur (PBI)
+	1
+	Syalfa Oktaviana Wijaya
+	102022400228
+	Developer
+	Modul Akses & Institusi (PBI-01, PBI-02, PBI-03):
+
+
+Manajemen profil dan validasi unggah KTM Pemohon, fitur Suspend akun pelanggar, serta kelola Master Data Fakultas dan Prodi.
+	2
+	Helmi Fauzan
+	102022400211
+	Developer
+	Modul Katalog Lab (PBI-04, PBI-05, PBI-06):
+
+
+Pengelolaan status katalog mesin, perhitungan SLA waktu & batas kuota harian, serta penulisan panduan SOP lab.
+	3
+	Giri Pulung Nugroho
+	102022400284
+	Developer
+	Modul Pengajuan (PBI-07, PBI-08, PBI-09):
+
+
+Pembuatan formulir dinamis pengajuan uji, generator Resi E-Ticket PDF ber-barcode, dan UI Visual Timeline Tracking.
+	4
+	Galuh Shafa Auliana R.
+	102022400131
+	Developer
+	Modul Validasi Antrean (PBI-10, PBI-11, PBI-12):
+
+
+Logika operasional terima fisik/ubah status, fitur Assign Operator penanggung jawab, dan penolakan cacat sampel beserta alasannya.
+	5
+	Hainur Fadillah
+	102022430032
+	PM / Developer
+	Modul Hasil & Keamanan (PBI-13, PBI-14, PBI-15):
+
+
+Fitur unggah dokumen lab, gerbang unduh file hasil uji terotorisasi (private storage), dan pencatatan Audit Trail otomatis.
+	6
+	Nabila Rizky Putri
+	102022400061
+	Developer
+	Modul Pelaporan & Dasbor (PBI-16, PBI-17, PBI-18):
+
+
+Manipulasi query grafik statistik utilitas mesin, fitur ruang pesan/diskusi tiket pengajuan, dan filter ekspor laporan ke Excel/PDF.
