@@ -23,7 +23,7 @@ class CreatePbi13HasilUjiTables extends Migration
             $table->string('nama_sampel');
             $table->string('instrumen');
             $table->string('laboratorium');
-            $table->enum('status', ['Menunggu Verifikasi', 'Sedang Diuji', 'Selesai'])->default('Sedang Diuji');
+            $table->enum('status', ['Menunggu Verifikasi', 'Dalam Antrean', 'Sedang Diuji', 'Selesai', 'Ditolak'])->default('Menunggu Verifikasi');
             $table->date('tanggal_uji');
             $table->timestamps();
 
