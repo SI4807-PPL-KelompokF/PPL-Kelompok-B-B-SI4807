@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboranHasilUjiController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PengajuanUjiController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LaboranAntreanController;
@@ -28,6 +29,13 @@ Route::get('/lacak-sampel/{nomorTiket}', [LandingController::class, 'track'])
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+// PBI-01 (UC-01): Profil Akademik & Validasi Identitas KTM — Pemohon (Syalfa Oktaviana)
+Route::middleware('auth')->group(function () {
+    Route::get('/profil', [ProfileController::class, 'show'])->name('profil.show');
+    Route::put('/profil', [ProfileController::class, 'update'])->name('profil.update');
+    Route::get('/profil/prodi', [ProfileController::class, 'prodiByFakultas'])->name('profil.prodi');
+});
 
 // Modul Pengajuan (PBI-07, PBI-08, PBI-09 - Giri Pulung Nugroho)
 Route::middleware('auth')->group(function () {

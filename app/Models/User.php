@@ -30,9 +30,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'nama_lengkap',
         'email',
         'password',
         'role',
+        'nomor_induk',
+        'fakultas_id',
+        'prodi_id',
+        'foto_identitas',
+        'status_validasi_ktm',
     ];
 
     /**
@@ -114,5 +120,24 @@ class User extends Authenticatable
     public function tiketPengujian()
     {
         return $this->hasMany(TiketPengujian::class, 'user_id');
+    }
+
+    /**
+     * Cek apakah profil akademik pemohon sudah tervalidasi.
+     */
+    public function isValidasiKtm(): bool
+    {
+        return ($this->status_validasi_ktm ?? 'Belum Tervalidasi') === 'Tervalidasi';
+    }
+
+    /**
+     * Cek apakah data profil wajib PBI-01 sudah dilengkapi.
+     */
+    public function isProfilLengkap(): bool
+    {
+        return !empty($this->nama_lengkap)
+            && !empty($this->nomor_induk)
+            && !empty($this->fakultas_id)
+            && !empty($this->prodi_id);
     }
 }
