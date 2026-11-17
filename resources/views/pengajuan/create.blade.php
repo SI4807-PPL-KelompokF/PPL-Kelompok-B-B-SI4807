@@ -101,6 +101,15 @@
                         <select id="prodi" name="prodi" dusk="select-prodi" required
                                 class="tu-input @error('prodi') is-invalid @enderror">
                             <option value="">-- Pilih Program Studi --</option>
+                            @php
+                                $selectedFak = old('fakultas', 'Fakultas Rekayasa Industri (FRI)');
+                                $prodiList = $fakultasProdiMap[$selectedFak] ?? ['S1 Sistem Informasi', 'S1 Teknik Industri', 'S1 Teknik Logistik'];
+                            @endphp
+                            @foreach ($prodiList as $pName)
+                                <option value="{{ $pName }}" {{ old('prodi', 'S1 Sistem Informasi') === $pName ? 'selected' : '' }}>
+                                    {{ $pName }}
+                                </option>
+                            @endforeach
                         </select>
                         @error('prodi')
                             <p class="tu-error">{{ $message }}</p>
