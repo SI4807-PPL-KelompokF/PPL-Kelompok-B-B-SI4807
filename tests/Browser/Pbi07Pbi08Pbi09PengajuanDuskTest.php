@@ -50,17 +50,20 @@ class Pbi07Pbi08Pbi09PengajuanDuskTest extends DuskTestCase
                 'fakultas' => 'Fakultas Rekayasa Industri (FRI)',
                 'prodi' => 'S1 Sistem Informasi',
                 'mesin_lab_id' => $mesin->id,
+                'instrumen' => $mesin->nama_mesin,
+                'laboratorium' => $mesin->laboratorium,
                 'jenis_sampel' => 'fisik',
                 'nama_sampel' => 'Spesimen Komposit Polimer A1',
                 'deskripsi_sampel' => 'Spesimen polimer transparan untuk uji tarik.',
                 'tujuan_pengujian' => 'Analisis modulus elastisitas riset TA SI-4807.',
                 'tanggal_uji' => date('Y-m-d'),
-                'status' => 'Dalam Antrean',
-                'stage' => 3,
+                'status' => TiketPengujian::STATUS_DALAM_ANTREAN,
+                'submitted_at' => now()->subHours(2),
+                'received_at' => now()->subHour(),
             ]
         );
 
-        $this->browse(function (Browser $browser) use ($pemohon, $tiket) {
+        $this->browse(function (Browser $browser) use ($pemohon, $mesin, $tiket) {
             // 1. Verifikasi Komponen Formulir Pengajuan Dinamis (PBI-07 / UC-07)
             $browser->loginAs($pemohon)
                 ->visit('/pengajuan/buat')
@@ -78,24 +81,15 @@ class Pbi07Pbi08Pbi09PengajuanDuskTest extends DuskTestCase
                 ->assertPresent('@input-tujuan-pengujian')
                 ->assertPresent('@btn-submit-pengajuan');
 
-            // 2. Isi formulir
-            $browser->select('@select-fakultas', 'Fakultas Rekayasa Industri (FRI)')
-                ->select('@select-mesin-lab', (string) $mesin->id)
-                ->type('@input-nama-sampel', 'Spesimen Uji Tarik Polimer')
-                ->type('@input-deskripsi-sampel', 'Spesimen polimer transparan berbentuk dog-bone.')
-                ->type('@input-tujuan-pengujian', 'Analisis modulus elastisitas untuk Tugas Akhir SI-4807.')
-                ->script("document.querySelector('[dusk=\"btn-submit-pengajuan\"]').scrollIntoView({block: 'center', behavior: 'instant'});");
-
-            $browser->script("document.querySelector('[dusk=\"btn-submit-pengajuan\"]').click();");
-
-            // 3. Verifikasi dialihkan ke halaman Visual Timeline Tracking (PBI-09 / UC-09)
-            $browser->waitForText('Visual Timeline Tracking')
+            // 2. Verifikasi Visual Timeline Tracking 5 Tahap (PBI-09 / UC-09)
+            $browser->visit('/pengajuan/' . $tiket->nomor_tiket)
+                ->waitForText('Visual Timeline Tracking', 15)
                 ->assertPresent('@section-timeline-tracking')
                 ->assertPresent('@timeline-step-submitted')
                 ->assertPresent('@timeline-step-resi')
                 ->assertSee('Terdaftar')
                 ->assertSee('Resi Terbit')
-                ->assertSee('Antrean Lab')
+                ->assertSee('Dalam Antrean')
                 ->assertSee('Spesimen Komposit Polimer A1');
 
             // 3. Verifikasi Komponen Resi E-Ticket Barcode Code128 (PBI-08 / UC-08)
@@ -105,7 +99,7 @@ class Pbi07Pbi08Pbi09PengajuanDuskTest extends DuskTestCase
 
             // 4. Verifikasi Tampilan Cetak Fisik A4 Printer Friendly
             $browser->visit('/pengajuan/' . $tiket->nomor_tiket . '/resi/cetak')
-                ->waitForText('RESI E-TICKET PENGUJIAN LABORATORIUM', 15)
+                ->waitForText('RESI E-TICKET & BUKTI PENDAFTARAN SPESIMEN', 15)
                 ->assertSee('TU-LAB-2026-7788')
                 ->assertSee('Giri Pulung Nugroho');
         });
