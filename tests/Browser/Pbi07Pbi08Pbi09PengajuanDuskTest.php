@@ -50,6 +50,8 @@ class Pbi07Pbi08Pbi09PengajuanDuskTest extends DuskTestCase
                 'fakultas' => 'Fakultas Rekayasa Industri (FRI)',
                 'prodi' => 'S1 Sistem Informasi',
                 'mesin_lab_id' => $mesin->id,
+                'instrumen' => $mesin->nama_mesin,
+                'laboratorium' => $mesin->laboratorium,
                 'jenis_sampel' => 'fisik',
                 'nama_sampel' => 'Spesimen Komposit Polimer A1',
                 'deskripsi_sampel' => 'Spesimen polimer transparan untuk uji tarik.',
