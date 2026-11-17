@@ -17,5 +17,7 @@ yarn-error.log
 /.vscode
 /.impeccable/config.local.json
 /state
+/ProposalPPL
+PROMPT_LOG.md
 .DS_Store
 Thumbs.db
