@@ -78,9 +78,18 @@ class Pbi07Pbi08Pbi09PengajuanDuskTest extends DuskTestCase
                 ->assertPresent('@input-tujuan-pengujian')
                 ->assertPresent('@btn-submit-pengajuan');
 
-            // 2. Verifikasi Visual Timeline Tracking 5 Tahap (PBI-09 / UC-09)
-            $browser->visit('/pengajuan/' . $tiket->nomor_tiket)
-                ->waitForText('Visual Timeline Tracking', 15)
+            // 2. Isi formulir
+            $browser->select('@select-fakultas', 'Fakultas Rekayasa Industri (FRI)')
+                ->select('@select-mesin-lab', (string) $mesin->id)
+                ->type('@input-nama-sampel', 'Spesimen Uji Tarik Polimer')
+                ->type('@input-deskripsi-sampel', 'Spesimen polimer transparan berbentuk dog-bone.')
+                ->type('@input-tujuan-pengujian', 'Analisis modulus elastisitas untuk Tugas Akhir SI-4807.')
+                ->script("document.querySelector('[dusk=\"btn-submit-pengajuan\"]').scrollIntoView({block: 'center', behavior: 'instant'});");
+
+            $browser->script("document.querySelector('[dusk=\"btn-submit-pengajuan\"]').click();");
+
+            // 3. Verifikasi dialihkan ke halaman Visual Timeline Tracking (PBI-09 / UC-09)
+            $browser->waitForText('Visual Timeline Tracking')
                 ->assertPresent('@section-timeline-tracking')
                 ->assertPresent('@timeline-step-submitted')
                 ->assertPresent('@timeline-step-resi')
