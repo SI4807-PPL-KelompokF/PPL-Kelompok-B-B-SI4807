@@ -97,7 +97,7 @@ class Pbi07Pbi08Pbi09PengajuanDuskTest extends DuskTestCase
                 ->assertPresent('@timeline-step-resi')
                 ->assertSee('Terdaftar')
                 ->assertSee('Resi Terbit')
-                ->assertSee('Antrean Lab')
+                ->assertSee('Dalam Antrean')
                 ->assertSee('Spesimen Komposit Polimer A1');
 
             // 3. Verifikasi Komponen Resi E-Ticket Barcode Code128 (PBI-08 / UC-08)
