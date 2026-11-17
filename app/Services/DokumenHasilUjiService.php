@@ -395,7 +395,7 @@ class DokumenHasilUjiService
      */
     public function ensureInitialDataSeeded(): void
     {
-        if (!Schema::hasTable('tiket_pengujian') || TiketPengujian::count() > 0) {
+        if (!Schema::hasTable('tiket_pengujian') || TiketPengujian::where('nomor_tiket', 'TLY-20261015-089')->exists()) {
             return;
         }
 

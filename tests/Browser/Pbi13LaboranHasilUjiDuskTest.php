@@ -24,6 +24,8 @@ class Pbi13LaboranHasilUjiDuskTest extends DuskTestCase
             ]
         );
 
+        app(\App\Services\DokumenHasilUjiService::class)->ensureInitialDataSeeded();
+
         $this->browse(function (Browser $browser) use ($laboran) {
             $browser->loginAs($laboran)
                 ->visit('/laboran/pengujian')
