@@ -62,7 +62,7 @@ class Pbi07Pbi08Pbi09PengajuanDuskTest extends DuskTestCase
             ]
         );
 
-        $this->browse(function (Browser $browser) use ($pemohon, $tiket) {
+        $this->browse(function (Browser $browser) use ($pemohon, $mesin, $tiket) {
             // 1. Verifikasi Komponen Formulir Pengajuan Dinamis (PBI-07 / UC-07)
             $browser->loginAs($pemohon)
                 ->visit('/pengajuan/buat')
