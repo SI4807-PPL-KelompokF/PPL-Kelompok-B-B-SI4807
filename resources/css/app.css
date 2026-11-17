@@ -524,6 +524,51 @@
     border-color: rgba(234, 239, 177, .38);
   }
 
+  /* Pengajuan Form & SOP Panels (Light & Dark Mode Contrast) */
+  .tu-sop-panel {
+    background-color: #fffbeb;
+    border: 1px solid #fcd34d;
+  }
+  .tu-sop-title {
+    color: #78350f;
+  }
+  .tu-sop-body {
+    color: #451a03;
+  }
+  .tu-choice-card {
+    background-color: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    transition: border-color .2s var(--ease), background-color .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .tu-choice-card:hover {
+    border-color: var(--red);
+  }
+  .tu-choice-card:has(:checked) {
+    background-color: rgba(237, 30, 40, .04);
+    border-color: var(--red);
+    box-shadow: 0 0 0 1px var(--red);
+  }
+  .tu-choice-desc {
+    color: #4b5563;
+  }
+  .tu-radio {
+    accent-color: var(--red);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+  }
+  .tu-confirm-panel {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+  }
+  .tu-confirm-box {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+  }
+  .tu-confirm-text {
+    color: #1f2937;
+  }
+
   /* Hero showcase & optical scan transition */
   .tu-frame {
     position: relative;
@@ -1456,8 +1501,86 @@
   html.dark .bg-gray-50\/70 {
     background-color: #0b0d12;
   }
-  html.dark .bg-gray-100 {
+  html.dark .bg-gray-100,
+  html.dark .bg-gray-100\/80 {
     background-color: #1a1f2c;
+  }
+  html.dark .bg-gray-200 {
+    background-color: #242a38;
+  }
+  html.dark .bg-amber-50\/70,
+  html.dark .bg-amber-50\/80 {
+    background-color: rgba(247, 212, 136, .08);
+  }
+  html.dark .bg-amber-100 {
+    background-color: rgba(247, 212, 136, .16);
+    border: 1px solid rgba(247, 212, 136, .35);
+  }
+  html.dark .border-amber-200 {
+    border-color: rgba(247, 212, 136, .35);
+  }
+  html.dark .text-amber-900\/90 {
+    color: #f3f4f6;
+  }
+  html.dark .bg-emerald-100 {
+    background-color: rgba(16, 185, 129, .16);
+    border: 1px solid rgba(16, 185, 129, .38);
+  }
+  html.dark .bg-red-50 {
+    background-color: rgba(237, 30, 40, .1);
+  }
+  html.dark .bg-red-100 {
+    background-color: rgba(237, 30, 40, .18);
+  }
+  html.dark .border-red-200,
+  html.dark .border-red-300 {
+    border-color: rgba(237, 30, 40, .4);
+  }
+  html.dark .text-red-950,
+  html.dark .text-red-800,
+  html.dark .text-red-700,
+  html.dark .text-red-600 {
+    color: #fca5a5;
+  }
+  html.dark .ring-red-100 {
+    --tw-ring-color: rgba(237, 30, 40, .28);
+  }
+  html.dark .tu-sop-panel {
+    background-color: rgba(247, 212, 136, .08);
+    border-color: rgba(247, 212, 136, .35);
+  }
+  html.dark .tu-sop-title {
+    color: #f7d488;
+  }
+  html.dark .tu-sop-body {
+    color: #f3f4f6;
+  }
+  html.dark .tu-choice-card {
+    background-color: #0e1118;
+    border-color: #2a3142;
+  }
+  html.dark .tu-choice-card:hover {
+    border-color: var(--red);
+    background-color: #151a24;
+  }
+  html.dark .tu-choice-card:has(:checked) {
+    background-color: rgba(237, 30, 40, .14);
+    border-color: var(--red);
+    box-shadow: 0 0 0 1px var(--red);
+  }
+  html.dark .tu-choice-desc {
+    color: #cbd5e1;
+  }
+  html.dark .tu-confirm-panel {
+    background-color: #131720;
+    border-color: #242a38;
+  }
+  html.dark .tu-confirm-box {
+    background-color: #0e1118;
+    border-color: #2a3142;
+  }
+  html.dark .tu-confirm-text {
+    color: #e5e7eb;
   }
   html.dark .text-gray-950,
   html.dark .text-gray-900 {
@@ -1512,6 +1635,10 @@
   html.dark .tu-check {
     background: #0e1118;
     border-color: #4b5563;
+  }
+  html.dark .tu-check:checked {
+    background: var(--red);
+    border-color: var(--red);
   }
   html.dark .tu-label {
     color: #e5e7eb;

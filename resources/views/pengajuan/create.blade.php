@@ -178,14 +178,14 @@
                         </div>
 
                         <!-- Panel SOP Penyiapan Sampel (PBI-06 / SC-06 Reader) -->
-                        <div class="bg-amber-50/70 border border-amber-200 rounded-md p-4">
-                            <div class="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase tracking-wide mb-1.5">
-                                <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <div class="tu-sop-panel rounded-md p-4">
+                            <div class="tu-sop-title flex items-center gap-2 font-bold text-xs uppercase tracking-wide mb-2">
+                                <svg class="w-4 h-4 text-amber-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span>Panduan Standar Operasional Prosedur (SOP) Penyiapan Sampel</span>
                             </div>
-                            <div id="dispSopPenyiapan" class="text-xs text-amber-900/90 whitespace-pre-line leading-relaxed font-sans">
+                            <div id="dispSopPenyiapan" class="tu-sop-body text-xs sm:text-[13px] whitespace-pre-line leading-relaxed font-sans">
                                 Silakan pilih mesin laboratorium untuk membaca petunjuk penyiapan sampel.
                             </div>
                         </div>
@@ -207,34 +207,34 @@
                     <!-- Pilihan Bentuk Sampel (Fisik / Digital) -->
                     <div>
                         <label class="tu-label">Bentuk Sampel Pengujian <span class="text-racing-red">*</span></label>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-1.5">
-                            <label class="relative flex items-start gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer transition-all hover:border-racing-red has-[:checked]:border-racing-red has-[:checked]:bg-red-50/20">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                            <label class="tu-choice-card relative flex items-start gap-3.5 p-4 sm:p-5 rounded-lg cursor-pointer">
                                 <input type="radio" name="jenis_sampel" value="fisik" dusk="radio-sampel-fisik"
-                                       class="mt-1 text-racing-red focus:ring-racing-red"
+                                       class="tu-radio mt-0.5 shrink-0"
                                        {{ old('jenis_sampel', 'fisik') === 'fisik' ? 'checked' : '' }}
                                        onchange="toggleJenisSampel()">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-900">Spesimen Fisik</p>
-                                    <p class="text-xs text-gray-500 mt-0.5">
+                                <div class="space-y-1.5">
+                                    <p class="text-sm font-bold text-gray-950">Spesimen Fisik</p>
+                                    <p class="tu-choice-desc text-xs leading-relaxed">
                                         Sampel material, cairan, kristal, komponen elektronika, atau beton yang diserahkan langsung ke meja Laboran.
                                     </p>
-                                    <span class="inline-block mt-2 text-[10px] font-semibold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
+                                    <span class="tu-chip tu-chip--jasmine mt-1">
                                         Wajib Cetak &amp; Tempel Resi Barcode
                                     </span>
                                 </div>
                             </label>
 
-                            <label class="relative flex items-start gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer transition-all hover:border-racing-red has-[:checked]:border-racing-red has-[:checked]:bg-red-50/20">
+                            <label class="tu-choice-card relative flex items-start gap-3.5 p-4 sm:p-5 rounded-lg cursor-pointer">
                                 <input type="radio" name="jenis_sampel" value="digital" dusk="radio-sampel-digital"
-                                       class="mt-1 text-racing-red focus:ring-racing-red"
+                                       class="tu-radio mt-0.5 shrink-0"
                                        {{ old('jenis_sampel') === 'digital' ? 'checked' : '' }}
                                        onchange="toggleJenisSampel()">
-                                <div>
-                                    <p class="text-sm font-bold text-gray-900">Berkas / Dataset Digital</p>
-                                    <p class="text-xs text-gray-500 mt-0.5">
+                                <div class="space-y-1.5">
+                                    <p class="text-sm font-bold text-gray-950">Berkas / Dataset Digital</p>
+                                    <p class="tu-choice-desc text-xs leading-relaxed">
                                         Data komputasi simulasi, file CAD/FEA, mesh 3D, atau dataset riset yang diunggah ke cloud storage.
                                     </p>
-                                    <span class="inline-block mt-2 text-[10px] font-semibold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded">
+                                    <span class="tu-chip tu-chip--mint mt-1">
                                         E-Ticket Digital (Tanpa Cetak Fisik)
                                     </span>
                                 </div>
@@ -306,12 +306,12 @@
             </section>
 
             <!-- Section 4: Konfirmasi Ketentuan & Submit -->
-            <section class="bg-gray-100/80 border border-gray-200 rounded-lg p-6 space-y-4 tu-reveal [--d:240ms]">
-                <div class="flex items-start gap-3">
+            <section class="tu-confirm-panel rounded-lg p-6 sm:p-8 space-y-5 shadow-sm tu-reveal [--d:240ms]">
+                <div class="tu-confirm-box rounded-md p-4 flex items-start gap-3.5">
                     <input type="checkbox" id="persetujuan_sop" name="persetujuan_sop" required
-                           class="tu-check mt-1" checked>
-                    <label for="persetujuan_sop" class="text-xs text-gray-700 leading-relaxed cursor-pointer select-none">
-                        Saya menyatakan bahwa data spesimen yang diajukan sudah sesuai dengan Standar Operasional Prosedur (SOP) Laboratorium Telkom University, bersedia menyerahkan sampel fisik maksimal dalam 3x24 jam sejak tiket diterbitkan, dan memahami bahwa layanan laboratorium kampus ini <strong>bebas biaya (gratis)</strong>.
+                           class="tu-check mt-0.5 shrink-0" checked>
+                    <label for="persetujuan_sop" class="tu-confirm-text text-xs sm:text-sm leading-relaxed cursor-pointer select-none">
+                        Saya menyatakan bahwa data spesimen yang diajukan sudah sesuai dengan Standar Operasional Prosedur (SOP) Laboratorium Telkom University, bersedia menyerahkan sampel fisik maksimal dalam 3x24 jam sejak tiket diterbitkan, dan memahami bahwa layanan laboratorium kampus ini <strong class="font-bold text-gray-950">bebas biaya (gratis)</strong>.
                     </label>
                 </div>
 

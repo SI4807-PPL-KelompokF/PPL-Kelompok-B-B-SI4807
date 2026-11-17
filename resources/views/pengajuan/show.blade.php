@@ -327,15 +327,15 @@
                 </section>
 
                 <!-- Ketentuan Penyerahan Sampel & SOP Lab -->
-                <section class="bg-amber-50/80 border border-amber-200 rounded-lg p-5 space-y-3 tu-reveal [--d:80ms]">
-                    <div class="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase tracking-wider">
-                        <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <section class="tu-sop-panel rounded-lg p-5 space-y-3 tu-reveal [--d:80ms]">
+                    <div class="tu-sop-title flex items-center gap-2 font-bold text-xs uppercase tracking-wider">
+                        <svg class="w-4 h-4 text-amber-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                         </svg>
                         <span>Instruksi Logistik Penting Bagi Pemohon</span>
                     </div>
 
-                    <ul class="text-xs text-amber-900/90 space-y-1.5 list-disc list-inside leading-relaxed">
+                    <ul class="tu-sop-body text-xs space-y-1.5 list-disc list-inside leading-relaxed">
                         @if ($tiket->jenis_sampel === 'fisik')
                             <li><strong>Spesimen Fisik:</strong> Harap cetak Resi Barcode dan tempelkan pada wadah sebelum diserahkan ke Laboran.</li>
                             <li><strong>Batas Penyerahan 3x24 Jam:</strong> Tiket yang tidak diserahkan sampel fisiknya dalam 3x24 jam akan otomatis ditolak (no-show) oleh sistem.</li>

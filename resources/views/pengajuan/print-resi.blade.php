@@ -7,25 +7,7 @@
     <link rel="preconnect" href="https://api.fontshare.com">
     <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
     <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'racing-red': '#ED1E28',
-                        'tiger-flame': '#F26A2D',
-                        'jasmine': '#F7D488',
-                        'cream': '#EAEFB1',
-                        'frosted-mint': '#E9F7CA',
-                    },
-                    fontFamily: {
-                        sans: ['"General Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-900 font-sans p-4 sm:p-8 print:p-0 print:bg-white">
     <!-- Non-printable top action bar -->
