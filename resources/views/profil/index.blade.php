@@ -227,7 +227,7 @@
                     $isValidated = $user->isValidasiKtm();
                     $isRejected = $user->isKtmDitolak();
                 @endphp
-                <div class="flex-shrink-0 self-start sm:self-center">
+                <div class="flex-shrink-0 self-start sm:self-center" dusk="pill-status-validasi">
                     @if($isValidated)
                         <span class="pv-pill-validated validated">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -255,7 +255,7 @@
 
             {{-- Flash success --}}
             @if(session('status'))
-                <div class="mb-6 flex items-center gap-3 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-800" role="alert">
+                <div class="mb-6 flex items-center gap-3 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-lg text-sm text-emerald-800" dusk="alert-status" role="alert">
                     <svg class="w-4 h-4 flex-shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
@@ -306,6 +306,7 @@
                                     type="text"
                                     id="nama_lengkap"
                                     name="nama_lengkap"
+                                    dusk="input-nama-lengkap"
                                     class="pv-input {{ $errors->has('nama_lengkap') ? 'is-invalid' : '' }}"
                                     value="{{ old('nama_lengkap', $user->nama_lengkap ?? $user->name) }}"
                                     placeholder="Masukkan nama lengkap sesuai KTM"
@@ -327,6 +328,7 @@
                                     type="text"
                                     id="nomor_induk"
                                     name="nomor_induk"
+                                    dusk="input-nomor-induk"
                                     class="pv-input {{ $errors->has('nomor_induk') ? 'is-invalid' : '' }}"
                                     value="{{ old('nomor_induk', $user->nomor_induk) }}"
                                     placeholder="Contoh: 102022400228"
@@ -346,6 +348,7 @@
                                     <input
                                         type="email"
                                         id="email_institusi"
+                                        dusk="input-email-institusi"
                                         class="pv-input pr-10"
                                         value="{{ $user->email }}"
                                         disabled
@@ -371,6 +374,7 @@
                                 <select
                                     id="fakultas_id"
                                     name="fakultas_id"
+                                    dusk="select-fakultas"
                                     class="pv-input {{ $errors->has('fakultas_id') ? 'is-invalid' : '' }}"
                                     required
                                     onchange="updateProdiOptions()"
@@ -395,6 +399,7 @@
                                 <select
                                     id="prodi_id"
                                     name="prodi_id"
+                                    dusk="select-prodi"
                                     class="pv-input {{ $errors->has('prodi_id') ? 'is-invalid' : '' }}"
                                     required
                                 >
@@ -408,7 +413,7 @@
                             {{-- Tombol submit --}}
                             <div class="flex items-center justify-end gap-3 pt-2">
                                 <a href="{{ route('home') }}" class="pv-btn-secondary">Batal</a>
-                                <button type="submit" class="pv-btn-primary">
+                                <button type="submit" dusk="btn-submit-profil" class="pv-btn-primary">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                                     </svg>
@@ -440,7 +445,7 @@
                         <div class="px-6 py-5 space-y-4">
                             {{-- Pratinjau berkas yang sudah ada --}}
                             @if($user->foto_identitas)
-                                <div id="berkas-preview" class="rounded-lg border border-gray-200 bg-gray-50 p-4">
+                                <div id="berkas-preview" dusk="berkas-preview" class="rounded-lg border border-gray-200 bg-gray-50 p-4">
                                     <p class="text-[10px] font-semibold text-gray-500 uppercase tracking-widest mb-3">Berkas Terunggah</p>
                                     <div class="flex items-center gap-3">
                                         @php
@@ -467,10 +472,12 @@
                                             <div class="flex gap-2 mt-2 flex-wrap">
                                                 <a href="{{ route('profil.identitas.preview') }}"
                                                    target="_blank"
+                                                   dusk="btn-lihat-berkas"
                                                    class="text-xs font-semibold text-red-900 hover:underline">
                                                     Lihat ↗
                                                 </a>
                                                 <button type="button" onclick="triggerFileInput()"
+                                                    dusk="btn-ganti-berkas"
                                                     class="text-xs font-semibold text-gray-600 hover:text-gray-900 border border-gray-300 px-2 py-0.5 rounded hover:bg-gray-50">
                                                     Ganti Berkas
                                                 </button>
@@ -481,6 +488,7 @@
                             @else
                                 {{-- Area drop zone --}}
                                 <div id="dropzone"
+                                     dusk="dropzone-ktm"
                                      class="rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-6 text-center cursor-pointer hover:border-red-900 hover:bg-red-50 transition-colors"
                                      onclick="triggerFileInput()">
                                     <svg class="w-10 h-10 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -496,6 +504,7 @@
                                 type="file"
                                 id="foto_identitas_input"
                                 name="foto_identitas"
+                                dusk="input-foto-identitas"
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 class="sr-only"
                                 form="form-profil"
