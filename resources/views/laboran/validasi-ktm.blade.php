@@ -78,18 +78,22 @@
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between lg:justify-end gap-4 lg:gap-6 pb-4">
                     <div class="flex overflow-x-auto no-scrollbar gap-1 border-b sm:border-b-0 border-gray-100 pb-2 sm:pb-0" role="tablist">
                         <a href="{{ route('laboran.validasi.ktm.index', ['status' => 'all', 'q' => $search]) }}"
+                           dusk="tab-semua"
                            class="tu-tab {{ $statusFilter === 'all' ? 'active' : '' }}">
                            Semua <span class="tu-mono text-xs text-gray-400">({{ $metrics['total'] }})</span>
                         </a>
                         <a href="{{ route('laboran.validasi.ktm.index', ['status' => 'menunggu', 'q' => $search]) }}"
+                           dusk="tab-menunggu"
                            class="tu-tab {{ $statusFilter === 'menunggu' ? 'active' : '' }}">
                            Perlu Verifikasi <span class="tu-mono text-xs text-gray-400">({{ $metrics['menunggu'] }})</span>
                         </a>
                         <a href="{{ route('laboran.validasi.ktm.index', ['status' => 'tervalidasi', 'q' => $search]) }}"
+                           dusk="tab-tervalidasi"
                            class="tu-tab {{ $statusFilter === 'tervalidasi' ? 'active' : '' }}">
                            Tervalidasi <span class="tu-mono text-xs text-gray-400">({{ $metrics['tervalidasi'] }})</span>
                         </a>
                         <a href="{{ route('laboran.validasi.ktm.index', ['status' => 'ditolak', 'q' => $search]) }}"
+                           dusk="tab-ditolak"
                            class="tu-tab {{ $statusFilter === 'ditolak' ? 'active' : '' }}">
                            Ditolak <span class="tu-mono text-xs text-gray-400">({{ $metrics['ditolak'] }})</span>
                         </a>
@@ -99,13 +103,13 @@
                         <svg class="pointer-events-none absolute left-3 top-[13px] h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/>
                         </svg>
-                        <input name="q" value="{{ $search }}" type="search" class="tu-input !py-2 !pl-9 !text-sm" placeholder="Cari nama, NIM, prodi" autocomplete="off">
+                        <input name="q" value="{{ $search }}" dusk="input-search" type="search" class="tu-input !py-2 !pl-9 !text-sm" placeholder="Cari nama, NIM, prodi" autocomplete="off">
                     </form>
                 </div>
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
+                <table class="w-full text-left text-sm" dusk="table-validasi-ktm">
                     <thead>
                         <tr class="border-b border-gray-100 tu-eyebrow !text-[10px] text-gray-400">
                             <th scope="col" class="px-5 sm:px-7 py-3 font-medium">Pemohon</th>
@@ -118,7 +122,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         @forelse ($pemohonList as $p)
-                            <tr class="hover:bg-gray-50/60 transition-colors">
+                            <tr class="hover:bg-gray-50/60 transition-colors" dusk="row-pemohon-{{ $p->id }}">
                                 {{-- Nama & Email --}}
                                 <td class="px-5 sm:px-7 py-4 align-top">
                                     <p class="font-semibold text-gray-950">{{ $p->nama_lengkap ?? $p->name }}</p>
@@ -149,6 +153,7 @@
                                         @endphp
                                         <div class="flex items-center gap-2">
                                             <button type="button"
+                                                    dusk="btn-preview-ktm-{{ $p->id }}"
                                                     onclick="openPreviewModal('{{ $previewUrl }}', '{{ strtoupper($ext) }}', '{{ addslashes($p->nama_lengkap ?? $p->name) }}')"
                                                     class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded border border-gray-300 bg-white text-gray-700 hover:border-racing-red hover:text-racing-red transition-colors">
                                                 @if(in_array($ext, ['jpg', 'jpeg', 'png']))
@@ -172,7 +177,7 @@
                                 </td>
 
                                 {{-- Status Validasi --}}
-                                <td class="px-3 py-4 align-top whitespace-nowrap">
+                                <td class="px-3 py-4 align-top whitespace-nowrap" dusk="status-badge-{{ $p->id }}">
                                     @if ($p->status_validasi_ktm === 'Tervalidasi')
                                         <span class="tu-chip tu-chip--mint">Tervalidasi</span>
                                     @elseif ($p->status_validasi_ktm === 'Ditolak')
@@ -197,6 +202,7 @@
                                                   onsubmit="return confirm('Validasi dan setujui KTM pemohon {{ addslashes($p->nama_lengkap ?? $p->name) }}?')">
                                                 @csrf
                                                 <button type="submit"
+                                                        dusk="btn-setujui-{{ $p->id }}"
                                                         class="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-semibold transition-colors flex items-center gap-1">
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -212,6 +218,7 @@
                                                   onsubmit="return confirm('Tolak berkas KTM pemohon {{ addslashes($p->nama_lengkap ?? $p->name) }}?')">
                                                 @csrf
                                                 <button type="submit"
+                                                        dusk="btn-tolak-{{ $p->id }}"
                                                         class="px-2 py-1 bg-white hover:bg-red-50 text-red-700 border border-red-300 rounded text-xs font-semibold transition-colors">
                                                     Tolak
                                                 </button>
