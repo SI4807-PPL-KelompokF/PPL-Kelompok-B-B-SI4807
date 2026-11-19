@@ -7,6 +7,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PengajuanUjiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LaboranAntreanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,22 @@ Route::get('/pengajuan/{nomorTiket}/unduh-lhu', [HomeController::class, 'downloa
     ->where('nomorTiket', '[A-Za-z0-9\-_]+')
     ->middleware('auth')
     ->name('pemohon.pengujian.download');
+
+
+// PBI-10: Validasi penerimaan fisik dan progres pengujian Laboran
+Route::prefix('laboran')->name('laboran.')->middleware(['auth', 'laboran'])->group(function () {
+    Route::get('/antrean', [LaboranAntreanController::class, 'index'])
+        ->name('antrean.index');
+
+    Route::post('/antrean/{nomorTiket}/terima-fisik', [LaboranAntreanController::class, 'terimaFisik'])
+        ->where('nomorTiket', '[A-Za-z0-9\-_]+')
+        ->name('antrean.terima-fisik');
+
+    Route::post('/antrean/{nomorTiket}/proses-mesin', [LaboranAntreanController::class, 'prosesMesin'])
+        ->where('nomorTiket', '[A-Za-z0-9\-_]+')
+        ->name('antrean.proses-mesin');
+});
+
 
 // PBI-13 (UC-13 / SC-13): Kelola Unggahan & Revisi Dokumen Hasil Uji oleh Laboran
 Route::prefix('laboran')->name('laboran.')->middleware(['auth', 'laboran'])->group(function () {
