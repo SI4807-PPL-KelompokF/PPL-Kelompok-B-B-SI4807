@@ -18,13 +18,17 @@ class LaboranAntreanTest extends DuskTestCase
      */
     public function testLaboranCanValidateAndUpdateQueueStatus(): void
     {
-        // 1. Mengambil akun Laboran yang sudah tersedia
-        $laboran = User::where(
-            'email',
-            'laboran@telkomuniversity.ac.id'
-        )
-            ->where('role', 'laboran')
-            ->firstOrFail();
+        // 1. Membuat atau mengambil akun Laboran untuk pengujian
+        $laboran = User::firstOrCreate(
+            [
+                'email' => 'laboran@telkomuniversity.ac.id',
+            ],
+            [
+                'name' => 'Laboran Testing',
+                'password' => bcrypt('password'),
+                'role' => User::ROLE_LABORAN,
+            ]
+        );
 
         // 2. Membuat atau memperbarui data tiket pengujian
         $tiket = TiketPengujian::updateOrCreate(
@@ -63,7 +67,6 @@ class LaboranAntreanTest extends DuskTestCase
                     $tiket->nomor_tiket
                 );
 
-                // Klik tombol Terima Sampel menggunakan JavaScript
                 $browser->script("
                     document.querySelector(
                         'form[action=\"{$urlTerima}\"] button[type=\"submit\"]'
@@ -88,7 +91,6 @@ class LaboranAntreanTest extends DuskTestCase
                     $tiket->nomor_tiket
                 );
 
-                // Klik tombol Proses Mesin menggunakan JavaScript
                 $browser->script("
                     document.querySelector(
                         'form[action=\"{$urlProses}\"] button[type=\"submit\"]'
