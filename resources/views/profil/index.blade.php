@@ -71,6 +71,7 @@
         }
         .pv-pill-validated.validated { background: #ECFDF5; color: #15803D; }
         .pv-pill-validated.not-validated { background: #FEF9C3; color: #A16207; }
+        .pv-pill-validated.rejected { background: #FEF2F2; color: #DC2626; }
         .pv-topbar-badge {
             display: inline-flex; align-items: center; gap: 6px;
             padding: 4px 14px; border-radius: 6px; background: #F9FAFB;
@@ -224,6 +225,7 @@
                 {{-- Pill status validasi --}}
                 @php
                     $isValidated = $user->isValidasiKtm();
+                    $isRejected = $user->isKtmDitolak();
                 @endphp
                 <div class="flex-shrink-0 self-start sm:self-center">
                     @if($isValidated)
@@ -232,6 +234,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             Tervalidasi
+                        </span>
+                    @elseif($isRejected)
+                        <span class="pv-pill-validated rejected">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                            Ditolak
                         </span>
                     @else
                         <span class="pv-pill-validated not-validated">
@@ -438,7 +447,8 @@
                                             $ext = strtolower(pathinfo($user->foto_identitas, PATHINFO_EXTENSION));
                                         @endphp
                                         @if(in_array($ext, ['jpg', 'jpeg', 'png']))
-                                            <img src="{{ Storage::url($user->foto_identitas) }}"
+                                            <img src="{{ route('profil.identitas.preview') }}"
+                                                 onerror="this.src='{{ Storage::url($user->foto_identitas) }}'"
                                                  alt="Foto Identitas KTM"
                                                  class="w-20 h-20 object-cover rounded border border-gray-200 flex-shrink-0">
                                         @else
@@ -455,7 +465,7 @@
                                             </p>
                                             <p class="text-[11px] text-gray-500 uppercase mt-0.5">{{ strtoupper($ext) }}</p>
                                             <div class="flex gap-2 mt-2 flex-wrap">
-                                                <a href="{{ Storage::url($user->foto_identitas) }}"
+                                                <a href="{{ route('profil.identitas.preview') }}"
                                                    target="_blank"
                                                    class="text-xs font-semibold text-red-900 hover:underline">
                                                     Lihat ↗
@@ -526,6 +536,14 @@
                                     Tervalidasi
                                 </span>
                                 <p class="text-xs text-gray-500">Identitas Anda telah diverifikasi oleh Laboran.</p>
+                            @elseif($isRejected)
+                                <span class="pv-pill-validated rejected">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                    Ditolak
+                                </span>
+                                <p class="text-xs text-red-700">Validasi KTM ditolak. Silakan unggah ulang foto KTM yang valid.</p>
                             @else
                                 <span class="pv-pill-validated not-validated">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -533,11 +551,16 @@
                                     </svg>
                                     Belum Tervalidasi
                                 </span>
+                                <p class="text-xs text-gray-500">Menunggu pemeriksaan oleh Laboran.</p>
                             @endif
                         </div>
-                        @if(!$isValidated)
+                        @if(!$isValidated && !$isRejected)
                             <p class="text-xs text-gray-500 mt-3 leading-5">
                                 Lengkapi data profil dan unggah foto KTM Anda, lalu Laboran akan memvalidasi identitas dalam 1&times;24 jam kerja.
+                            </p>
+                        @elseif($isRejected)
+                            <p class="text-xs text-red-600 mt-3 leading-5">
+                                Pastikan nama dan NIM pada berkas KTM terbaca jelas dan sesuai dengan profil akademik Anda.
                             </p>
                         @endif
                     </div>

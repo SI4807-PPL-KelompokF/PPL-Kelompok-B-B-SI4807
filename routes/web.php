@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboranHasilUjiController;
+use App\Http\Controllers\LaboranValidasiKtmController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PengajuanUjiController;
 use App\Http\Controllers\ProfileController;
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil', [ProfileController::class, 'show'])->name('profil.show');
     Route::put('/profil', [ProfileController::class, 'update'])->name('profil.update');
     Route::get('/profil/prodi', [ProfileController::class, 'prodiByFakultas'])->name('profil.prodi');
+    Route::get('/profil/identitas/preview', [ProfileController::class, 'previewIdentitas'])->name('profil.identitas.preview');
 });
 
 // Modul Pengajuan (PBI-07, PBI-08, PBI-09 - Giri Pulung Nugroho)
@@ -85,6 +87,12 @@ Route::prefix('laboran')->name('laboran.')->middleware(['auth', 'laboran'])->gro
     Route::get('/pengujian/{nomorTiket}/unduh-hasil', [LaboranHasilUjiController::class, 'download'])
         ->where('nomorTiket', '[A-Za-z0-9\-_]+')
         ->name('pengujian.download');
+
+    // Validasi Identitas & KTM Pemohon oleh Laboran (PBI-01 - Syalfa)
+    Route::get('/validasi-ktm', [LaboranValidasiKtmController::class, 'index'])->name('validasi.ktm.index');
+    Route::post('/validasi-ktm/{user}/setuju', [LaboranValidasiKtmController::class, 'approve'])->name('validasi.ktm.approve');
+    Route::post('/validasi-ktm/{user}/tolak', [LaboranValidasiKtmController::class, 'reject'])->name('validasi.ktm.reject');
+    Route::get('/validasi-ktm/{user}/preview', [LaboranValidasiKtmController::class, 'previewKtm'])->name('validasi.ktm.preview');
 });
 
 // Manajemen Pengguna oleh Administrator
