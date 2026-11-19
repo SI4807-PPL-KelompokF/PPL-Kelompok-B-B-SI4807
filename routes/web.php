@@ -5,6 +5,11 @@ use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboranHasilUjiController;
 use App\Http\Controllers\LaboranValidasiKtmController;
+use App\Http\Controllers\AdminMesinLabController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LaboranHasilUjiController;
+use App\Http\Controllers\LaboranSopController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PengajuanUjiController;
 use App\Http\Controllers\ProfileController;
@@ -116,3 +121,16 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
 // Endpoint API untuk ambil daftar prodi berdasarkan fakultas
 Route::get('/api/fakultas/{fakultasId}/prodi', [AdminFakultasProdiController::class, 'getProdiByFakultas'])->name('api.fakultas.prodi');
+// PBI-04 (SPK-4): Kelola Katalog Mesin dan Status Operasional oleh Admin
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::resource('mesin', AdminMesinLabController::class)->except(['show']);
+    Route::patch('/mesin/{mesin}/toggle', [AdminMesinLabController::class, 'toggleStatus'])->name('mesin.toggle');
+});
+
+// PBI-06 (SPK-6): Kelola Teks SOP Penyiapan Sampel oleh Laboran(HELMI)
+Route::prefix('laboran')->name('laboran.')->middleware(['auth', 'laboran'])->group(function () {
+    Route::get('/sop', [LaboranSopController::class, 'index'])->name('sop.index');
+    Route::get('/sop/{mesin}/edit', [LaboranSopController::class, 'edit'])->name('sop.edit');
+    Route::put('/sop/{mesin}', [LaboranSopController::class, 'update'])->name('sop.update');
+    Route::delete('/sop/{mesin}', [LaboranSopController::class, 'destroy'])->name('sop.destroy');
+});
