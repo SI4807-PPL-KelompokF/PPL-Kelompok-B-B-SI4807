@@ -131,6 +131,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Cek apakah validasi KTM pemohon ditolak oleh Laboran.
+     */
+    public function isKtmDitolak(): bool
+    {
+        return ($this->status_validasi_ktm ?? '') === 'Ditolak';
+    }
+
+    /**
      * Cek apakah data profil wajib PBI-01 sudah dilengkapi.
      */
     public function isProfilLengkap(): bool

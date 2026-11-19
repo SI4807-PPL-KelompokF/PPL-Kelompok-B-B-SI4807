@@ -140,6 +140,8 @@ class ProfileController extends Controller
             // Simpan berkas baru: storage/app/public/identitas/{user_id}/
             $path = $file->store('identitas/' . $user->id, 'public');
             $updatePayload['foto_identitas'] = $path;
+            // Berkas baru diunggah -> status diset kembali ke Belum Tervalidasi agar diperiksa laboran
+            $updatePayload['status_validasi_ktm'] = 'Belum Tervalidasi';
         }
 
         $user->update($updatePayload);
@@ -159,5 +161,19 @@ class ProfileController extends Controller
         $prodis   = $map[$fakultas] ?? [];
 
         return response()->json(['prodis' => $prodis]);
+    }
+
+    /**
+     * PBI-01: Pratinjau berkas identitas/KTM milik pemohon sendiri.
+     */
+    public function previewIdentitas()
+    {
+        $user = Auth::user();
+
+        if (empty($user->foto_identitas) || !Storage::disk('public')->exists($user->foto_identitas)) {
+            abort(404, 'Berkas foto identitas belum diunggah atau tidak ditemukan.');
+        }
+
+        return Storage::disk('public')->response($user->foto_identitas);
     }
 }
