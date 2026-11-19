@@ -200,10 +200,10 @@
 
                 {{-- Counter Pills dari Figma --}}
                 <div class="flex items-center gap-2.5 flex-wrap">
-                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#F9EEEE] text-[#800000] border border-red-200 shadow-xs">
+                    <span dusk="pill-total-fakultas" class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#F9EEEE] text-[#800000] border border-red-200 shadow-xs">
                         Total Fakultas: {{ $totalFakultas }}
                     </span>
-                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-200 shadow-xs">
+                    <span dusk="pill-total-prodi" class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-200 shadow-xs">
                         Total Prodi: {{ $totalProdi }}
                     </span>
                 </div>
@@ -248,12 +248,12 @@
                             <svg class="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/>
                             </svg>
-                            <input type="search" name="search_fakultas" value="{{ $searchFakultas }}"
+                            <input type="search" name="search_fakultas" dusk="input-search-fakultas" value="{{ $searchFakultas }}"
                                    placeholder="Cari nama atau kode fakultas..."
                                    class="w-full h-9 pl-9 pr-3 rounded-lg border border-gray-300 text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#800000]">
                         </form>
 
-                        <button type="button" onclick="openModal('modalTambahFakultas')"
+                        <button type="button" dusk="btn-tambah-fakultas" onclick="openModal('modalTambahFakultas')"
                                 class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#800000] hover:bg-[#660000] text-white text-xs font-semibold shadow-xs transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -265,7 +265,7 @@
 
                 {{-- Tabel Fakultas --}}
                 <div class="overflow-x-auto mt-4">
-                    <table class="w-full text-left text-xs">
+                    <table class="w-full text-left text-xs" dusk="table-fakultas">
                         <thead>
                             <tr class="border-b border-gray-200 text-[11px] font-semibold text-gray-500 uppercase tracking-wider bg-gray-50/50">
                                 <th scope="col" class="py-3 px-4 w-12 text-center">No</th>
@@ -277,7 +277,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @forelse($fakultas as $idx => $f)
-                                <tr class="hover:bg-gray-50/60 transition-colors">
+                                <tr dusk="row-fakultas-{{ $f->id }}" class="hover:bg-gray-50/60 transition-colors">
                                     <td class="py-3.5 px-4 text-center text-gray-500">{{ $fakultas->firstItem() + $idx }}</td>
                                     <td class="py-3.5 px-4">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-bold bg-[#F9EEEE] text-[#800000]">
@@ -293,6 +293,7 @@
                                     <td class="py-3.5 px-4 text-right">
                                         <div class="inline-flex items-center gap-1.5 justify-end">
                                             <button type="button"
+                                                    dusk="btn-edit-fakultas-{{ $f->id }}"
                                                     onclick="editFakultas('{{ $f->id }}', '{{ addslashes($f->kode_fakultas) }}', '{{ addslashes($f->nama_fakultas) }}')"
                                                     class="px-2.5 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:text-[#800000] hover:border-[#800000] text-xs font-medium transition-colors">
                                                 Edit
@@ -301,7 +302,7 @@
                                                   onsubmit="return confirm('Apakah Anda yakin ingin menghapus Fakultas {{ addslashes($f->nama_fakultas) }}?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="px-2.5 py-1 rounded border border-red-200 bg-white text-red-600 hover:bg-red-50 text-xs font-medium transition-colors">
+                                                <button type="submit" dusk="btn-hapus-fakultas-{{ $f->id }}" class="px-2.5 py-1 rounded border border-red-200 bg-white text-red-600 hover:bg-red-50 text-xs font-medium transition-colors">
                                                     Hapus
                                                 </button>
                                             </form>
@@ -341,7 +342,7 @@
                         {{-- Dropdown Filter Fakultas --}}
                         <form method="GET" action="{{ route('admin.master.fakultas-prodi.index') }}" class="flex items-center gap-2">
                             <input type="hidden" name="search_fakultas" value="{{ $searchFakultas }}">
-                            <select name="filter_fakultas_id" onchange="this.form.submit()"
+                            <select name="filter_fakultas_id" dusk="select-filter-fakultas" onchange="this.form.submit()"
                                     class="h-9 px-3 rounded-lg border border-gray-300 text-xs text-gray-900 bg-white focus:outline-none focus:border-[#800000]">
                                 <option value="">Semua Fakultas</option>
                                 @foreach($allFakultas as $af)
@@ -355,13 +356,13 @@
                                 <svg class="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/>
                                 </svg>
-                                <input type="search" name="search_prodi" value="{{ $searchProdi }}"
+                                <input type="search" name="search_prodi" dusk="input-search-prodi" value="{{ $searchProdi }}"
                                        placeholder="Cari kode atau nama prodi..."
                                        class="w-full h-9 pl-9 pr-3 rounded-lg border border-gray-300 text-xs text-gray-900 placeholder-gray-400 focus:outline-none focus:border-[#800000]">
                             </div>
                         </form>
 
-                        <button type="button" onclick="openModal('modalTambahProdi')"
+                        <button type="button" dusk="btn-tambah-prodi" onclick="openModal('modalTambahProdi')"
                                 class="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#800000] hover:bg-[#660000] text-white text-xs font-semibold shadow-xs transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -373,7 +374,7 @@
 
                 {{-- Tabel Program Studi --}}
                 <div class="overflow-x-auto mt-4">
-                    <table class="w-full text-left text-xs">
+                    <table class="w-full text-left text-xs" dusk="table-prodi">
                         <thead>
                             <tr class="border-b border-gray-200 text-[11px] font-semibold text-gray-500 uppercase tracking-wider bg-gray-50/50">
                                 <th scope="col" class="py-3 px-4 w-12 text-center">No</th>
@@ -385,7 +386,7 @@
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             @forelse($prodi as $idx => $p)
-                                <tr class="hover:bg-gray-50/60 transition-colors">
+                                <tr dusk="row-prodi-{{ $p->id }}" class="hover:bg-gray-50/60 transition-colors">
                                     <td class="py-3.5 px-4 text-center text-gray-500">{{ $prodi->firstItem() + $idx }}</td>
                                     <td class="py-3.5 px-4">
                                         <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#F3F4F6] text-[#4B5563]">
@@ -402,6 +403,7 @@
                                     <td class="py-3.5 px-4 text-right">
                                         <div class="inline-flex items-center gap-1.5 justify-end">
                                             <button type="button"
+                                                    dusk="btn-edit-prodi-{{ $p->id }}"
                                                     onclick="editProdi('{{ $p->id }}', '{{ $p->fakultas_id }}', '{{ addslashes($p->kode_prodi) }}', '{{ addslashes($p->nama_prodi) }}')"
                                                     class="px-2.5 py-1 rounded border border-gray-300 bg-white text-gray-700 hover:text-[#800000] hover:border-[#800000] text-xs font-medium transition-colors">
                                                 Edit
@@ -410,7 +412,7 @@
                                                   onsubmit="return confirm('Apakah Anda yakin ingin menghapus Program Studi {{ addslashes($p->nama_prodi) }}?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="px-2.5 py-1 rounded border border-red-200 bg-white text-red-600 hover:bg-red-50 text-xs font-medium transition-colors">
+                                                <button type="submit" dusk="btn-hapus-prodi-{{ $p->id }}" class="px-2.5 py-1 rounded border border-red-200 bg-white text-red-600 hover:bg-red-50 text-xs font-medium transition-colors">
                                                     Hapus
                                                 </button>
                                             </form>
@@ -449,7 +451,7 @@
      ======================================================== --}}
 
 {{-- 1. Modal Tambah Fakultas --}}
-<div id="modalTambahFakultas" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
+<div id="modalTambahFakultas" dusk="modal-tambah-fakultas" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <h3 class="text-sm font-bold text-gray-900">Tambah Fakultas</h3>
@@ -460,25 +462,25 @@
             <div class="p-6 space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Kode Fakultas <span class="text-red-600">*</span></label>
-                    <input type="text" name="kode_fakultas" required placeholder="Contoh: FRI / FIF / FTE"
+                    <input type="text" name="kode_fakultas" dusk="input-tambah-kode-fakultas" required placeholder="Contoh: FRI / FIF / FTE"
                            class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs uppercase focus:outline-none focus:border-[#800000]">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Fakultas <span class="text-red-600">*</span></label>
-                    <input type="text" name="nama_fakultas" required placeholder="Contoh: Fakultas Rekayasa Industri (FRI)"
+                    <input type="text" name="nama_fakultas" dusk="input-tambah-nama-fakultas" required placeholder="Contoh: Fakultas Rekayasa Industri (FRI)"
                            class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-[#800000]">
                 </div>
             </div>
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
                 <button type="button" onclick="closeModal('modalTambahFakultas')" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-[#800000] text-white rounded-lg text-xs font-semibold hover:bg-[#660000]">Simpan Data</button>
+                <button type="submit" dusk="btn-submit-tambah-fakultas" class="px-4 py-2 bg-[#800000] text-white rounded-lg text-xs font-semibold hover:bg-[#660000]">Simpan Data</button>
             </div>
         </form>
     </div>
 </div>
 
 {{-- 2. Modal Edit Fakultas --}}
-<div id="modalEditFakultas" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
+<div id="modalEditFakultas" dusk="modal-edit-fakultas" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <h3 class="text-sm font-bold text-gray-900">Ubah Fakultas</h3>
@@ -490,25 +492,25 @@
             <div class="p-6 space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Kode Fakultas <span class="text-red-600">*</span></label>
-                    <input type="text" id="edit_kode_fakultas" name="kode_fakultas" required
+                    <input type="text" id="edit_kode_fakultas" name="kode_fakultas" dusk="input-edit-kode-fakultas" required
                            class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs uppercase focus:outline-none focus:border-[#800000]">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Fakultas <span class="text-red-600">*</span></label>
-                    <input type="text" id="edit_nama_fakultas" name="nama_fakultas" required
+                    <input type="text" id="edit_nama_fakultas" name="nama_fakultas" dusk="input-edit-nama-fakultas" required
                            class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-[#800000]">
                 </div>
             </div>
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
                 <button type="button" onclick="closeModal('modalEditFakultas')" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-[#800000] text-white rounded-lg text-xs font-semibold hover:bg-[#660000]">Simpan Perubahan</button>
+                <button type="submit" dusk="btn-submit-edit-fakultas" class="px-4 py-2 bg-[#800000] text-white rounded-lg text-xs font-semibold hover:bg-[#660000]">Simpan Perubahan</button>
             </div>
         </form>
     </div>
 </div>
 
 {{-- 3. Modal Tambah Prodi --}}
-<div id="modalTambahProdi" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
+<div id="modalTambahProdi" dusk="modal-tambah-prodi" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <h3 class="text-sm font-bold text-gray-900">Tambah Program Studi</h3>
@@ -519,7 +521,7 @@
             <div class="p-6 space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Fakultas Induk <span class="text-red-600">*</span></label>
-                    <select name="fakultas_id" required class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:border-[#800000]">
+                    <select name="fakultas_id" dusk="select-tambah-prodi-fakultas" required class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:border-[#800000]">
                         <option value="">-- Pilih Fakultas Induk --</option>
                         @foreach($allFakultas as $af)
                             <option value="{{ $af->id }}">{{ $af->kode_fakultas }} &middot; {{ $af->nama_fakultas }}</option>
@@ -528,25 +530,25 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Kode Prodi</label>
-                    <input type="text" name="kode_prodi" placeholder="Contoh: IF / SI / TI"
+                    <input type="text" name="kode_prodi" dusk="input-tambah-kode-prodi" placeholder="Contoh: IF / SI / TI"
                            class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs uppercase focus:outline-none focus:border-[#800000]">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Program Studi <span class="text-red-600">*</span></label>
-                    <input type="text" name="nama_prodi" required placeholder="Contoh: S1 Sistem Informasi"
+                    <input type="text" name="nama_prodi" dusk="input-tambah-nama-prodi" required placeholder="Contoh: S1 Sistem Informasi"
                            class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-[#800000]">
                 </div>
             </div>
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
                 <button type="button" onclick="closeModal('modalTambahProdi')" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-[#800000] text-white rounded-lg text-xs font-semibold hover:bg-[#660000]">Simpan Data</button>
+                <button type="submit" dusk="btn-submit-tambah-prodi" class="px-4 py-2 bg-[#800000] text-white rounded-lg text-xs font-semibold hover:bg-[#660000]">Simpan Data</button>
             </div>
         </form>
     </div>
 </div>
 
 {{-- 4. Modal Edit Prodi --}}
-<div id="modalEditProdi" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
+<div id="modalEditProdi" dusk="modal-edit-prodi" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl shadow-xl max-w-md w-full overflow-hidden">
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <h3 class="text-sm font-bold text-gray-900">Ubah Program Studi</h3>
@@ -558,7 +560,7 @@
             <div class="p-6 space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Fakultas Induk <span class="text-red-600">*</span></label>
-                    <select id="edit_prodi_fakultas_id" name="fakultas_id" required class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:border-[#800000]">
+                    <select id="edit_prodi_fakultas_id" name="fakultas_id" dusk="select-edit-prodi-fakultas" required class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs bg-white focus:outline-none focus:border-[#800000]">
                         @foreach($allFakultas as $af)
                             <option value="{{ $af->id }}">{{ $af->kode_fakultas }} &middot; {{ $af->nama_fakultas }}</option>
                         @endforeach
@@ -566,18 +568,18 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Kode Prodi</label>
-                    <input type="text" id="edit_kode_prodi" name="kode_prodi"
+                    <input type="text" id="edit_kode_prodi" name="kode_prodi" dusk="input-edit-kode-prodi"
                            class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs uppercase focus:outline-none focus:border-[#800000]">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Program Studi <span class="text-red-600">*</span></label>
-                    <input type="text" id="edit_nama_prodi" name="nama_prodi" required
+                    <input type="text" id="edit_nama_prodi" name="nama_prodi" dusk="input-edit-nama-prodi" required
                            class="w-full h-10 px-3 border border-gray-300 rounded-lg text-xs focus:outline-none focus:border-[#800000]">
                 </div>
             </div>
             <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
                 <button type="button" onclick="closeModal('modalEditProdi')" class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-medium text-gray-700 hover:bg-gray-100">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-[#800000] text-white rounded-lg text-xs font-semibold hover:bg-[#660000]">Simpan Perubahan</button>
+                <button type="submit" dusk="btn-submit-edit-prodi" class="px-4 py-2 bg-[#800000] text-white rounded-lg text-xs font-semibold hover:bg-[#660000]">Simpan Perubahan</button>
             </div>
         </form>
     </div>
