@@ -32,14 +32,31 @@ class Pbi03MasterFakultasProdiDuskTest extends DuskTestCase
             ]);
     }
 
+    /**
+     * Helper klik elemen via JS setelah scrollIntoView agar bebas dari ElementClickInterceptedException.
+     */
+    private function jsClick(Browser $browser, string $duskSelector): void
+    {
+        $name = ltrim($duskSelector, '@');
+        $browser->script("
+            const el = document.querySelector('[dusk=\"{$name}\"]');
+            if (el) {
+                el.scrollIntoView({block: 'center', behavior: 'instant'});
+                el.click();
+            }
+        ");
+    }
+
     public function testAdminCanViewMasterFakultasProdiDashboardAndElements()
     {
         $admin = $this->getAdminUser();
 
         $this->browse(function (Browser $browser) use ($admin) {
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser->loginAs($admin)
                 ->visit('/admin/master-fakultas-prodi')
-                ->waitForText('Kelola Master Data Fakultas & Program Studi')
+                ->waitForText('Kelola Master Data Fakultas & Program Studi', 10)
                 ->assertSee('Portal Admin')
                 ->assertSee('Master Data Fakultas')
                 ->assertSee('Master Data Program Studi')
@@ -63,36 +80,44 @@ class Pbi03MasterFakultasProdiDuskTest extends DuskTestCase
         Fakultas::where('kode_fakultas', $kodeFakultasBaru)->delete();
 
         $this->browse(function (Browser $browser) use ($admin, $kodeFakultasBaru, $namaFakultasBaru, $namaFakultasEdit) {
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser->loginAs($admin)
                 ->visit('/admin/master-fakultas-prodi')
-                ->waitForText('Master Data Fakultas');
+                ->waitForText('Master Data Fakultas', 10);
 
-            $browser->click('@btn-tambah-fakultas')
-                ->waitFor('@modal-tambah-fakultas')
+            $this->jsClick($browser, '@btn-tambah-fakultas');
+
+            $browser->waitFor('@modal-tambah-fakultas', 10)
+                ->pause(300)
                 ->type('@input-tambah-kode-fakultas', $kodeFakultasBaru)
-                ->type('@input-tambah-nama-fakultas', $namaFakultasBaru)
-                ->click('@btn-submit-tambah-fakultas');
+                ->type('@input-tambah-nama-fakultas', $namaFakultasBaru);
 
-            $browser->waitForText('Fakultas berhasil ditambahkan.')
+            $this->jsClick($browser, '@btn-submit-tambah-fakultas');
+
+            $browser->waitForText('Fakultas berhasil ditambahkan.', 10)
                 ->assertSee($kodeFakultasBaru)
                 ->assertSee($namaFakultasBaru);
 
             $fakultas = Fakultas::where('kode_fakultas', $kodeFakultasBaru)->first();
             $this->assertNotNull($fakultas, 'Fakultas baru harus tersimpan di database.');
 
-            $browser->click("@btn-edit-fakultas-{$fakultas->id}")
-                ->waitFor('@modal-edit-fakultas')
-                ->clear('@input-edit-nama-fakultas')
-                ->type('@input-edit-nama-fakultas', $namaFakultasEdit)
-                ->click('@btn-submit-edit-fakultas');
+            $this->jsClick($browser, "@btn-edit-fakultas-{$fakultas->id}");
 
-            $browser->waitForText('Fakultas berhasil diperbarui.')
+            $browser->waitFor('@modal-edit-fakultas', 10)
+                ->pause(300)
+                ->clear('@input-edit-nama-fakultas')
+                ->type('@input-edit-nama-fakultas', $namaFakultasEdit);
+
+            $this->jsClick($browser, '@btn-submit-edit-fakultas');
+
+            $browser->waitForText('Fakultas berhasil diperbarui.', 10)
                 ->assertSee($namaFakultasEdit);
 
             $browser->script("window.confirm = function() { return true; };");
-            $browser->script("document.querySelector('[dusk=\"btn-hapus-fakultas-{$fakultas->id}\"]').click();");
+            $this->jsClick($browser, "@btn-hapus-fakultas-{$fakultas->id}");
 
-            $browser->waitForText('Fakultas berhasil dihapus.')
+            $browser->waitForText('Fakultas berhasil dihapus.', 10)
                 ->assertDontSee($kodeFakultasBaru);
         });
     }
@@ -109,37 +134,46 @@ class Pbi03MasterFakultasProdiDuskTest extends DuskTestCase
         Prodi::where('kode_prodi', $kodeProdiBaru)->delete();
 
         $this->browse(function (Browser $browser) use ($admin, $fakultasInduk, $kodeProdiBaru, $namaProdiBaru, $namaProdiEdit) {
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser->loginAs($admin)
                 ->visit('/admin/master-fakultas-prodi')
-                ->waitForText('Master Data Program Studi');
+                ->waitForText('Master Data Program Studi', 10);
 
-            $browser->click('@btn-tambah-prodi')
-                ->waitFor('@modal-tambah-prodi')
+            // Klik via JS agar tidak terhalang sticky header / scroll viewport
+            $this->jsClick($browser, '@btn-tambah-prodi');
+
+            $browser->waitFor('@modal-tambah-prodi', 10)
+                ->pause(300)
                 ->select('@select-tambah-prodi-fakultas', (string) $fakultasInduk->id)
                 ->type('@input-tambah-kode-prodi', $kodeProdiBaru)
-                ->type('@input-tambah-nama-prodi', $namaProdiBaru)
-                ->click('@btn-submit-tambah-prodi');
+                ->type('@input-tambah-nama-prodi', $namaProdiBaru);
 
-            $browser->waitForText('Program Studi berhasil ditambahkan.')
+            $this->jsClick($browser, '@btn-submit-tambah-prodi');
+
+            $browser->waitForText('Program Studi berhasil ditambahkan.', 10)
                 ->assertSee($kodeProdiBaru)
                 ->assertSee($namaProdiBaru);
 
             $prodi = Prodi::where('kode_prodi', $kodeProdiBaru)->first();
             $this->assertNotNull($prodi, 'Program studi baru harus tersimpan di database.');
 
-            $browser->click("@btn-edit-prodi-{$prodi->id}")
-                ->waitFor('@modal-edit-prodi')
-                ->clear('@input-edit-nama-prodi')
-                ->type('@input-edit-nama-prodi', $namaProdiEdit)
-                ->click('@btn-submit-edit-prodi');
+            $this->jsClick($browser, "@btn-edit-prodi-{$prodi->id}");
 
-            $browser->waitForText('Program Studi berhasil diperbarui.')
+            $browser->waitFor('@modal-edit-prodi', 10)
+                ->pause(300)
+                ->clear('@input-edit-nama-prodi')
+                ->type('@input-edit-nama-prodi', $namaProdiEdit);
+
+            $this->jsClick($browser, '@btn-submit-edit-prodi');
+
+            $browser->waitForText('Program Studi berhasil diperbarui.', 10)
                 ->assertSee($namaProdiEdit);
 
             $browser->script("window.confirm = function() { return true; };");
-            $browser->script("document.querySelector('[dusk=\"btn-hapus-prodi-{$prodi->id}\"]').click();");
+            $this->jsClick($browser, "@btn-hapus-prodi-{$prodi->id}");
 
-            $browser->waitForText('Program Studi berhasil dihapus.')
+            $browser->waitForText('Program Studi berhasil dihapus.', 10)
                 ->assertDontSee($kodeProdiBaru);
         });
     }
@@ -150,9 +184,11 @@ class Pbi03MasterFakultasProdiDuskTest extends DuskTestCase
         $fakultasSample = Fakultas::first();
 
         $this->browse(function (Browser $browser) use ($admin, $fakultasSample) {
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser->loginAs($admin)
                 ->visit('/admin/master-fakultas-prodi')
-                ->waitForText('Kelola Master Data Fakultas & Program Studi');
+                ->waitForText('Kelola Master Data Fakultas & Program Studi', 10);
 
             if ($fakultasSample) {
                 $browser->type('@input-search-fakultas', $fakultasSample->kode_fakultas)
