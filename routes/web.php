@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminFakultasProdiController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboranHasilUjiController;
@@ -101,4 +102,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/pengguna', [AdminUserController::class, 'store'])->name('users.store');
     Route::put('/pengguna/{user}', [AdminUserController::class, 'update'])->name('users.update');
     Route::delete('/pengguna/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+
+    // PBI-03 (UC-04): Kelola Master Data Fakultas dan Program Studi (Syalfa)
+    Route::get('/master-fakultas-prodi', [AdminFakultasProdiController::class, 'index'])->name('master.fakultas-prodi.index');
+    Route::post('/fakultas', [AdminFakultasProdiController::class, 'storeFakultas'])->name('fakultas.store');
+    Route::put('/fakultas/{fakultas}', [AdminFakultasProdiController::class, 'updateFakultas'])->name('fakultas.update');
+    Route::delete('/fakultas/{fakultas}', [AdminFakultasProdiController::class, 'destroyFakultas'])->name('fakultas.destroy');
+
+    Route::post('/prodi', [AdminFakultasProdiController::class, 'storeProdi'])->name('prodi.store');
+    Route::put('/prodi/{prodi}', [AdminFakultasProdiController::class, 'updateProdi'])->name('prodi.update');
+    Route::delete('/prodi/{prodi}', [AdminFakultasProdiController::class, 'destroyProdi'])->name('prodi.destroy');
 });
+
+// Endpoint API untuk ambil daftar prodi berdasarkan fakultas
+Route::get('/api/fakultas/{fakultasId}/prodi', [AdminFakultasProdiController::class, 'getProdiByFakultas'])->name('api.fakultas.prodi');

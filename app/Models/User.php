@@ -148,4 +148,20 @@ class User extends Authenticatable
             && !empty($this->fakultas_id)
             && !empty($this->prodi_id);
     }
+
+    /**
+     * Relasi Eloquent ke Fakultas (PBI-03).
+     */
+    public function fakultas()
+    {
+        return $this->belongsTo(Fakultas::class, 'fakultas_id');
+    }
+
+    /**
+     * Relasi Eloquent ke Program Studi (PBI-03).
+     */
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class, 'prodi_id');
+    }
 }
