@@ -16,10 +16,22 @@ class ProfileController extends Controller
 
     /**
      * PBI-01: Master data Fakultas → Prodi Telkom University.
-     * Sumber sama dengan PengajuanUjiController::getFakultasProdiMap().
+     * Mengambil dari database master (PBI-03) atau fallback ke array bawaan.
      */
     private function getFakultasProdiMap(): array
     {
+        if (class_exists(\App\Models\Fakultas::class) && \Illuminate\Support\Facades\Schema::hasTable('fakultas')) {
+            $fakultasList = \App\Models\Fakultas::with('prodi')->orderBy('id', 'asc')->get();
+            if ($fakultasList->isNotEmpty()) {
+                $map = [];
+                foreach ($fakultasList as $fak) {
+                    $key = $fak->nama_fakultas;
+                    $map[$key] = $fak->prodi->pluck('nama_prodi')->toArray();
+                }
+                return $map;
+            }
+        }
+
         return [
             'Fakultas Informatika (FIF)' => [
                 'S1 Informatika',
