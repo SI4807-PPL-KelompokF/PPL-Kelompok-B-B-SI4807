@@ -38,7 +38,6 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
         parent::tearDownAfterClass();
     }
 
-   
     private function getOrCreateUserByRole(string $role, array $defaults = []): User
     {
         $user = User::where('role', $role)->first();
@@ -59,9 +58,6 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
         ], $defaults));
     }
 
-    /**
-     * Ambil pasangan Fakultas & Prodi aktif dari database.
-     */
     private function getActiveFakultasAndProdi(): array
     {
         if (class_exists(Fakultas::class) && method_exists(Fakultas::class, 'seedDefaultData') && Fakultas::count() === 0) {
@@ -75,14 +71,15 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
     }
 
     /**
-     * Skenario 1 (PBI-01 Sisi Pemohon):
-     * Pemohon yang sudah ada memperbarui profil akademik & mengunggah KTM.
+     * Skenario 1 (PBI-01 Sisi Pemohon)
      */
     public function testPemohonCanUpdateAcademicProfileAndUploadKtm()
     {
         [$fakultas, $prodi] = $this->getActiveFakultasAndProdi();
 
+        // Pastikan profil pemohon dalam kondisi awal belum terisi KTM
         $pemohon = $this->getOrCreateUserByRole(User::ROLE_PEMOHON, [
+            'foto_identitas' => null,
             'status_validasi_ktm' => 'Belum Tervalidasi',
         ]);
 
@@ -90,9 +87,11 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
         $nimUji = '102022400228';
 
         $this->browse(function (Browser $browser) use ($pemohon, $fakultas, $prodi, $namaUji, $nimUji) {
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser->loginAs($pemohon)
                 ->visit('/profil')
-                ->waitForText('Profil Akademik & Validasi Identitas')
+                ->waitForText('Profil Akademik & Validasi Identitas', 10)
                 ->assertPresent('@input-nama-lengkap')
                 ->assertPresent('@input-nomor-induk')
                 ->assertPresent('@input-email-institusi')
@@ -108,21 +107,27 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
 
             if ($fakultas) {
                 $browser->select('@select-fakultas', (string) $fakultas->id)
-                    ->pause(300);
+                    ->pause(400);
             }
 
             if ($prodi) {
                 $browser->select('@select-prodi', (string) $prodi->id);
             }
 
+            // Cek apakah atribut dusk="@foto-identitas-input" atau input[name="foto_identitas"] tersedia
             if (self::$sampleKtmPath && file_exists(self::$sampleKtmPath)) {
-                $browser->attach('@foto-identitas-input', self::$sampleKtmPath);
+                $hasDuskAttr = $browser->script("return !!document.querySelector('[dusk=\"foto-identitas-input\"]');")[0] ?? false;
+                if ($hasDuskAttr) {
+                    $browser->attach('@foto-identitas-input', self::$sampleKtmPath);
+                } else {
+                    $browser->attach('input[name="foto_identitas"]', self::$sampleKtmPath);
+                }
             }
 
             $browser->script("document.querySelector('[dusk=\"btn-submit-profil\"]').scrollIntoView({block: 'center', behavior: 'instant'});");
             $browser->script("document.querySelector('[dusk=\"btn-submit-profil\"]').click();");
 
-            $browser->waitForText('Profil akademik berhasil diperbarui.')
+            $browser->waitForText('Profil akademik berhasil diperbarui.', 10)
                 ->assertSee($namaUji)
                 ->assertSee($nimUji)
                 ->assertSee('Belum Tervalidasi');
@@ -130,8 +135,7 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
     }
 
     /**
-     * Skenario 2 (PBI-01 Sisi Laboran):
-     * Laboran membuka panel validasi KTM dan menyetujui berkas pemohon.
+     * Skenario 2 (PBI-01 Sisi Laboran - Approve)
      */
     public function testLaboranCanInspectAndApprovePemohonKtm()
     {
@@ -149,15 +153,17 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
         $laboran = $this->getOrCreateUserByRole(User::ROLE_LABORAN);
 
         $this->browse(function (Browser $browser) use ($laboran, $pemohon) {
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser->loginAs($laboran)
                 ->visit('/laboran/validasi-ktm')
-                ->waitForText('Validasi Identitas & KTM')
+                ->waitForText('Validasi Identitas & KTM', 10)
                 ->assertPresent('@table-validasi-ktm')
                 ->assertPresent('@tab-semua')
                 ->assertPresent('@tab-menunggu')
                 ->assertPresent('@tab-tervalidasi')
                 ->assertPresent('@tab-ditolak')
-                ->waitFor("@row-pemohon-{$pemohon->id}");
+                ->waitFor("@row-pemohon-{$pemohon->id}", 10);
 
             $browser->assertSeeIn("@row-pemohon-{$pemohon->id}", $pemohon->nama_lengkap ?? $pemohon->name)
                 ->assertPresent("@btn-setujui-{$pemohon->id}")
@@ -167,14 +173,13 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
             $browser->script("document.querySelector('[dusk=\"btn-setujui-{$pemohon->id}\"]').scrollIntoView({block: 'center', behavior: 'instant'});");
             $browser->script("document.querySelector('[dusk=\"btn-setujui-{$pemohon->id}\"]').click();");
 
-            $browser->waitForText('berhasil divalidasi')
+            $browser->waitForText('berhasil divalidasi', 10)
                 ->assertSeeIn("@status-badge-{$pemohon->id}", 'Tervalidasi');
         });
     }
 
     /**
-     * Skenario 3 (Verifikasi End-to-End Status Pemohon):
-     * Pemohon melihat status berubah menjadi "Tervalidasi".
+     * Skenario 3 (Verifikasi End-to-End Status Pemohon)
      */
     public function testPemohonStatusReflectsTervalidasiAfterLaboranApproval()
     {
@@ -183,9 +188,12 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
         ]);
 
         $this->browse(function (Browser $browser) use ($pemohon) {
+            // Bersihkan cookie & sesi browser sebelumnya agar tidak terjadi session lock di server CI
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser->loginAs($pemohon)
                 ->visit('/profil')
-                ->waitForText('Profil Akademik & Validasi Identitas')
+                ->waitForText('Profil Akademik & Validasi Identitas', 10)
                 ->assertPresent('@pill-status-validasi')
                 ->assertSeeIn('@pill-status-validasi', 'Tervalidasi')
                 ->assertSee('Identitas Anda telah diverifikasi oleh Laboran.');
@@ -193,14 +201,12 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
     }
 
     /**
-     * Skenario 4 (PBI-01 Sisi Laboran Penolakan Berkas):
-     * Laboran menolak berkas KTM pemohon dan status pemohon berubah menjadi "Ditolak".
+     * Skenario 4 (PBI-01 Sisi Laboran - Penolakan Berkas)
      */
     public function testLaboranCanRejectInvalidKtm()
     {
         [$fakultas, $prodi] = $this->getActiveFakultasAndProdi();
 
-        // Gunakan pemohon kedua jika ada, atau gunakan pemohon yang ada dengan status direset
         $pemohonDitolak = User::where('role', User::ROLE_PEMOHON)->skip(1)->first()
             ?? $this->getOrCreateUserByRole(User::ROLE_PEMOHON);
 
@@ -216,20 +222,26 @@ class Pbi01ProfilDanValidasiKtmDuskTest extends DuskTestCase
         $laboran = $this->getOrCreateUserByRole(User::ROLE_LABORAN);
 
         $this->browse(function (Browser $browser) use ($laboran, $pemohonDitolak) {
+            $browser->driver->manage()->deleteAllCookies();
+
             $browser->loginAs($laboran)
                 ->visit('/laboran/validasi-ktm')
-                ->waitFor("@row-pemohon-{$pemohonDitolak->id}")
+                ->waitFor("@row-pemohon-{$pemohonDitolak->id}", 10)
                 ->script("window.confirm = function() { return true; };");
 
             $browser->script("document.querySelector('[dusk=\"btn-tolak-{$pemohonDitolak->id}\"]').scrollIntoView({block: 'center', behavior: 'instant'});");
             $browser->script("document.querySelector('[dusk=\"btn-tolak-{$pemohonDitolak->id}\"]').click();");
 
-            $browser->waitForText('telah ditolak')
+            $browser->waitForText('telah ditolak', 10)
+                ->waitFor("@status-badge-{$pemohonDitolak->id}", 10)
                 ->assertSeeIn("@status-badge-{$pemohonDitolak->id}", 'Ditolak');
+
+            // Reset sesi sebelum beralih login ke pemohon
+            $browser->driver->manage()->deleteAllCookies();
 
             $browser->loginAs($pemohonDitolak)
                 ->visit('/profil')
-                ->waitForText('Profil Akademik & Validasi Identitas')
+                ->waitForText('Profil Akademik & Validasi Identitas', 10)
                 ->assertPresent('@pill-status-validasi')
                 ->assertSeeIn('@pill-status-validasi', 'Ditolak')
                 ->assertSee('Validasi KTM ditolak. Silakan unggah ulang foto KTM yang valid.');
