@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboranHasilUjiController;
 use App\Http\Controllers\LandingController;
@@ -29,6 +30,11 @@ Route::get('/pengajuan/{nomorTiket}/unduh-lhu', [HomeController::class, 'downloa
     ->where('nomorTiket', '[A-Za-z0-9\-_]+')
     ->middleware('auth')
     ->name('pemohon.pengujian.download');
+
+// PBI-16 (UC-16): Dashboard Analitik Penggunaan Laboratorium (khusus Admin)
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 
 // PBI-13 (UC-13 / SC-13): Kelola Unggahan & Revisi Dokumen Hasil Uji oleh Laboran
 Route::prefix('laboran')->name('laboran.')->middleware(['auth', 'laboran'])->group(function () {
