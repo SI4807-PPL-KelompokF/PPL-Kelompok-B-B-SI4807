@@ -13,7 +13,6 @@
                 </p>
             </div>
             <div class="tu-reveal [--d:100ms] flex flex-wrap items-center gap-3">
-                <span class="tu-chip tu-chip--cream">.PDF &middot; .XLSX &middot; .XLS &middot; Maks. 5 MB</span>
                 <a href="{{ route('laboran.antrean.index') }}" class="tu-btn tu-btn--ghost tu-btn--sm">
                     <span>Antrean Fisik</span>
                 </a>

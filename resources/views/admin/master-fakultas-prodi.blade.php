@@ -7,25 +7,12 @@
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div class="tu-reveal max-w-2xl">
-                <div class="flex flex-wrap items-center gap-2 mb-3">
-                    <span class="tu-chip tu-chip--jasmine">Portal Admin</span>
-                    <span class="tu-chip tu-chip--cream">Referensi Akademik</span>
-                </div>
                 <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950 leading-[1.05]">
                     Kelola Master Data Fakultas &amp; Program Studi
                 </h1>
                 <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">
                     Atur daftar unit fakultas dan program studi sebagai referensi dinamis pada formulir profil akademik dan pengajuan uji laboratorium.
                 </p>
-            </div>
-
-            <div class="tu-reveal [--d:100ms] flex flex-wrap items-center gap-2.5">
-                <span dusk="pill-total-fakultas" class="tu-chip tu-chip--cream text-xs">
-                    Total Fakultas: {{ $totalFakultas }}
-                </span>
-                <span dusk="pill-total-prodi" class="tu-chip tu-chip--mint text-xs">
-                    Total Prodi: {{ $totalProdi }}
-                </span>
             </div>
         </div>
 
@@ -46,13 +33,13 @@
         <!-- Metric Strip -->
         <section aria-label="Ringkasan master data akademik">
             <div class="grid grid-cols-2 border-y border-gray-200 bg-white/70">
-                <div class="tu-metric tu-reveal px-5 sm:px-7 py-7 border-r border-gray-200 [--c:#ED1E28]">
+                <div class="tu-metric tu-reveal px-5 sm:px-7 py-7 border-r border-gray-200 [--c:#ED1E28]" dusk="pill-total-fakultas">
                     <span class="tu-tick"></span>
                     <p class="mt-5 text-xs sm:text-sm font-semibold text-racing-red">Unit Fakultas</p>
                     <p class="mt-1 text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums">{{ $totalFakultas }}</p>
                     <p class="mt-2 text-xs text-gray-500">Terdaftar aktif di sistem Telyuji</p>
                 </div>
-                <div class="tu-metric tu-reveal px-5 sm:px-7 py-7 [--c:#F26A2D] [--d:80ms]">
+                <div class="tu-metric tu-reveal px-5 sm:px-7 py-7 [--c:#F26A2D] [--d:80ms]" dusk="pill-total-prodi">
                     <span class="tu-tick"></span>
                     <p class="mt-5 text-xs sm:text-sm font-semibold text-tiger-flame">Program Studi</p>
                     <p class="mt-1 text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums">{{ $totalProdi }}</p>
@@ -103,7 +90,7 @@
                             <tr dusk="row-fakultas-{{ $f->id }}" class="lu-row no-anim">
                                 <td class="px-5 sm:px-7 py-3.5 text-center tu-mono text-xs text-gray-500">{{ $fakultas->firstItem() + $idx }}</td>
                                 <td class="px-3 py-3.5">
-                                    <span class="tu-chip tu-chip--jasmine tu-mono">{{ $f->kode_fakultas }}</span>
+                                    <span class="tu-chip {{ $f->identityChipClass() }} tu-mono">{{ $f->kode_fakultas }}</span>
                                 </td>
                                 <td class="px-3 py-3.5 font-semibold text-gray-950">{{ $f->nama_fakultas }}</td>
                                 <td class="px-3 py-3.5 text-center">
@@ -205,7 +192,7 @@
                                 <td class="px-3 py-3.5 font-semibold text-gray-950">{{ $p->nama_prodi }}</td>
                                 <td class="px-3 py-3.5 text-xs text-gray-600">
                                     <span class="inline-flex items-center gap-2">
-                                        <span class="tu-dot" aria-hidden="true"></span>
+                                        <span class="inline-block w-2 h-2 rounded-full shrink-0" style="background-color: {{ $p->fakultas ? $p->fakultas->identityHex() : '#64748B' }}" aria-hidden="true"></span>
                                         <span>{{ $p->fakultas->nama_fakultas ?? '-' }}</span>
                                     </span>
                                 </td>

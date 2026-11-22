@@ -18,18 +18,6 @@
 
             <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
                 <div class="max-w-2xl">
-                    <div class="flex flex-wrap items-center gap-2 mb-3">
-                        <span class="tu-chip tu-chip--cream">Portal Pemohon</span>
-                        <div dusk="pill-status-validasi">
-                            @if ($isValidated)
-                                <span class="tu-chip tu-chip--mint">Tervalidasi</span>
-                            @elseif ($isRejected)
-                                <span class="tu-chip bg-red-100 text-red-800 border-red-200">Ditolak</span>
-                            @else
-                                <span class="tu-chip tu-chip--jasmine">Belum Tervalidasi</span>
-                            @endif
-                        </div>
-                    </div>
                     <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950 leading-[1.05]">
                         Profil Akademik &amp; Validasi Identitas
                     </h1>
@@ -292,14 +280,20 @@
                     <h2 id="status-ktm-heading" class="text-sm font-bold text-gray-950">Status Validasi KTM</h2>
 
                     <div class="flex flex-wrap items-center gap-2.5">
+                        <div dusk="pill-status-validasi">
+                            @if ($isValidated)
+                                <span class="tu-chip tu-chip--mint">Tervalidasi</span>
+                            @elseif ($isRejected)
+                                <span class="tu-chip bg-red-100 text-red-800 border-red-200">Ditolak</span>
+                            @else
+                                <span class="tu-chip tu-chip--jasmine">Belum Tervalidasi</span>
+                            @endif
+                        </div>
                         @if ($isValidated)
-                            <span class="tu-chip tu-chip--mint">Tervalidasi</span>
                             <p class="text-xs text-gray-600">Identitas Anda telah diverifikasi oleh Laboran.</p>
                         @elseif ($isRejected)
-                            <span class="tu-chip bg-red-100 text-red-800 border-red-200">Ditolak</span>
                             <p class="text-xs text-red-700 font-medium">Validasi KTM ditolak. Silakan unggah ulang foto KTM yang valid.</p>
                         @else
-                            <span class="tu-chip tu-chip--jasmine">Belum Tervalidasi</span>
                             <p class="text-xs text-gray-600">Menunggu pemeriksaan oleh Laboran.</p>
                         @endif
                     </div>

@@ -7,22 +7,10 @@
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div class="tu-reveal max-w-2xl">
-                <div class="flex items-center gap-2 mb-3">
-                    <a href="{{ route('laboran.pengujian.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-racing-red transition-colors">
-                        <span>&larr; Panel Pengujian</span>
-                    </a>
-                    <span class="text-gray-300">&middot;</span>
-                    <span class="tu-chip tu-chip--jasmine text-[11px]">PBI-01 Validasi Identitas</span>
-                </div>
                 <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950 leading-[1.05]">Validasi Identitas &amp; KTM</h1>
                 <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">
                     Periksa kesesuaian data akademik dan berkas KTM/ID pemohon sebelum mereka diizinkan mengajukan uji laboratorium.
                 </p>
-            </div>
-            <div class="tu-reveal [--d:100ms] flex flex-wrap items-center gap-3">
-                <a href="{{ route('laboran.pengujian.index') }}" class="tu-btn tu-btn--sm tu-btn--ghost">
-                    <span>Panel Pengujian Lab</span>
-                </a>
             </div>
         </div>
 

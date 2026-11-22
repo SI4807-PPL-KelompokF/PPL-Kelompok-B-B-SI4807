@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fakultas;
 use App\Models\TiketPengujian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -85,8 +86,12 @@ class DashboardController extends Controller
                     return $this->normalizeFakultasLabel($row->fakultas);
                 })
                 ->map(function ($group, $label) {
+                    $identity = Fakultas::resolveIdentity($label);
+
                     return (object) [
                         'fakultas' => $label,
+                        'kode_fakultas' => $identity['code'],
+                        'warna' => $identity['hex'],
                         'jumlah_pengajuan' => (int) $group->sum('jumlah_pengajuan'),
                     ];
                 })

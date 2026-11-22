@@ -107,12 +107,11 @@
         <section class="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 shadow-sm tu-reveal" aria-labelledby="timeline-heading" dusk="section-timeline-tracking">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 pb-5">
                 <div>
-                    <h2 id="timeline-heading" class="text-lg font-bold tracking-tight text-gray-950 flex items-center gap-2">
-                        <span>Visual Timeline Tracking</span>
-                        <span class="inline-block w-2 h-2 rounded-full bg-racing-red animate-ping"></span>
+                    <h2 id="timeline-heading" class="text-lg font-bold tracking-tight text-gray-950">
+                        Visual Timeline Tracking
                     </h2>
                     <p class="text-xs text-gray-500 mt-0.5">
-                        Pelacakan real-time linimasa tahapan sampel laboratorium
+                        Pelacakan linimasa tahapan sampel laboratorium
                     </p>
                 </div>
                 <div class="text-xs text-gray-500 flex items-center gap-3">
@@ -354,12 +353,9 @@
             <div class="lg:col-span-4 space-y-6">
                 <!-- Kartu Resi Barcode Vektor (PBI-08) -->
                 <section class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm tu-reveal [--d:120ms] text-center space-y-4">
-                    <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                        <div class="flex items-center gap-2">
-                            <img src="{{ asset('images/logo-telyuji.png') }}" alt="" width="20" height="20" class="h-5 w-5 object-contain shrink-0">
-                            <p class="text-xs font-bold text-gray-900 uppercase tracking-wide">Resi E-Ticket Barcode</p>
-                        </div>
-                        <span class="tu-chip tu-chip--cream text-[10px]">Code 128</span>
+                    <div class="flex items-center gap-2 border-b border-gray-100 pb-3">
+                        <img src="{{ asset('images/logo-telyuji.png') }}" alt="" width="20" height="20" class="h-5 w-5 object-contain shrink-0">
+                        <p class="text-xs font-bold text-gray-900 uppercase tracking-wide">Resi E-Ticket Barcode</p>
                     </div>
 
                     <!-- Visual Barcode -->
@@ -398,7 +394,7 @@
                 @if ($tiket->auditTrails && $tiket->auditTrails->isNotEmpty())
                     <section class="bg-white border border-gray-200 rounded-lg p-5 shadow-sm tu-reveal [--d:160ms] space-y-3">
                         <h3 class="text-xs font-bold text-gray-900 uppercase tracking-wide border-b border-gray-100 pb-2">
-                            Log Jejak Aktivitas (Audit Trail)
+                            Riwayat Aktivitas
                         </h3>
                         <div class="space-y-3">
                             @foreach ($tiket->auditTrails->take(4) as $audit)

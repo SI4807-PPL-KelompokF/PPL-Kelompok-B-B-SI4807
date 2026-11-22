@@ -7,10 +7,6 @@
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div class="tu-reveal max-w-2xl">
-                <div class="inline-flex items-center gap-2 mb-3">
-                    <span class="tu-chip tu-chip--jasmine">Portal Admin</span>
-                    <span class="tu-chip tu-chip--cream">PBI-04 Katalog Instrumen</span>
-                </div>
                 <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950 leading-[1.05]">
                     Katalog Mesin Laboratorium
                 </h1>
@@ -64,9 +60,8 @@
 
         <!-- Table -->
         <section class="bg-white border border-gray-200" aria-labelledby="mesin-table-heading">
-            <div class="flex items-center justify-between gap-4 border-b border-gray-200 px-5 sm:px-7 py-4">
+            <div class="border-b border-gray-200 px-5 sm:px-7 py-4">
                 <h2 id="mesin-table-heading" class="text-base font-bold tracking-tight text-gray-950">Daftar Mesin &amp; Instrumen Uji</h2>
-                <span class="tu-eyebrow text-xs text-gray-400">{{ $mesins->count() }} instrumen</span>
             </div>
 
             <div class="overflow-x-auto">

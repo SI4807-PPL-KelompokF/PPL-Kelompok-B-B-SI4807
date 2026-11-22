@@ -76,12 +76,9 @@
 
             <!-- Section 1: Identitas Akademik Pemohon -->
             <section class="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-sm tu-reveal">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                    <div class="flex items-center gap-3">
-                        <span class="inline-grid place-items-center w-7 h-7 rounded-full bg-racing-red text-white text-xs font-bold">1</span>
-                        <h2 class="text-base sm:text-lg font-bold text-gray-950">Identitas Akademik Pemohon</h2>
-                    </div>
-                    <span class="tu-chip tu-chip--cream">Sivitas Akademika</span>
+                <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                    <span class="inline-grid place-items-center w-7 h-7 rounded-full bg-racing-red text-white text-xs font-bold">1</span>
+                    <h2 class="text-base sm:text-lg font-bold text-gray-950">Identitas Akademik Pemohon</h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -143,12 +140,9 @@
 
             <!-- Section 2: Pemilihan Instrumen & Parameter Laboratorium -->
             <section class="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-sm tu-reveal [--d:80ms]">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                    <div class="flex items-center gap-3">
-                        <span class="inline-grid place-items-center w-7 h-7 rounded-full bg-racing-red text-white text-xs font-bold">2</span>
-                        <h2 class="text-base sm:text-lg font-bold text-gray-950">Pemilihan Instrumen &amp; Fasilitas Lab</h2>
-                    </div>
-                    <span class="text-xs text-gray-500 font-medium">Berdasarkan Katalog Resmi</span>
+                <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                    <span class="inline-grid place-items-center w-7 h-7 rounded-full bg-racing-red text-white text-xs font-bold">2</span>
+                    <h2 class="text-base sm:text-lg font-bold text-gray-950">Pemilihan Instrumen &amp; Fasilitas Lab</h2>
                 </div>
 
                 <div class="space-y-4">
@@ -218,12 +212,9 @@
 
             <!-- Section 3: Spesifikasi Sampel & Rincian Pengujian -->
             <section class="bg-white border border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-sm tu-reveal [--d:160ms]">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
-                    <div class="flex items-center gap-3">
-                        <span class="inline-grid place-items-center w-7 h-7 rounded-full bg-racing-red text-white text-xs font-bold">3</span>
-                        <h2 class="text-base sm:text-lg font-bold text-gray-950">Spesifikasi Sampel &amp; Tujuan Uji</h2>
-                    </div>
-                    <span class="text-xs text-gray-500 font-medium">Fisik atau Digital</span>
+                <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
+                    <span class="inline-grid place-items-center w-7 h-7 rounded-full bg-racing-red text-white text-xs font-bold">3</span>
+                    <h2 class="text-base sm:text-lg font-bold text-gray-950">Spesifikasi Sampel &amp; Tujuan Uji</h2>
                 </div>
 
                 <div class="space-y-6">
@@ -241,9 +232,9 @@
                                     <p class="tu-choice-desc text-xs leading-relaxed">
                                         Sampel material, cairan, kristal, komponen elektronika, atau beton yang diserahkan langsung ke meja Laboran.
                                     </p>
-                                    <span class="tu-chip tu-chip--jasmine mt-1">
-                                        Wajib Cetak &amp; Tempel Resi Barcode
-                                    </span>
+                                    <p class="text-[11px] font-semibold text-amber-800 pt-0.5">
+                                        Wajib cetak &amp; tempel resi barcode pada wadah sampel.
+                                    </p>
                                 </div>
                             </label>
 
@@ -257,9 +248,9 @@
                                     <p class="tu-choice-desc text-xs leading-relaxed">
                                         Data komputasi simulasi, file CAD/FEA, mesh 3D, atau dataset riset yang diunggah ke cloud storage.
                                     </p>
-                                    <span class="tu-chip tu-chip--mint mt-1">
-                                        E-Ticket Digital (Tanpa Cetak Fisik)
-                                    </span>
+                                    <p class="text-[11px] font-semibold text-emerald-700 pt-0.5">
+                                        E-Ticket digital tanpa penyerahan fisik.
+                                    </p>
                                 </div>
                             </label>
                         </div>

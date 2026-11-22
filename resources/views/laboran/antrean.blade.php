@@ -7,10 +7,6 @@
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div class="tu-reveal max-w-2xl">
-                <div class="inline-flex items-center gap-2 mb-3">
-                    <span class="tu-chip lu-chip--flame">Panel Laboran</span>
-                    <span class="tu-chip tu-chip--cream">PBI-10 Validasi Antrean</span>
-                </div>
                 <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950 leading-[1.05]">
                     Antrean Pengujian
                 </h1>
