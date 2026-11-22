@@ -395,12 +395,12 @@ class DokumenHasilUjiService
      */
     public function ensureInitialDataSeeded(): void
     {
-        if (!Schema::hasTable('tiket_pengujian') || TiketPengujian::count() > 0) {
+        if (!Schema::hasTable('tiket_pengujian') || TiketPengujian::where('nomor_tiket', 'TLY-20261015-089')->exists()) {
             return;
         }
 
         $pemohonDefault = Schema::hasTable('users')
-            ? User::where('email', 'pemohon@student.telkomuniversity.ac.id')->first()
+            ? User::whereIn('email', ['pemohon@telkomuniversity.ac.id', 'pemohon@student.telkomuniversity.ac.id'])->first()
             : null;
 
         TiketPengujian::create([

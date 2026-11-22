@@ -54,10 +54,30 @@
                         <a href="{{ url('/') }}#katalog-lab" class="tu-link">Katalog</a>
                         <a href="{{ url('/') }}#faq" class="tu-link">FAQ</a>
                         @auth
-                            <a href="{{ route('home') }}" class="tu-link">Dashboard</a>
-                            @if (Route::has('laboran.pengujian.index') && (Auth::user()->role ?? 'laboran') === 'laboran')
+                            @if (Route::has('admin.users.index') && Auth::user()->isAdmin())
+                                <a href="{{ route('admin.users.index') }}" dusk="nav-admin-users" class="tu-link font-semibold text-gray-900">
+                                    Manajemen Pengguna
+                                </a>
+                                @if (Route::has('admin.master.fakultas-prodi.index'))
+                                    <a href="{{ route('admin.master.fakultas-prodi.index') }}" dusk="nav-admin-master-fakultas" class="tu-link font-semibold text-gray-900">
+                                        Master Fakultas &amp; Prodi
+                                    </a>
+                                @endif
+                            @elseif (Route::has('laboran.pengujian.index') && Auth::user()->isLaboran())
                                 <a href="{{ route('laboran.pengujian.index') }}" dusk="nav-laboran-pbi13" class="tu-link font-semibold text-gray-900">
                                     Panel Laboran
+                                </a>
+                                @if (Route::has('laboran.validasi.ktm.index'))
+                                    <a href="{{ route('laboran.validasi.ktm.index') }}" dusk="nav-laboran-validasi-ktm" class="tu-link font-semibold text-gray-900">
+                                        Validasi KTM
+                                    </a>
+                                @endif
+                            @else
+                                <a href="{{ route('home') }}" dusk="nav-pemohon-dashboard" class="tu-link font-semibold text-gray-900">
+                                    Dashboard
+                                </a>
+                                <a href="{{ route('pengajuan.create') }}" dusk="nav-buat-pengajuan" class="tu-link font-semibold text-racing-red">
+                                    + Buat Pengajuan
                                 </a>
                             @endif
                             @if (Route::has('admin.dashboard') && Auth::user()->isAdmin())
@@ -97,8 +117,8 @@
                                 <span class="hidden sm:inline text-sm font-medium text-gray-700">
                                     {{ Auth::user()->name }}
                                 </span>
-                                <span class="tu-chip tu-chip--cream">
-                                    {{ ucfirst(Auth::user()->role ?? 'Pemohon') }}
+                                <span dusk="header-role-badge" class="tu-chip {{ Auth::user()->roleChipClass() }}">
+                                    {{ Auth::user()->roleLabel() }}
                                 </span>
                                 <a href="{{ route('logout') }}"
                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
@@ -140,14 +160,36 @@
                         <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                     </a>
                     @auth
-                        <a href="{{ route('home') }}" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
-                            <span>Dashboard Pengujian</span>
-                            <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
-                        </a>
-                        @if (Route::has('laboran.pengujian.index') && (Auth::user()->role ?? 'laboran') === 'laboran')
-                            <a href="{{ route('laboran.pengujian.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
-                                <span>Panel Laboran (Unggah &amp; Revisi Hasil Uji)</span>
+                        @if (Route::has('admin.users.index') && Auth::user()->isAdmin())
+                            <a href="{{ route('admin.users.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                <span>Manajemen Pengguna</span>
                                 <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                            </a>
+                            @if (Route::has('admin.master.fakultas-prodi.index'))
+                                <a href="{{ route('admin.master.fakultas-prodi.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Master Fakultas &amp; Prodi</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
+                        @elseif (Route::has('laboran.pengujian.index') && Auth::user()->isLaboran())
+                            <a href="{{ route('laboran.pengujian.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                <span>Panel Laboran</span>
+                                <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                            </a>
+                            @if (Route::has('laboran.validasi.ktm.index'))
+                                <a href="{{ route('laboran.validasi.ktm.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Validasi KTM</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
+                        @else
+                            <a href="{{ route('home') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                <span>Dashboard Pengujian</span>
+                                <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                            </a>
+                            <a href="{{ route('pengajuan.create') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-racing-red transition-colors hover:text-tiger-flame">
+                                <span>+ Buat Pengajuan Uji Baru</span>
+                                <span class="text-xs text-racing-red" aria-hidden="true">&rarr;</span>
                             </a>
                         @endif
                         @if (Route::has('admin.dashboard') && Auth::user()->isAdmin())
@@ -185,12 +227,24 @@
                     </nav>
                     <nav class="md:col-span-3 text-sm space-y-2.5" aria-label="Akun">
                         <p class="text-xs font-semibold text-gray-400 mb-4">Akun</p>
-                        @if (Route::has('login'))
-                            <a href="{{ route('login') }}" class="tu-link block w-fit text-gray-700">Masuk</a>
-                        @endif
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="tu-link block w-fit text-gray-700">Daftar pemohon</a>
-                        @endif
+                        @guest
+                            @if (Route::has('login'))
+                                <a href="{{ route('login') }}" class="tu-link block w-fit text-gray-700">Masuk</a>
+                            @endif
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="tu-link block w-fit text-gray-700">Daftar pemohon</a>
+                            @endif
+                        @else
+                            <a href="{{ Auth::user()->homeRoute() }}" class="tu-link block w-fit text-gray-700">
+                                @if (Auth::user()->isAdmin())
+                                    Manajemen Pengguna
+                                @elseif (Auth::user()->isLaboran())
+                                    Panel Laboran
+                                @else
+                                    Dashboard Pengujian
+                                @endif
+                            </a>
+                        @endguest
                     </nav>
                 </div>
 

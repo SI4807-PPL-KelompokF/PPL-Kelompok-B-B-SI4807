@@ -31,12 +31,12 @@ class Pbi13LaboranHasilUjiTest extends TestCase
     {
         return User::factory()->create([
             'name' => 'Raka Pratama, S.T.',
-            'email' => 'laboran@student.telkomuniversity.ac.id',
+            'email' => 'laboran@telkomuniversity.ac.id',
             'role' => User::ROLE_LABORAN,
         ]);
     }
 
-    private function createPemohon(string $email = 'pemohon1@student.telkomuniversity.ac.id', string $name = 'Mahasiswa Pemohon'): User
+    private function createPemohon(string $email = 'pemohon1@telkomuniversity.ac.id', string $name = 'Mahasiswa Pemohon'): User
     {
         return User::factory()->create([
             'name' => $name,
@@ -310,8 +310,8 @@ class Pbi13LaboranHasilUjiTest extends TestCase
     public function test_laboran_and_ticket_owner_can_download_decrypted_lhu_while_other_pemohon_is_forbidden()
     {
         $laboran = $this->createLaboran();
-        $owner = $this->createPemohon('owner@student.telkomuniversity.ac.id', 'Pemilik Sampel');
-        $other = $this->createPemohon('other@student.telkomuniversity.ac.id', 'Pemohon Lain');
+        $owner = $this->createPemohon('owner@telkomuniversity.ac.id', 'Pemilik Sampel');
+        $other = $this->createPemohon('other@telkomuniversity.ac.id', 'Pemohon Lain');
 
         $tiket = TiketPengujian::create([
             'nomor_tiket' => 'TLY-20261021-305',

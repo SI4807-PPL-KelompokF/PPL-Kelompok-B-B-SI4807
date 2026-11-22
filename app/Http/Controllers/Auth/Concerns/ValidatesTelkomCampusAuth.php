@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Auth\Concerns;
 
 trait ValidatesTelkomCampusAuth
 {
-    public const TELKOM_STUDENT_EMAIL_REGEX = '/^[a-zA-Z0-9._%+-]+@student\.telkomuniversity\.ac\.id$/i';
+    public const TELKOM_CAMPUS_EMAIL_REGEX = '/^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)*telkomuniversity\.ac\.id$/i';
+    public const TELKOM_STUDENT_EMAIL_REGEX = self::TELKOM_CAMPUS_EMAIL_REGEX;
 
     /**
-     * Aturan validasi email kampus Telkom University (@student.telkomuniversity.ac.id).
+     * Aturan validasi email civitas akademika Telkom University (@telkomuniversity.ac.id beserta subdomainnya).
      */
     protected function telkomEmailRules(array $extraRules = []): array
     {
@@ -15,7 +16,7 @@ trait ValidatesTelkomCampusAuth
             'required',
             'string',
             'email',
-            'regex:' . self::TELKOM_STUDENT_EMAIL_REGEX,
+            'regex:' . self::TELKOM_CAMPUS_EMAIL_REGEX,
         ], $extraRules);
     }
 
@@ -41,7 +42,7 @@ trait ValidatesTelkomCampusAuth
     protected function telkomAuthValidationMessages(string $emailField = 'email', bool $includePassword = false): array
     {
         $messages = [
-            $emailField . '.regex' => 'Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.',
+            $emailField . '.regex' => 'Alamat email wajib menggunakan domain @telkomuniversity.ac.id.',
         ];
 
         if ($includePassword) {
