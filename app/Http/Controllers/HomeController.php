@@ -23,7 +23,7 @@ class HomeController extends Controller
         $user = Auth::user();
 
         if ($user && $user->isAdmin()) {
-            return app(AdminUserController::class)->index();
+            return app(DashboardController::class)->index($request);
         }
 
         if ($user && $user->isLaboran()) {
@@ -34,6 +34,7 @@ class HomeController extends Controller
         $metrics = [
             'total' => 0,
             'menunggu' => 0,
+            'dalam_antrean' => 0,
             'sedang_diuji' => 0,
             'selesai' => 0,
         ];
@@ -48,7 +49,11 @@ class HomeController extends Controller
 
                 $metrics = [
                     'total' => $tiketSaya->count(),
-                    'menunggu' => $tiketSaya->where('status', TiketPengujian::STATUS_MENUNGGU)->count(),
+                    'menunggu' => $tiketSaya->whereIn('status', [
+                        TiketPengujian::STATUS_MENUNGGU,
+                        TiketPengujian::STATUS_DALAM_ANTREAN,
+                    ])->count(),
+                    'dalam_antrean' => $tiketSaya->where('status', TiketPengujian::STATUS_DALAM_ANTREAN)->count(),
                     'sedang_diuji' => $tiketSaya->where('status', TiketPengujian::STATUS_SEDANG_DIUJI)->count(),
                     'selesai' => $tiketSaya->where('status', TiketPengujian::STATUS_SELESAI)->count(),
                 ];

@@ -182,7 +182,7 @@
                     name="email"
                     required
                     placeholder="nama@telkomuniversity.ac.id"
-                    pattern="^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*telkomuniversity\.ac\.id$"
+                    pattern="^[a-zA-Z0-9._%+\-]+@([a-zA-Z0-9\-]+\.)*telkomuniversity\.ac\.id$"
                     title="Gunakan alamat email berdomain @telkomuniversity.ac.id"
                     class="tu-input"
                 >

@@ -55,6 +55,7 @@ class LaboranHasilUjiController extends Controller
                     : null;
 
                 $auditTrails = AuditTrail::with('tiketPengujian')
+                    ->whereIn('aksi', AuditTrail::LHU_ACTIONS)
                     ->latest('id')
                     ->take(15)
                     ->get();

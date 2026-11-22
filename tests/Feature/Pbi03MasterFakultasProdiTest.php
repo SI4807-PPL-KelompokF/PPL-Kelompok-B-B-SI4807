@@ -47,7 +47,18 @@ class Pbi03MasterFakultasProdiTest extends TestCase
             ->assertSee('Kelola Master Data Fakultas &amp; Program Studi', false)
             ->assertSee('dusk="table-fakultas"', false)
             ->assertSee('dusk="table-prodi"', false)
-            ->assertSee('Fakultas Informatika (FIF)');
+            ->assertSee('Fakultas Informatika (FIF)')
+            ->assertSee('tu-fak-fte', false)
+            ->assertSee('tu-fak-fri', false)
+            ->assertSee('tu-fak-fif', false)
+            ->assertSee('tu-fak-feb', false)
+            ->assertSee('tu-fak-fks', false)
+            ->assertSee('tu-fak-fik', false)
+            ->assertSee('tu-fak-fit', false)
+            ->assertDontSee('Portal Admin')
+            ->assertDontSee('Referensi Akademik')
+            ->assertDontSee('<style>', false)
+            ->assertDontSee('href="#"', false);
 
         $this->assertGreaterThan(0, Fakultas::count());
         $this->assertGreaterThan(0, Prodi::count());
@@ -154,7 +165,13 @@ class Pbi03MasterFakultasProdiTest extends TestCase
             ->assertSee('Fakultas Rekayasa Industri (FRI)')
             ->assertSee('S1 Teknik Industri');
 
-        $this->getJson(route('api.fakultas.prodi', $fakultas->id))
+        $pemohon = User::factory()->create([
+            'email' => 'pemohon.api@student.telkomuniversity.ac.id',
+            'role' => User::ROLE_PEMOHON,
+        ]);
+
+        $this->actingAs($pemohon)
+            ->getJson(route('api.fakultas.prodi', $fakultas->id))
             ->assertStatus(200)
             ->assertJson([
                 'ok' => true,

@@ -50,7 +50,8 @@ class Pbi01ProfilDanValidasiKtmTest extends TestCase
             ->assertSee('dusk="select-prodi"', false)
             ->assertSee('dusk="input-foto-identitas"', false)
             ->assertSee('dusk="btn-submit-profil"', false)
-            ->assertSee('dusk="pill-status-validasi"', false);
+            ->assertSee('dusk="pill-status-validasi"', false)
+            ->assertDontSee('<style>', false);
 
         $this->actingAs($pemohon)
             ->getJson(route('profil.prodi', ['fakultas_id' => $fakultas->nama_fakultas]))
@@ -85,6 +86,7 @@ class Pbi01ProfilDanValidasiKtmTest extends TestCase
             ->assertSessionHas('status', 'Profil akademik berhasil diperbarui.');
 
         $pemohon->refresh();
+        $this->assertEquals('Pemohon Akademik Uji', $pemohon->name);
         $this->assertEquals('Pemohon Akademik Uji', $pemohon->nama_lengkap);
         $this->assertEquals('102022400228', $pemohon->nomor_induk);
         $this->assertEquals($fakultas->nama_fakultas, $pemohon->fakultas_id);

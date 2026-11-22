@@ -10,26 +10,30 @@
         ══════════════════════════════════════════════════════════════════ --}}
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
             <div class="tu-reveal">
-                <div class="inline-flex items-center gap-2 mb-3">
-                    <span class="tu-chip tu-chip--cream">
-                        <svg class="w-3 h-3 mr-1 text-racing-red" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-                        </svg>
-                        Dashboard Analitik
-                    </span>
-                </div>
                 <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950 leading-[1.05]">
                     Dashboard Laboratorium
                 </h1>
                 <p class="mt-4 max-w-xl text-sm sm:text-base leading-relaxed text-gray-600">
-                    Pantau statistik operasional laboratorium secara real-time — tingkat penggunaan mesin uji,
+                    Pantau statistik operasional laboratorium — tingkat penggunaan mesin uji,
                     distribusi pengajuan per fakultas, dan kondisi antrean keseluruhan.
                 </p>
             </div>
-            <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-3">
-                <span class="tu-chip tu-chip--cream text-xs text-gray-500">
-                    Data diperbarui setiap kunjungan
-                </span>
+            <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-2.5">
+                @if (Route::has('admin.users.index'))
+                    <a href="{{ route('admin.users.index') }}" class="tu-btn tu-btn--ghost tu-btn--sm">
+                        <span>Manajemen Pengguna</span>
+                    </a>
+                @endif
+                @if (Route::has('admin.master.fakultas-prodi.index'))
+                    <a href="{{ route('admin.master.fakultas-prodi.index') }}" class="tu-btn tu-btn--ghost tu-btn--sm">
+                        <span>Fakultas &amp; Prodi</span>
+                    </a>
+                @endif
+                @if (Route::has('admin.mesin.index'))
+                    <a href="{{ route('admin.mesin.index') }}" class="tu-btn tu-btn--sm">
+                        <span>Katalog Mesin</span>
+                    </a>
+                @endif
             </div>
         </div>
 
@@ -108,16 +112,13 @@
 
             {{-- ── GRAFIK 1: Penggunaan Mesin (Instrumen) ────────────────── --}}
             <section class="bg-white border border-gray-200 tu-reveal flex flex-col" aria-labelledby="chart-instrumen-heading" dusk="chart-instrumen-section">
-                <div class="border-b border-gray-200 px-5 sm:px-7 py-4 flex items-center justify-between gap-4">
-                    <div>
-                        <h2 id="chart-instrumen-heading" class="text-base font-bold tracking-tight text-gray-950">
-                            Tingkat Penggunaan Mesin Laboratorium
-                        </h2>
-                        <p class="mt-0.5 text-xs text-gray-500">
-                            Jumlah tiket pengajuan per mesin/instrumen uji — diurutkan dari tertinggi
-                        </p>
-                    </div>
-                    <span class="tu-eyebrow text-xs text-gray-400 shrink-0">Bar Chart</span>
+                <div class="border-b border-gray-200 px-5 sm:px-7 py-4">
+                    <h2 id="chart-instrumen-heading" class="text-base font-bold tracking-tight text-gray-950">
+                        Tingkat Penggunaan Mesin Laboratorium
+                    </h2>
+                    <p class="mt-0.5 text-xs text-gray-500">
+                        Jumlah tiket pengajuan per mesin/instrumen uji — diurutkan dari tertinggi
+                    </p>
                 </div>
 
                 <div class="flex-1 px-5 sm:px-7 py-6">
@@ -156,20 +157,13 @@
 
             {{-- ── GRAFIK 2: Distribusi Pengajuan per Fakultas ──────────── --}}
             <section class="bg-white border border-gray-200 tu-reveal flex flex-col" aria-labelledby="chart-fakultas-heading" dusk="chart-fakultas-section">
-                <div class="border-b border-gray-200 px-5 sm:px-7 py-4 flex items-center justify-between gap-4">
-                    <div>
-                        <h2 id="chart-fakultas-heading" class="text-base font-bold tracking-tight text-gray-950">
-                            Distribusi Pengajuan Berdasarkan Fakultas
-                        </h2>
-                        <p class="mt-0.5 text-xs text-gray-500">
-                            Jumlah tiket pengajuan dari setiap fakultas pemohon
-                        </p>
-                    </div>
-                    @if ($usageByFakultas->count() <= 6)
-                        <span class="tu-eyebrow text-xs text-gray-400 shrink-0">Doughnut</span>
-                    @else
-                        <span class="tu-eyebrow text-xs text-gray-400 shrink-0">Bar Chart</span>
-                    @endif
+                <div class="border-b border-gray-200 px-5 sm:px-7 py-4">
+                    <h2 id="chart-fakultas-heading" class="text-base font-bold tracking-tight text-gray-950">
+                        Distribusi Pengajuan Berdasarkan Fakultas
+                    </h2>
+                    <p class="mt-0.5 text-xs text-gray-500">
+                        Jumlah tiket pengajuan dari setiap fakultas pemohon
+                    </p>
                 </div>
 
                 <div class="flex-1 px-5 sm:px-7 py-6">
@@ -192,7 +186,7 @@
                         @php $chartTypeFakultas = $usageByFakultas->count() <= 6 ? 'doughnut' : 'bar'; @endphp
 
                         <div class="relative {{ $chartTypeFakultas === 'doughnut' ? 'flex items-center justify-center' : '' }}"
-                             style="{{ $chartTypeFakultas === 'doughnut' ? 'min-height: 280px;' : 'min-height: 280px;' }}">
+                             style="min-height: 280px;">
                             <canvas id="chartFakultas" dusk="canvas-fakultas"
                                 aria-label="Grafik distribusi pengajuan berdasarkan fakultas"
                                 role="img"
@@ -204,6 +198,7 @@
                                 'type'   => $chartTypeFakultas,
                                 'labels' => $usageByFakultas->pluck('fakultas')->toArray(),
                                 'data'   => $usageByFakultas->pluck('jumlah_pengajuan')->map(fn($v) => (int)$v)->toArray(),
+                                'colors' => $usageByFakultas->pluck('warna')->toArray(),
                             ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
                         </script>
                     @endif
@@ -212,15 +207,15 @@
                 {{-- Legenda tabel di bawah grafik (selalu tampil kalau ada data) --}}
                 @if ($usageByFakultas->isNotEmpty())
                     <div class="border-t border-gray-100 px-5 sm:px-7 py-4" dusk="fakultas-legend-table">
-                        <p class="tu-eyebrow text-xs text-gray-400 mb-3">Rincian</p>
                         <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                             @php $totalFak = $usageByFakultas->sum('jumlah_pengajuan'); @endphp
                             @foreach ($usageByFakultas as $fak)
                                 @php
                                     $pct = $totalFak > 0 ? round(($fak->jumlah_pengajuan / $totalFak) * 100, 1) : 0;
+                                    $fakColor = $fak->warna ?? \App\Models\Fakultas::resolveIdentity($fak->fakultas)['hex'];
                                 @endphp
                                 <div class="flex items-center gap-3" dusk="legend-row-{{ $loop->index }}">
-                                    <div class="shrink-0 w-2.5 h-2.5 rounded-sm" style="background-color: {{ $loop->index === 0 ? '#ED1E28' : ($loop->index === 1 ? '#F26A2D' : ($loop->index === 2 ? '#F7D488' : ($loop->index === 3 ? '#34d399' : ($loop->index === 4 ? '#60a5fa' : '#a78bfa')))) }}"></div>
+                                    <div class="shrink-0 w-2.5 h-2.5 rounded-sm" style="background-color: {{ $fakColor }}"></div>
                                     <span class="flex-1 text-xs text-gray-700 truncate">{{ $fak->fakultas }}</span>
                                     <span class="tu-mono text-xs font-semibold text-gray-950">{{ number_format($fak->jumlah_pengajuan) }}</span>
                                     <span class="tu-mono text-xs text-gray-400">{{ $pct }}%</span>
@@ -241,11 +236,10 @@
         ══════════════════════════════════════════════════════════════════ --}}
         @if ($usageByInstrumen->isNotEmpty())
         <section class="bg-white border border-gray-200 tu-reveal" aria-labelledby="table-instrumen-heading" dusk="table-instrumen-section">
-            <div class="flex items-center justify-between gap-4 border-b border-gray-200 px-5 sm:px-7 py-4">
+            <div class="border-b border-gray-200 px-5 sm:px-7 py-4">
                 <h2 id="table-instrumen-heading" class="text-base font-bold tracking-tight text-gray-950">
                     Rincian Penggunaan per Mesin Laboratorium
                 </h2>
-                <span class="tu-eyebrow text-xs text-gray-400">{{ $usageByInstrumen->count() }} mesin</span>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm" dusk="instrumen-detail-table">
@@ -332,10 +326,25 @@
         return PALETTE[index % PALETTE.length];
     }
 
+    function getThemeColors() {
+        var dark = document.documentElement.classList.contains('dark');
+        return {
+            text: dark ? '#a1a9b8' : '#6b7280',
+            tickY: dark ? '#e5e7eb' : '#374151',
+            grid: dark ? '#1f2533' : '#f3f4f6',
+            tooltipBg: dark ? '#141821' : '#ffffff',
+            tooltipTitle: dark ? '#f9fafb' : '#111827',
+            tooltipBody: dark ? '#e5e7eb' : '#374151',
+            tooltipBorder: dark ? '#2a3142' : '#e5e7eb',
+        };
+    }
+
+    var theme = getThemeColors();
+
     // ── Global Chart.js defaults (konsisten dengan desain Telyuji) ───────
     Chart.defaults.font.family = '"General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
     Chart.defaults.font.size = 12;
-    Chart.defaults.color = '#6b7280'; // text-gray-500
+    Chart.defaults.color = theme.text;
 
     // ── Grafik 1: Penggunaan Instrumen (Horizontal Bar) ──────────────────
     var instrumenEl  = document.getElementById('chartInstrumen');
@@ -355,7 +364,7 @@
                     data: iData,
                     backgroundColor: iLabels.map(function (_, idx) {
                         var c = getColor(idx);
-                        return c + 'CC'; // 80% opacity
+                        return c + 'CC';
                     }),
                     borderColor: iLabels.map(function (_, idx) {
                         return getColor(idx);
@@ -366,17 +375,17 @@
                 }],
             },
             options: {
-                indexAxis: 'y',          // Horizontal bar
+                indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
                 aspectRatio: 1.6,
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: '#fff',
-                        titleColor: '#111827',
-                        bodyColor: '#374151',
-                        borderColor: '#e5e7eb',
+                        backgroundColor: theme.tooltipBg,
+                        titleColor: theme.tooltipTitle,
+                        bodyColor: theme.tooltipBody,
+                        borderColor: theme.tooltipBorder,
                         borderWidth: 1,
                         padding: 10,
                         callbacks: {
@@ -394,15 +403,16 @@
                         beginAtZero: true,
                         ticks: {
                             stepSize: 1,
+                            color: theme.text,
                             callback: function (val) {
                                 return Number.isInteger(val) ? val : null;
                             },
                         },
-                        grid: { color: '#f3f4f6' },
+                        grid: { color: theme.grid },
                         title: {
                             display: true,
                             text: 'Jumlah Pengajuan',
-                            color: '#9ca3af',
+                            color: theme.text,
                             font: { size: 11 },
                         },
                     },
@@ -410,7 +420,7 @@
                         grid: { display: false },
                         ticks: {
                             font: { weight: '600' },
-                            color: '#374151',
+                            color: theme.tickY,
                         },
                     },
                 },
@@ -427,7 +437,9 @@
         var fType   = fakultasData.type   || 'bar';
         var fLabels = fakultasData.labels || [];
         var fData   = fakultasData.data   || [];
-        var fColors = fLabels.map(function (_, idx) { return getColor(idx); });
+        var fColors = Array.isArray(fakultasData.colors) && fakultasData.colors.length === fLabels.length
+            ? fakultasData.colors
+            : fLabels.map(function (_, idx) { return getColor(idx); });
 
         if (fType === 'doughnut') {
             window.telyujiDashboardCharts.fakultas = new Chart(fakultasEl, {
@@ -448,12 +460,12 @@
                     maintainAspectRatio: true,
                     cutout: '62%',
                     plugins: {
-                        legend: { display: false }, // Legenda sudah ada di tabel bawah
+                        legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#fff',
-                            titleColor: '#111827',
-                            bodyColor: '#374151',
-                            borderColor: '#e5e7eb',
+                            backgroundColor: theme.tooltipBg,
+                            titleColor: theme.tooltipTitle,
+                            bodyColor: theme.tooltipBody,
+                            borderColor: theme.tooltipBorder,
                             borderWidth: 1,
                             padding: 10,
                             callbacks: {
@@ -468,7 +480,6 @@
                 },
             });
         } else {
-            // Bar chart untuk fakultas > 6
             window.telyujiDashboardCharts.fakultas = new Chart(fakultasEl, {
                 type: 'bar',
                 data: {
@@ -490,10 +501,10 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#fff',
-                            titleColor: '#111827',
-                            bodyColor: '#374151',
-                            borderColor: '#e5e7eb',
+                            backgroundColor: theme.tooltipBg,
+                            titleColor: theme.tooltipTitle,
+                            bodyColor: theme.tooltipBody,
+                            borderColor: theme.tooltipBorder,
                             borderWidth: 1,
                             padding: 10,
                             callbacks: {
@@ -508,15 +519,16 @@
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,
+                                color: theme.text,
                                 callback: function (val) {
                                     return Number.isInteger(val) ? val : null;
                                 },
                             },
-                            grid: { color: '#f3f4f6' },
+                            grid: { color: theme.grid },
                             title: {
                                 display: true,
                                 text: 'Jumlah Pengajuan',
-                                color: '#9ca3af',
+                                color: theme.text,
                                 font: { size: 11 },
                             },
                         },
@@ -524,7 +536,7 @@
                             grid: { display: false },
                             ticks: {
                                 font: { weight: '600' },
-                                color: '#374151',
+                                color: theme.tickY,
                             },
                         },
                     },
@@ -532,6 +544,32 @@
             });
         }
     }
+
+    window.addEventListener('tu:themechange', function () {
+        var c = getThemeColors();
+        Chart.defaults.color = c.text;
+        Object.keys(window.telyujiDashboardCharts).forEach(function (k) {
+            var ch = window.telyujiDashboardCharts[k];
+            if (!ch) return;
+            if (ch.options.plugins && ch.options.plugins.tooltip) {
+                ch.options.plugins.tooltip.backgroundColor = c.tooltipBg;
+                ch.options.plugins.tooltip.titleColor = c.tooltipTitle;
+                ch.options.plugins.tooltip.bodyColor = c.tooltipBody;
+                ch.options.plugins.tooltip.borderColor = c.tooltipBorder;
+            }
+            if (ch.options.scales) {
+                if (ch.options.scales.x) {
+                    if (ch.options.scales.x.ticks) ch.options.scales.x.ticks.color = c.text;
+                    if (ch.options.scales.x.grid) ch.options.scales.x.grid.color = c.grid;
+                    if (ch.options.scales.x.title) ch.options.scales.x.title.color = c.text;
+                }
+                if (ch.options.scales.y && ch.options.scales.y.ticks) {
+                    ch.options.scales.y.ticks.color = c.tickY;
+                }
+            }
+            ch.update('none');
+        });
+    });
 })();
 </script>
 @endpush

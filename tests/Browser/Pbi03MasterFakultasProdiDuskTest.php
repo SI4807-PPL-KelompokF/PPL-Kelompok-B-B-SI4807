@@ -58,7 +58,6 @@ class Pbi03MasterFakultasProdiDuskTest extends DuskTestCase
             $browser->loginAs($admin)
                 ->visit('/admin/master-fakultas-prodi')
                 ->waitForText('Kelola Master Data Fakultas & Program Studi', 15)
-                ->assertSee('Portal Admin')
                 ->assertSee('Master Data Fakultas')
                 ->assertSee('Master Data Program Studi')
                 ->assertPresent('@pill-total-fakultas')

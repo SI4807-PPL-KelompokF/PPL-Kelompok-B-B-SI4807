@@ -60,11 +60,11 @@ class AdminUserManagementTest extends TestCase
             'role' => User::ROLE_PEMOHON,
         ]);
 
-        // 1. Login sebagai Admin diarahkan langsung ke /admin/pengguna
+        // 1. Login sebagai Admin diarahkan langsung ke /admin/dashboard
         $this->post('/login', [
             'email' => 'admin@telkomuniversity.ac.id',
             'password' => 'Telyuji#2026',
-        ])->assertRedirect(route('admin.users.index'));
+        ])->assertRedirect(route('admin.dashboard'));
         $this->post('/logout');
 
         // 2. Login sebagai Laboran diarahkan langsung ke /laboran/pengujian
@@ -80,21 +80,25 @@ class AdminUserManagementTest extends TestCase
             'password' => 'Telyuji#2026',
         ])->assertRedirect(route('home'));
 
-        // 4. Tampilan Pemohon di /home hanya menampilkan menu Dashboard (tanpa menu Admin/Laboran)
+        // 4. Tampilan Pemohon di /home hanya menampilkan menu Pemohon (tanpa menu Admin/Laboran)
         $this->actingAs($pemohon)
             ->get('/home')
             ->assertStatus(200)
             ->assertSee('Dashboard Layanan Pengujian')
             ->assertSee('dusk="nav-pemohon-dashboard"', false)
+            ->assertSee('dusk="nav-pemohon-profil"', false)
             ->assertDontSee('dusk="nav-admin-users"', false)
             ->assertDontSee('dusk="nav-laboran-pbi13"', false);
 
-        // 5. Admin mengakses /home menampilkan halaman Manajemen Pengguna
+        // 5. Admin mengakses /home menampilkan Dashboard Laboratorium
         $this->actingAs($admin)
             ->get('/home')
             ->assertStatus(200)
-            ->assertSee('Manajemen Pengguna')
-            ->assertSee('dusk="users-table"', false);
+            ->assertSee('Dashboard Laboratorium')
+            ->assertSee('dusk="metric-total"', false)
+            ->assertSee('dusk="nav-admin-dashboard"', false)
+            ->assertSee('dusk="nav-admin-users"', false)
+            ->assertSee('dusk="nav-admin-mesin"', false);
 
         // 6. Admin tidak dapat mengakses workspace operasional Laboran (pemisahan tugas ketat)
         $this->actingAs($admin)

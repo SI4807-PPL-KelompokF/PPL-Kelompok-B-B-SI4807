@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $currentUser = Auth::user();
+    $isKtmValidated = $currentUser && $currentUser->isValidasiKtm();
+    $isKtmRejected = $currentUser && $currentUser->isKtmDitolak();
+@endphp
 <div class="relative overflow-hidden">
     <x-bg-pattern uid="home-pat" />
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
@@ -9,10 +14,15 @@
             <div class="tu-reveal">
                 <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950 leading-[1.05]">Dashboard Layanan Pengujian</h1>
                 <p class="mt-4 max-w-xl text-sm sm:text-base leading-relaxed text-gray-600">
-                    Selamat datang kembali, <span class="font-semibold text-gray-950">{{ Auth::user()->name }}</span>. Kelola pengujian laboratorium Anda di sini.
+                    Selamat datang kembali, <span class="font-semibold text-gray-950">{{ $currentUser->displayName() }}</span>. Kelola pengujian laboratorium Anda di sini.
                 </p>
             </div>
             <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-3">
+                @if (Route::has('profil.show'))
+                    <a href="{{ route('profil.show') }}" dusk="btn-profil-ktm" class="tu-btn tu-btn--ghost tu-btn--sm">
+                        <span>Profil &amp; Validasi KTM</span>
+                    </a>
+                @endif
                 <a href="{{ route('pengajuan.create') }}" dusk="btn-tambah-pengajuan-baru" class="tu-btn">
                     <span aria-hidden="true">+</span>
                     <span>Buat Pengajuan Sampel Baru</span>
@@ -23,6 +33,32 @@
         @if (session('status'))
             <div class="tu-alert" role="alert">
                 {{ session('status') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="tu-alert tu-alert--danger" role="alert">
+                {{ $errors->first() }}
+            </div>
+        @endif
+
+        @if ($currentUser && !$isKtmValidated && Route::has('profil.show'))
+            <div class="tu-alert {{ $isKtmRejected ? 'tu-alert--danger' : 'tu-alert--warning' }} flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" dusk="banner-status-ktm-home" role="status">
+                <div>
+                    @if ($isKtmRejected)
+                        <p class="font-semibold">Validasi KTM Anda ditolak oleh Laboran.</p>
+                        <p class="text-xs opacity-90 mt-0.5">Silakan perbarui profil akademik dan unggah ulang foto KTM yang terbaca jelas.</p>
+                    @elseif (!$currentUser->isProfilLengkap() || empty($currentUser->foto_identitas))
+                        <p class="font-semibold">Profil akademik &amp; identitas KTM Anda belum lengkap.</p>
+                        <p class="text-xs opacity-90 mt-0.5">Lengkapi NIM/NIP, Fakultas, Prodi, dan foto KTM agar data terisi otomatis saat pengajuan.</p>
+                    @else
+                        <p class="font-semibold">Berkas KTM Anda sedang menunggu verifikasi Laboran.</p>
+                        <p class="text-xs opacity-90 mt-0.5">Anda dapat memantau status validasi identitas pada halaman Profil &amp; KTM.</p>
+                    @endif
+                </div>
+                <a href="{{ route('profil.show') }}" class="tu-btn tu-btn--sm shrink-0 self-start sm:self-center">
+                    <span>Kelola Profil &amp; KTM</span>
+                </a>
             </div>
         @endif
 
@@ -37,9 +73,9 @@
                 </div>
                 <div class="tu-metric tu-reveal px-5 sm:px-7 py-8 border-b lg:border-b-0 lg:border-r border-gray-200 [--c:#F7D488] [--d:80ms]">
                     <span class="tu-tick"></span>
-                    <p class="tu-eyebrow mt-5 text-amber-800">Menunggu Verifikasi</p>
+                    <p class="tu-eyebrow mt-5 text-amber-800">Menunggu &amp; Antrean</p>
                     <p class="mt-2 text-5xl font-extrabold tracking-tight text-gray-950 tabular-nums"><span data-count="{{ $metrics['menunggu'] ?? 0 }}">{{ $metrics['menunggu'] ?? 0 }}</span></p>
-                    <p class="mt-2 text-xs text-amber-700">Dalam antrean laboran</p>
+                    <p class="mt-2 text-xs text-amber-700">Verifikasi &amp; antrean laboran</p>
                 </div>
                 <div class="tu-metric tu-reveal px-5 sm:px-7 py-8 border-r border-gray-200 [--c:#F26A2D] [--d:160ms]">
                     <span class="tu-tick"></span>
@@ -99,7 +135,7 @@
                                         @elseif ($tiket->status === 'Ditolak')
                                             <span class="tu-chip bg-red-100 text-red-800 border-red-200">Ditolak</span>
                                         @else
-                                            <span class="tu-chip tu-chip--cream">Menunggu Fisik</span>
+                                            <span class="tu-chip tu-chip--cream">Menunggu Verifikasi</span>
                                         @endif
                                     </td>
                                     <td class="px-5 sm:px-7 py-3 align-top text-right whitespace-nowrap">

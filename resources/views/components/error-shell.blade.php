@@ -11,8 +11,8 @@
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid items-center gap-10 lg:grid-cols-12 lg:gap-16">
             <!-- Left: Outlined Numeral + Minimalist Copy & Actions -->
-            <div class="lg:col-span-7 tu-reveal" style="--sc: {{ $strokeColor }};">
-                <div class="tu-numeral tu-item select-none mb-4" style="--i:0">
+            <div class="lg:col-span-7" style="--sc: {{ $strokeColor }};">
+                <div class="tu-numeral select-none mb-4">
                     {{ $code }}
                 </div>
 
@@ -44,7 +44,7 @@
             </div>
 
             <!-- Right: 2D Flat Geometric Laboratory Scene -->
-            <div class="lg:col-span-5 tu-reveal [--d:120ms]">
+            <div class="lg:col-span-5">
                 <div class="relative border border-gray-200 bg-white p-6 sm:p-8 lg:p-10 shadow-sm">
                     <span class="tu-bracket tu-bracket--tl" aria-hidden="true"></span>
                     <span class="tu-bracket tu-bracket--tr" aria-hidden="true"></span>
