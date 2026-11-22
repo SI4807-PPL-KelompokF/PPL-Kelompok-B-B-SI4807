@@ -61,19 +61,36 @@ jobs:
       uses: nanasess/setup-chromedriver@v3
 
     - name: Run Laravel Dusk Browser Tests
+      timeout-minutes: 10
       env:
         APP_URL: http://127.0.0.1:8000
         DUSK_DRIVER_URL: http://127.0.0.1:9515
         DB_CONNECTION: sqlite
         DB_DATABASE: ${{ github.workspace }}/database/database.sqlite
+        PHP_CLI_SERVER_WORKERS: 4
       run: |
         mkdir -p vendor/laravel/dusk/bin
         cp "$(which chromedriver)" vendor/laravel/dusk/bin/chromedriver-linux
         chmod -R 0755 vendor/laravel/dusk/bin/
-        chromedriver --port=9515 &
-        php artisan serve --host=127.0.0.1 --port=8000 &
-        sleep 3
-        php artisan dusk -v
+        chromedriver --port=9515 > /tmp/chromedriver.log 2>&1 &
+        CHRO_PID=$!
+        php artisan serve --host=127.0.0.1 --port=8000 --no-reload > /tmp/serve.log 2>&1 &
+        SERVE_PID=$!
+        trap 'kill $CHRO_PID $SERVE_PID 2>/dev/null || true' EXIT
+        for i in $(seq 1 30); do
+          if curl -s -o /dev/null http://127.0.0.1:8000 && curl -sSf http://127.0.0.1:9515/status > /dev/null 2>&1; then
+            break
+          fi
+          sleep 1
+        done
+        php artisan dusk --debug -v || {
+          EXIT_CODE=$?
+          echo "=== Laravel Serve Log (last 50 lines) ==="
+          tail -n 50 /tmp/serve.log || true
+          echo "=== ChromeDriver Log (last 50 lines) ==="
+          tail -n 50 /tmp/chromedriver.log || true
+          exit $EXIT_CODE
+        }
 
     - name: Upload Dusk Screenshots & Logs
       uses: actions/upload-artifact@v4
