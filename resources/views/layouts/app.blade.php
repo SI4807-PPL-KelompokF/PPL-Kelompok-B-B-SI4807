@@ -13,7 +13,7 @@
     <title>{{ config('app.name', 'Telyuji') }} - Sistem Pengujian Laboratorium</title>
 
     <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script src="{{ asset(mix('js/app.js')) }}" defer></script>
 
     <!-- Foundry Typeface: General Sans (Indian Type Foundry) -->
     <link rel="preconnect" href="https://api.fontshare.com">
@@ -21,7 +21,7 @@
     <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset(mix('css/app.css')) }}" rel="stylesheet">
 
     <script>
         (function () {
@@ -78,6 +78,11 @@
                                 </a>
                                 <a href="{{ route('pengajuan.create') }}" dusk="nav-buat-pengajuan" class="tu-link font-semibold text-racing-red">
                                     + Buat Pengajuan
+                                </a>
+                            @endif
+                            @if (Route::has('admin.dashboard') && Auth::user()->isAdmin())
+                                <a href="{{ route('admin.dashboard') }}" dusk="nav-admin-dashboard" class="tu-link font-semibold text-gray-900">
+                                    Dasbor Admin
                                 </a>
                             @endif
                         @endauth
@@ -185,6 +190,12 @@
                             <a href="{{ route('pengajuan.create') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-racing-red transition-colors hover:text-tiger-flame">
                                 <span>+ Buat Pengajuan Uji Baru</span>
                                 <span class="text-xs text-racing-red" aria-hidden="true">&rarr;</span>
+                            </a>
+                        @endif
+                        @if (Route::has('admin.dashboard') && Auth::user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}" data-mobile-link dusk="mobile-nav-admin-dashboard" class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                <span>Dasbor Analitik Admin</span>
+                                <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                             </a>
                         @endif
                     @endauth
@@ -425,5 +436,8 @@
             }
         })();
     </script>
+
+    {{-- Slot untuk script tambahan halaman (misal: Chart.js di dashboard admin) --}}
+    @stack('scripts')
 </body>
 </html>

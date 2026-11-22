@@ -13,6 +13,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public const ROLE_ADMIN   = 'admin';
     public const ROLE_ADMIN = 'admin';
     public const ROLE_LABORAN = 'laboran';
     public const ROLE_PEMOHON = 'pemohon';
@@ -72,6 +73,7 @@ class User extends Authenticatable
 
     public function isPemohon(): bool
     {
+        return ($this->role ?? self::ROLE_PEMOHON) === self::ROLE_PEMOHON;
         return !$this->isAdmin() && !$this->isLaboran();
     }
 

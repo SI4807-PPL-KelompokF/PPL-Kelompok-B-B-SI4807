@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 class EnsureAdminRole
 {
     /**
+     * Pastikan hanya pengguna dengan peran "admin" yang dapat mengakses rute dasbor analitik.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
      * Pastikan pengguna terautentikasi memiliki peran 'admin'.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -19,6 +24,15 @@ class EnsureAdminRole
         $user = $request->user();
 
         if (!$user || !$user->isAdmin()) {
+            $message = 'Akses ditolak. Fitur ini hanya dapat diakses oleh Administrator.';
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => $message,
+                ], 403);
+            }
+
+            abort(403, $message);
             if ($request->expectsJson()) {
                 return response()->json([
                     'ok' => false,

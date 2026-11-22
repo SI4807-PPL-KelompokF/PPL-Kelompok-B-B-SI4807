@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AdminFakultasProdiController;
 use App\Http\Controllers\AdminMesinLabController;
 use App\Http\Controllers\AdminUserController;
@@ -64,6 +65,11 @@ Route::get('/pengajuan/{nomorTiket}/unduh-lhu', [HomeController::class, 'downloa
     ->where('nomorTiket', '[A-Za-z0-9\-_]+')
     ->middleware('auth')
     ->name('pemohon.pengujian.download');
+
+// PBI-16 (UC-16): Dashboard Analitik Penggunaan Laboratorium (khusus Admin)
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 
 
 // PBI-10: Validasi penerimaan fisik dan progres pengujian Laboran

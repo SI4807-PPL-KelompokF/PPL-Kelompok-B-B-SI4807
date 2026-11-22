@@ -30,6 +30,22 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
+    /**
+     * Redirect pengguna berdasarkan role setelah login berhasil.
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        // Admin diarahkan ke Dashboard Analitik
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Role lainnya tetap mengikuti redirect default Laravel
+        return null;
+    }
+
+
     /**
      * Arahkan pengguna setelah login ke halaman sesuai perannya (Admin / Laboran / Pemohon).
      */
