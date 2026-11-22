@@ -422,4 +422,41 @@ class Pbi16DashboardTest extends TestCase
             return $m['total'] === $jumlahDibuat;
         });
     }
+
+    /** @test */
+    public function grafik_fakultas_menggunakan_warna_identitas_resmi_dan_bebas_badge_berlebih(): void
+    {
+        $admin = User::factory()->create(['role' => User::ROLE_ADMIN]);
+
+        $expectedColors = [
+            'Fakultas Teknik Elektro' => '#1E3A8A',
+            'Fakultas Rekayasa Industri' => '#166534',
+            'Fakultas Informatika' => '#D4A017',
+            'Fakultas Ekonomi dan Bisnis' => '#38BDF8',
+            'Fakultas Komunikasi dan Ilmu Sosial' => '#7C3AED',
+            'Fakultas Industri Kreatif' => '#F97316',
+            'Fakultas Ilmu Terapan' => '#84CC16',
+        ];
+
+        foreach (array_keys($expectedColors) as $fakultasName) {
+            TiketPengujian::factory()->create(['fakultas' => $fakultasName]);
+        }
+
+        $response = $this->actingAs($admin)->get(route('admin.dashboard'));
+
+        $response->assertOk()
+            ->assertDontSee('Dashboard Analitik')
+            ->assertDontSee('>Bar Chart<', false)
+            ->assertDontSee('>Doughnut<', false)
+            ->assertViewHas('usageByFakultas', function ($collection) use ($expectedColors) {
+                $byName = $collection->keyBy('fakultas');
+                foreach ($expectedColors as $name => $hex) {
+                    if (!isset($byName[$name]) || $byName[$name]->warna !== $hex) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+    }
 }

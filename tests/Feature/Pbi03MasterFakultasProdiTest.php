@@ -48,6 +48,15 @@ class Pbi03MasterFakultasProdiTest extends TestCase
             ->assertSee('dusk="table-fakultas"', false)
             ->assertSee('dusk="table-prodi"', false)
             ->assertSee('Fakultas Informatika (FIF)')
+            ->assertSee('tu-fak-fte', false)
+            ->assertSee('tu-fak-fri', false)
+            ->assertSee('tu-fak-fif', false)
+            ->assertSee('tu-fak-feb', false)
+            ->assertSee('tu-fak-fks', false)
+            ->assertSee('tu-fak-fik', false)
+            ->assertSee('tu-fak-fit', false)
+            ->assertDontSee('Portal Admin')
+            ->assertDontSee('Referensi Akademik')
             ->assertDontSee('<style>', false)
             ->assertDontSee('href="#"', false);
 
