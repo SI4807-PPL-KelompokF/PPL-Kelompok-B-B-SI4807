@@ -13,7 +13,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public const ROLE_ADMIN   = 'admin';
     public const ROLE_ADMIN = 'admin';
     public const ROLE_LABORAN = 'laboran';
     public const ROLE_PEMOHON = 'pemohon';
@@ -74,7 +73,13 @@ class User extends Authenticatable
     public function isPemohon(): bool
     {
         return ($this->role ?? self::ROLE_PEMOHON) === self::ROLE_PEMOHON;
-        return !$this->isAdmin() && !$this->isLaboran();
+    }
+
+    public function displayName(): string
+    {
+        $display = trim((string) ($this->nama_lengkap ?: $this->name));
+
+        return $display !== '' ? $display : (string) $this->email;
     }
 
     public function roleLabel(): string
@@ -108,6 +113,10 @@ class User extends Authenticatable
      */
     public function homeRoute(): string
     {
+        if ($this->isAdmin() && Route::has('admin.dashboard')) {
+            return route('admin.dashboard');
+        }
+
         if ($this->isAdmin() && Route::has('admin.users.index')) {
             return route('admin.users.index');
         }

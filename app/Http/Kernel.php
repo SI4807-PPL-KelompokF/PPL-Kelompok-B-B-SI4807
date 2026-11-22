@@ -59,7 +59,6 @@ class Kernel extends HttpKernel
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'admin'   => \App\Http\Middleware\EnsureAdminRole::class,
         'admin' => \App\Http\Middleware\EnsureAdminRole::class,
         'laboran' => \App\Http\Middleware\EnsureLaboranRole::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,

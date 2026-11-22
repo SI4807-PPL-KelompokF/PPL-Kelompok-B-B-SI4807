@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\TiketPengujian;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardController extends Controller
 {
@@ -20,114 +20,140 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
-        // Nilai fallback apabila tabel belum dimigrasi
         $metrics = [
-            'total'       => 0,
-            'menunggu'    => 0,
+            'total' => 0,
+            'menunggu' => 0,
+            'dalam_antrean' => 0,
             'sedang_diuji' => 0,
-            'selesai'     => 0,
+            'selesai' => 0,
         ];
         $usageByInstrumen = collect();
-        $usageByFakultas  = collect();
+        $usageByFakultas = collect();
 
         try {
             if (!Schema::hasTable('tiket_pengujian')) {
                 return view('admin.dashboard', compact(
-                    'metrics', 'usageByInstrumen', 'usageByFakultas'
+                    'metrics',
+                    'usageByInstrumen',
+                    'usageByFakultas'
                 ));
             }
 
-            // ── Kartu ringkasan metrik ────────────────────────────────────────────
-            // Satu kueri COUNT per status untuk menghindari N+1 dan pengambilan
-            // seluruh record ke PHP.
+            // Satu kueri COUNT per status agar bebas N+1 dan portabel di SQLite, MySQL, & PostgreSQL
             $statusCounts = TiketPengujian::query()
                 ->select('status', DB::raw('COUNT(*) as jumlah'))
                 ->groupBy('status')
                 ->pluck('jumlah', 'status');
 
-            $total = $statusCounts->sum();
-
             $metrics = [
-                'total'        => $total,
-                'menunggu'     => (int) ($statusCounts[TiketPengujian::STATUS_MENUNGGU] ?? 0),
+                'total' => (int) $statusCounts->sum(),
+                'menunggu' => (int) ($statusCounts[TiketPengujian::STATUS_MENUNGGU] ?? 0),
+                'dalam_antrean' => (int) ($statusCounts[TiketPengujian::STATUS_DALAM_ANTREAN] ?? 0),
                 'sedang_diuji' => (int) ($statusCounts[TiketPengujian::STATUS_SEDANG_DIUJI] ?? 0),
-                'selesai'      => (int) ($statusCounts[TiketPengujian::STATUS_SELESAI] ?? 0),
+                'selesai' => (int) ($statusCounts[TiketPengujian::STATUS_SELESAI] ?? 0),
             ];
 
-            // ── Grafik penggunaan mesin (instrumen) ──────────────────────────────
-            // Satu baris tiket dihitung satu kali untuk instrumen yang tercatat.
-            // Nilai kosong tetap ditampilkan sebagai "Tidak Diketahui" agar tidak
-            // hilang diam-diam dari ringkasan jumlah pengajuan.
-            $subInstrumen = TiketPengujian::query()
-                ->selectRaw("CASE WHEN instrumen IS NULL OR TRIM(instrumen) = '' THEN 'Tidak Diketahui' ELSE TRIM(instrumen) END AS instrumen");
-
-            $usageByInstrumen = DB::table(DB::raw("({$subInstrumen->toSql()}) as t_instrumen"))
-                ->mergeBindings($subInstrumen->getQuery())
+            // Agregasi penggunaan instrumen (portabel lintas dialek SQL)
+            $rawInstrumen = TiketPengujian::query()
                 ->select('instrumen', DB::raw('COUNT(*) as jumlah_pengajuan'))
                 ->groupBy('instrumen')
-                ->orderByDesc('jumlah_pengajuan')
                 ->get();
 
+            $usageByInstrumen = $rawInstrumen
+                ->groupBy(function ($row) {
+                    $label = trim((string) ($row->instrumen ?? ''));
 
-            // Grafik distribusi pengajuan per fakultas
-            // Normalisasi kode dan variasi nama fakultas agar tidak
-            // dihitung sebagai kategori yang berbeda.
+                    return $label === '' ? 'Tidak Diketahui' : $label;
+                })
+                ->map(function ($group, $label) {
+                    return (object) [
+                        'instrumen' => $label,
+                        'jumlah_pengajuan' => (int) $group->sum('jumlah_pengajuan'),
+                    ];
+                })
+                ->sortByDesc('jumlah_pengajuan')
+                ->values();
 
-            $facultyValueSql = "TRIM(CASE
-                WHEN INSTR(fakultas, '·') > 0
-                THEN SUBSTR(fakultas, INSTR(fakultas, '·') + 1)
-                ELSE fakultas
-            END)";
-
-            $subFakultas = TiketPengujian::query()->selectRaw("
-                CASE
-                    WHEN fakultas IS NULL OR TRIM(fakultas) = ''
-                        THEN 'Tidak Diketahui'
-
-                    WHEN {$facultyValueSql} = ''
-                        THEN 'Tidak Diketahui'
-
-                    WHEN UPPER({$facultyValueSql})
-                        IN ('FTE', 'FAKULTAS TEKNIK ELEKTRO')
-                        THEN 'Fakultas Teknik Elektro'
-
-                    WHEN UPPER({$facultyValueSql})
-                        IN ('FIF', 'FAKULTAS INFORMATIKA')
-                        THEN 'Fakultas Informatika'
-
-                    WHEN UPPER({$facultyValueSql})
-                        IN ('FAK. REKAYASA INDUSTRI',
-                            'FAKULTAS REKAYASA INDUSTRI')
-                        THEN 'Fakultas Rekayasa Industri'
-
-                    WHEN UPPER({$facultyValueSql})
-                        IN ('FAK. ILMU TERAPAN',
-                            'FAKULTAS ILMU TERAPAN')
-                        THEN 'Fakultas Ilmu Terapan'
-
-                    ELSE {$facultyValueSql}
-                END AS fakultas
-            ");
-
-            $usageByFakultas = DB::table(
-                    DB::raw("({$subFakultas->toSql()}) as t_fakultas")
-                )
-                ->mergeBindings($subFakultas->getQuery())
+            // Agregasi distribusi fakultas (portabel di SQLite, MySQL, & PostgreSQL — tanpa INSTR())
+            $rawFakultas = TiketPengujian::query()
                 ->select('fakultas', DB::raw('COUNT(*) as jumlah_pengajuan'))
                 ->groupBy('fakultas')
-                ->orderByDesc('jumlah_pengajuan')
                 ->get();
 
+            $usageByFakultas = $rawFakultas
+                ->groupBy(function ($row) {
+                    return $this->normalizeFakultasLabel($row->fakultas);
+                })
+                ->map(function ($group, $label) {
+                    return (object) [
+                        'fakultas' => $label,
+                        'jumlah_pengajuan' => (int) $group->sum('jumlah_pengajuan'),
+                    ];
+                })
+                ->sortByDesc('jumlah_pengajuan')
+                ->values();
         } catch (\Throwable $e) {
-            // Tetap tampilkan fallback yang aman, tetapi catat penyebabnya agar
-            // kegagalan query tidak tersembunyi saat dashboard kosong.
             Log::warning('PBI-16: gagal mengambil statistik dashboard laboratorium.', [
                 'exception' => $e,
             ]);
         }
 
         return view('admin.dashboard', compact(
-            'metrics', 'usageByInstrumen', 'usageByFakultas'
+            'metrics',
+            'usageByInstrumen',
+            'usageByFakultas'
         ));
+    }
+
+    /**
+     * Normalisasikan variasi penulisan nama/kode fakultas dari seluruh modul (PBI-03, PBI-07, PBI-13)
+     * agar tidak terpecah menjadi kategori duplikat pada grafik distribusi.
+     */
+    private function normalizeFakultasLabel(?string $raw): string
+    {
+        $value = trim((string) ($raw ?? ''));
+        if ($value === '') {
+            return 'Tidak Diketahui';
+        }
+
+        // Ambil segmen setelah pemisah '·' jika formatnya "S1 Teknik Elektro · FTE"
+        if (mb_strpos($value, '·') !== false) {
+            $parts = explode('·', $value);
+            $value = trim((string) end($parts));
+        }
+
+        if ($value === '') {
+            return 'Tidak Diketahui';
+        }
+
+        // Normalisasi kode dalam tanda kurung seperti "Fakultas Rekayasa Industri (FRI)"
+        $withoutCode = trim((string) preg_replace('/\s*\([A-Za-z]{2,5}\)\s*$/', '', $value));
+        $upper = strtoupper($withoutCode);
+
+        $canonicalMap = [
+            'FTE' => 'Fakultas Teknik Elektro',
+            'FAK. TEKNIK ELEKTRO' => 'Fakultas Teknik Elektro',
+            'FAKULTAS TEKNIK ELEKTRO' => 'Fakultas Teknik Elektro',
+            'FIF' => 'Fakultas Informatika',
+            'FAK. INFORMATIKA' => 'Fakultas Informatika',
+            'FAKULTAS INFORMATIKA' => 'Fakultas Informatika',
+            'FRI' => 'Fakultas Rekayasa Industri',
+            'FAK. REKAYASA INDUSTRI' => 'Fakultas Rekayasa Industri',
+            'FAKULTAS REKAYASA INDUSTRI' => 'Fakultas Rekayasa Industri',
+            'FIT' => 'Fakultas Ilmu Terapan',
+            'ILMU TERAPAN' => 'Fakultas Ilmu Terapan',
+            'FAK. ILMU TERAPAN' => 'Fakultas Ilmu Terapan',
+            'FAKULTAS ILMU TERAPAN' => 'Fakultas Ilmu Terapan',
+            'FEB' => 'Fakultas Ekonomi dan Bisnis',
+            'FAK. EKONOMI DAN BISNIS' => 'Fakultas Ekonomi dan Bisnis',
+            'FAKULTAS EKONOMI DAN BISNIS' => 'Fakultas Ekonomi dan Bisnis',
+            'FKS' => 'Fakultas Komunikasi dan Ilmu Sosial',
+            'FKB' => 'Fakultas Komunikasi dan Ilmu Sosial',
+            'FAKULTAS KOMUNIKASI DAN ILMU SOSIAL' => 'Fakultas Komunikasi dan Ilmu Sosial',
+            'FIK' => 'Fakultas Industri Kreatif',
+            'FAKULTAS INDUSTRI KREATIF' => 'Fakultas Industri Kreatif',
+        ];
+
+        return $canonicalMap[$upper] ?? $withoutCode;
     }
 }

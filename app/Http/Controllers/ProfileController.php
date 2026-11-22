@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fakultas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -15,72 +16,11 @@ class ProfileController extends Controller
     }
 
     /**
-     * PBI-01: Master data Fakultas → Prodi Telkom University.
-     * Mengambil dari database master (PBI-03) atau fallback ke array bawaan.
+     * PBI-01: Master data Fakultas -> Prodi Telkom University dari sumber tunggal (PBI-03).
      */
     private function getFakultasProdiMap(): array
     {
-        if (class_exists(\App\Models\Fakultas::class) && \Illuminate\Support\Facades\Schema::hasTable('fakultas')) {
-            $fakultasList = \App\Models\Fakultas::with('prodi')->orderBy('id', 'asc')->get();
-            if ($fakultasList->isNotEmpty()) {
-                $map = [];
-                foreach ($fakultasList as $fak) {
-                    $key = $fak->nama_fakultas;
-                    $map[$key] = $fak->prodi->pluck('nama_prodi')->toArray();
-                }
-                return $map;
-            }
-        }
-
-        return [
-            'Fakultas Informatika (FIF)' => [
-                'S1 Informatika',
-                'S1 Sistem Informasi',
-                'S1 Teknologi Informasi',
-                'S1 Rekayasa Perangkat Lunak',
-                'S1 Sains Data',
-                'S2 Informatika',
-            ],
-            'Fakultas Teknik Elektro (FTE)' => [
-                'S1 Teknik Telekomunikasi',
-                'S1 Teknik Elektro',
-                'S1 Teknik Biomedis',
-                'S1 Teknik Komputer',
-                'S2 Teknik Elektro',
-            ],
-            'Fakultas Rekayasa Industri (FRI)' => [
-                'S1 Teknik Industri',
-                'S1 Sistem Informasi',
-                'S1 Teknik Logistik',
-                'S2 Teknik Industri',
-            ],
-            'Fakultas Ekonomi dan Bisnis (FEB)' => [
-                'S1 Manajemen',
-                'S1 Akuntansi',
-                'S2 Manajemen',
-            ],
-            'Fakultas Komunikasi dan Ilmu Sosial (FKS)' => [
-                'S1 Ilmu Komunikasi',
-                'S1 Hubungan Masyarakat',
-                'S1 Administrasi Bisnis',
-            ],
-            'Fakultas Industri Kreatif (FIK)' => [
-                'S1 Desain Komunikasi Visual',
-                'S1 Desain Interior',
-                'S1 Desain Produk',
-                'S1 Seni Rupa',
-            ],
-            'Ilmu Terapan (FIT)' => [
-                'D3 Teknik Telekomunikasi',
-                'D3 Rekayasa Perangkat Lunak',
-                'D3 Sistem Informasi',
-            ],
-            'Staf / Dosen' => [
-                'Dosen Tetap',
-                'Dosen Tidak Tetap',
-                'Tenaga Kependidikan',
-            ],
-        ];
+        return Fakultas::getFakultasProdiMap(true);
     }
 
     /**
@@ -123,6 +63,7 @@ class ProfileController extends Controller
         ]);
 
         $updatePayload = [
+            'name'         => $validated['nama_lengkap'],
             'nama_lengkap' => $validated['nama_lengkap'],
             'nomor_induk'  => $validated['nomor_induk'],
             'fakultas_id'  => $validated['fakultas_id'],

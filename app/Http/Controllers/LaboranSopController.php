@@ -13,16 +13,35 @@ class LaboranSopController extends Controller
         . '<li>Tempelkan resi barcode pada wadah sampel.</li></ol>'
         . '<p>Sampel wajib diambil maksimal 7 hari kerja setelah pengujian selesai.</p>';
 
+    public function __construct()
+    {
+        $this->middleware(['auth', 'laboran']);
+    }
+
     public function index()
     {
-        $mesins = MesinLab::orderBy('nama_mesin')->get();
+        MesinLab::seedDefaultData();
 
-        return view('laboran.sop.index', compact('mesins'));
+        $mesins = MesinLab::orderBy('laboratorium')
+            ->orderBy('nama_mesin')
+            ->get();
+
+        $metrics = [
+            'total' => $mesins->count(),
+            'sudah_ada' => $mesins->filter(function (MesinLab $m) {
+                return !empty(trim(strip_tags((string) $m->sop_penyiapan)));
+            })->count(),
+            'belum_ada' => $mesins->filter(function (MesinLab $m) {
+                return empty(trim(strip_tags((string) $m->sop_penyiapan)));
+            })->count(),
+        ];
+
+        return view('laboran.sop.index', compact('mesins', 'metrics'));
     }
 
     public function edit(MesinLab $mesin)
     {
-        $sop = $mesin->sop_penyiapan ?: self::TEMPLATE_SOP;
+        $sop = $this->formatForEditor($mesin->sop_penyiapan);
 
         return view('laboran.sop.edit', compact('mesin', 'sop'));
     }
@@ -30,7 +49,9 @@ class LaboranSopController extends Controller
     public function update(Request $request, MesinLab $mesin)
     {
         $request->validate([
-            'sop_penyiapan' => 'nullable|string|max:20000',
+            'sop_penyiapan' => ['nullable', 'string', 'max:20000'],
+        ], [
+            'sop_penyiapan.max' => 'Teks SOP maksimal 20.000 karakter.',
         ]);
 
         $mesin->update([
@@ -38,7 +59,7 @@ class LaboranSopController extends Controller
         ]);
 
         return redirect()->route('laboran.sop.index')
-            ->with('success', 'SOP mesin ' . $mesin->nama_mesin . ' berhasil disimpan.');
+            ->with('status', 'SOP mesin ' . $mesin->nama_mesin . ' berhasil disimpan.');
     }
 
     // "Hapus SOP" = mengosongkan teks SOP, mesin tetap ada
@@ -47,7 +68,30 @@ class LaboranSopController extends Controller
         $mesin->update(['sop_penyiapan' => null]);
 
         return redirect()->route('laboran.sop.index')
-            ->with('success', 'SOP mesin ' . $mesin->nama_mesin . ' berhasil dihapus.');
+            ->with('status', 'SOP mesin ' . $mesin->nama_mesin . ' berhasil dihapus.');
+    }
+
+    /**
+     * Siapkan teks SOP agar tampil rapi di editor Quill (mengonversi teks polos berbaris ke paragraf HTML).
+     */
+    private function formatForEditor(?string $raw): string
+    {
+        if ($raw === null || trim(strip_tags($raw)) === '') {
+            return self::TEMPLATE_SOP;
+        }
+
+        if (preg_match('/<(p|ol|ul|li|br|strong|b|em|i|u)\b/i', $raw)) {
+            return (string) $this->bersihkan($raw);
+        }
+
+        $lines = preg_split('/\r\n|\r|\n/', trim($raw)) ?: [];
+        $paragraphs = array_map(function (string $line) {
+            return '<p>' . e(trim($line)) . '</p>';
+        }, array_filter($lines, function (string $line) {
+            return trim($line) !== '';
+        }));
+
+        return implode('', $paragraphs);
     }
 
     // Hanya izinkan tag format dasar dan buang semua atribut (cegah XSS), tanpa dependency baru

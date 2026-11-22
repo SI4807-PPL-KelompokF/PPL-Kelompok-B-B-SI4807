@@ -34,7 +34,7 @@ class AdminUserController extends Controller
         $usersPayload = $users->map(function (User $u) {
             return [
                 'id' => $u->id,
-                'name' => $u->name,
+                'name' => $u->displayName(),
                 'email' => $u->email,
                 'role' => $u->role ?? User::ROLE_PEMOHON,
                 'role_label' => $u->roleLabel(),
@@ -61,6 +61,7 @@ class AdminUserController extends Controller
 
         User::create([
             'name' => $validated['name'],
+            'nama_lengkap' => $validated['name'],
             'email' => strtolower(trim($validated['email'])),
             'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
@@ -86,6 +87,7 @@ class AdminUserController extends Controller
 
         $payload = [
             'name' => $validated['name'],
+            'nama_lengkap' => $validated['name'],
             'email' => strtolower(trim($validated['email'])),
             'role' => $validated['role'],
         ];
