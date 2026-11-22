@@ -20,10 +20,20 @@
 
                 <div class="mt-8 flex flex-col sm:flex-row sm:items-center gap-3 tu-reveal [--d:560ms]">
                     @auth
-                        <a href="{{ route('home') }}" class="tu-btn">
-                            <span>Buka Dashboard Pengujian</span>
-                            <span class="arr" aria-hidden="true">&rarr;</span>
-                        </a>
+                        @if (Auth::user()->isPemohon())
+                            <a href="{{ route('pengajuan.create') }}" class="tu-btn">
+                                <span>Buat Pengajuan Sampel</span>
+                                <span class="arr" aria-hidden="true">&rarr;</span>
+                            </a>
+                            <a href="{{ route('home') }}" class="tu-btn tu-btn--ghost">
+                                <span>Buka Dashboard Pengujian</span>
+                            </a>
+                        @else
+                            <a href="{{ Auth::user()->homeRoute() }}" class="tu-btn">
+                                <span>Buka Panel {{ Auth::user()->roleLabel() }}</span>
+                                <span class="arr" aria-hidden="true">&rarr;</span>
+                            </a>
+                        @endif
                     @else
                         <a href="{{ route('register') }}" class="tu-btn">
                             <span>Mulai Pengajuan Sampel</span>
@@ -210,13 +220,30 @@
                 Daftarkan akun dan ajukan pengujian instrumen laboratorium Anda hari ini melalui sistem Telyuji. Bebas biaya bagi seluruh civitas akademika Telkom University.
             </p>
             <div class="mt-9 flex flex-col sm:flex-row sm:items-center gap-3">
-                <a href="{{ route('register') }}" class="tu-btn tu-btn--on-dark">
-                    <span>Daftar Akun Pemohon</span>
-                    <span class="arr" aria-hidden="true">&rarr;</span>
-                </a>
-                <a href="{{ route('login') }}" class="tu-btn tu-btn--ghost-dark">
-                    <span>Sudah Memiliki Akun? Masuk</span>
-                </a>
+                @auth
+                    @if (Auth::user()->isPemohon())
+                        <a href="{{ route('pengajuan.create') }}" class="tu-btn tu-btn--on-dark">
+                            <span>Buat Pengajuan Sampel</span>
+                            <span class="arr" aria-hidden="true">&rarr;</span>
+                        </a>
+                        <a href="{{ route('home') }}" class="tu-btn tu-btn--ghost-dark">
+                            <span>Lihat Dashboard Pengujian</span>
+                        </a>
+                    @else
+                        <a href="{{ Auth::user()->homeRoute() }}" class="tu-btn tu-btn--on-dark">
+                            <span>Buka Panel {{ Auth::user()->roleLabel() }}</span>
+                            <span class="arr" aria-hidden="true">&rarr;</span>
+                        </a>
+                    @endif
+                @else
+                    <a href="{{ route('register') }}" class="tu-btn tu-btn--on-dark">
+                        <span>Daftar Akun Pemohon</span>
+                        <span class="arr" aria-hidden="true">&rarr;</span>
+                    </a>
+                    <a href="{{ route('login') }}" class="tu-btn tu-btn--ghost-dark">
+                        <span>Sudah Memiliki Akun? Masuk</span>
+                    </a>
+                @endauth
             </div>
         </div>
     </div>
@@ -698,7 +725,7 @@
                             '<span class="tu-chip tu-chip--cream truncate max-w-[185px]">' + item.location + '</span>' +
                             '<span class="tu-card-pill shrink-0">' + item.sla + '</span>' +
                         '</div>' +
-                        '<a href="{{ route('register') }}" class="tu-card-btn mt-5"' + (clone ? ' tabindex="-1"' : '') + '>Ajukan Pengujian</a>' +
+                        '<a href="{{ Auth::check() ? (Auth::user()->isPemohon() ? route('pengajuan.create') : Auth::user()->homeRoute()) : route('register') }}" class="tu-card-btn mt-5"' + (clone ? ' tabindex="-1"' : '') + '>Ajukan Pengujian</a>' +
                     '</div>' +
                 '</article>';
         }

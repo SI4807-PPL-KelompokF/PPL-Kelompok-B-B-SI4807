@@ -30,7 +30,9 @@
                         @elseif ($tiket->status === 'Dalam Antrean')
                             <span class="tu-chip tu-chip--jasmine text-xs">Dalam Antrean Fisik</span>
                         @else
-                            <span class="tu-chip tu-chip--cream text-xs">Menunggu Penyerahan Fisik</span>
+                            <span class="tu-chip tu-chip--cream text-xs">
+                                {{ $tiket->jenis_sampel === 'digital' ? 'Menunggu Verifikasi Digital' : 'Menunggu Penyerahan Fisik' }}
+                            </span>
                         @endif
                     </div>
                     <p class="mt-1 text-sm text-gray-600">
@@ -358,11 +360,11 @@
                     </div>
 
                     <!-- Visual Barcode -->
-                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-md flex flex-col items-center justify-center">
+                    <div class="tu-barcode-surface p-4 flex flex-col items-center justify-center">
                         <div class="w-full flex justify-center py-2" dusk="barcode-svg-container">
                             {!! $barcodeSvg !!}
                         </div>
-                        <p class="text-[10px] text-gray-400 font-mono mt-1">
+                        <p class="text-[10px] text-gray-500 font-mono mt-1">
                             TOKEN: {{ substr($tiket->barcode_token ?: 'TELYUJI', 0, 16) }}
                         </p>
                     </div>
@@ -398,9 +400,9 @@
                         <div class="space-y-3">
                             @foreach ($tiket->auditTrails->take(4) as $audit)
                                 <div class="text-xs border-l-2 border-racing-red pl-3 py-0.5 space-y-0.5">
-                                    <div class="flex items-center justify-between">
-                                        <span class="font-bold text-gray-900">{{ $audit->aksi }}</span>
-                                        <span class="text-[10px] text-gray-400 tu-mono">{{ $audit->created_at->format('d/m H:i') }}</span>
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="font-bold text-gray-900">{{ $audit->actionLabel() }}</span>
+                                        <span class="text-[10px] text-gray-400 tu-mono shrink-0">{{ $audit->created_at->format('d/m H:i') }}</span>
                                     </div>
                                     <p class="text-gray-600 text-[11px] leading-tight">{{ $audit->keterangan }}</p>
                                     <p class="text-[10px] text-gray-400">Oleh: {{ $audit->nama_aktor }}</p>

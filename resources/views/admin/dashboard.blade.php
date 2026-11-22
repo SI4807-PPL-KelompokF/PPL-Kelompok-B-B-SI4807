@@ -26,10 +26,22 @@
                     distribusi pengajuan per fakultas, dan kondisi antrean keseluruhan.
                 </p>
             </div>
-            <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-3">
-                <span class="tu-chip tu-chip--cream text-xs text-gray-500">
-                    Data diperbarui setiap kunjungan
-                </span>
+            <div class="tu-reveal [--d:120ms] flex flex-wrap items-center gap-2.5">
+                @if (Route::has('admin.users.index'))
+                    <a href="{{ route('admin.users.index') }}" class="tu-btn tu-btn--ghost tu-btn--sm">
+                        <span>Manajemen Pengguna</span>
+                    </a>
+                @endif
+                @if (Route::has('admin.master.fakultas-prodi.index'))
+                    <a href="{{ route('admin.master.fakultas-prodi.index') }}" class="tu-btn tu-btn--ghost tu-btn--sm">
+                        <span>Fakultas &amp; Prodi</span>
+                    </a>
+                @endif
+                @if (Route::has('admin.mesin.index'))
+                    <a href="{{ route('admin.mesin.index') }}" class="tu-btn tu-btn--sm">
+                        <span>Katalog Mesin</span>
+                    </a>
+                @endif
             </div>
         </div>
 
@@ -332,10 +344,25 @@
         return PALETTE[index % PALETTE.length];
     }
 
+    function getThemeColors() {
+        var dark = document.documentElement.classList.contains('dark');
+        return {
+            text: dark ? '#a1a9b8' : '#6b7280',
+            tickY: dark ? '#e5e7eb' : '#374151',
+            grid: dark ? '#1f2533' : '#f3f4f6',
+            tooltipBg: dark ? '#141821' : '#ffffff',
+            tooltipTitle: dark ? '#f9fafb' : '#111827',
+            tooltipBody: dark ? '#e5e7eb' : '#374151',
+            tooltipBorder: dark ? '#2a3142' : '#e5e7eb',
+        };
+    }
+
+    var theme = getThemeColors();
+
     // ── Global Chart.js defaults (konsisten dengan desain Telyuji) ───────
     Chart.defaults.font.family = '"General Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
     Chart.defaults.font.size = 12;
-    Chart.defaults.color = '#6b7280'; // text-gray-500
+    Chart.defaults.color = theme.text;
 
     // ── Grafik 1: Penggunaan Instrumen (Horizontal Bar) ──────────────────
     var instrumenEl  = document.getElementById('chartInstrumen');
@@ -355,7 +382,7 @@
                     data: iData,
                     backgroundColor: iLabels.map(function (_, idx) {
                         var c = getColor(idx);
-                        return c + 'CC'; // 80% opacity
+                        return c + 'CC';
                     }),
                     borderColor: iLabels.map(function (_, idx) {
                         return getColor(idx);
@@ -366,17 +393,17 @@
                 }],
             },
             options: {
-                indexAxis: 'y',          // Horizontal bar
+                indexAxis: 'y',
                 responsive: true,
                 maintainAspectRatio: false,
                 aspectRatio: 1.6,
                 plugins: {
                     legend: { display: false },
                     tooltip: {
-                        backgroundColor: '#fff',
-                        titleColor: '#111827',
-                        bodyColor: '#374151',
-                        borderColor: '#e5e7eb',
+                        backgroundColor: theme.tooltipBg,
+                        titleColor: theme.tooltipTitle,
+                        bodyColor: theme.tooltipBody,
+                        borderColor: theme.tooltipBorder,
                         borderWidth: 1,
                         padding: 10,
                         callbacks: {
@@ -394,15 +421,16 @@
                         beginAtZero: true,
                         ticks: {
                             stepSize: 1,
+                            color: theme.text,
                             callback: function (val) {
                                 return Number.isInteger(val) ? val : null;
                             },
                         },
-                        grid: { color: '#f3f4f6' },
+                        grid: { color: theme.grid },
                         title: {
                             display: true,
                             text: 'Jumlah Pengajuan',
-                            color: '#9ca3af',
+                            color: theme.text,
                             font: { size: 11 },
                         },
                     },
@@ -410,7 +438,7 @@
                         grid: { display: false },
                         ticks: {
                             font: { weight: '600' },
-                            color: '#374151',
+                            color: theme.tickY,
                         },
                     },
                 },
@@ -448,12 +476,12 @@
                     maintainAspectRatio: true,
                     cutout: '62%',
                     plugins: {
-                        legend: { display: false }, // Legenda sudah ada di tabel bawah
+                        legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#fff',
-                            titleColor: '#111827',
-                            bodyColor: '#374151',
-                            borderColor: '#e5e7eb',
+                            backgroundColor: theme.tooltipBg,
+                            titleColor: theme.tooltipTitle,
+                            bodyColor: theme.tooltipBody,
+                            borderColor: theme.tooltipBorder,
                             borderWidth: 1,
                             padding: 10,
                             callbacks: {
@@ -468,7 +496,6 @@
                 },
             });
         } else {
-            // Bar chart untuk fakultas > 6
             window.telyujiDashboardCharts.fakultas = new Chart(fakultasEl, {
                 type: 'bar',
                 data: {
@@ -490,10 +517,10 @@
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#fff',
-                            titleColor: '#111827',
-                            bodyColor: '#374151',
-                            borderColor: '#e5e7eb',
+                            backgroundColor: theme.tooltipBg,
+                            titleColor: theme.tooltipTitle,
+                            bodyColor: theme.tooltipBody,
+                            borderColor: theme.tooltipBorder,
                             borderWidth: 1,
                             padding: 10,
                             callbacks: {
@@ -508,15 +535,16 @@
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1,
+                                color: theme.text,
                                 callback: function (val) {
                                     return Number.isInteger(val) ? val : null;
                                 },
                             },
-                            grid: { color: '#f3f4f6' },
+                            grid: { color: theme.grid },
                             title: {
                                 display: true,
                                 text: 'Jumlah Pengajuan',
-                                color: '#9ca3af',
+                                color: theme.text,
                                 font: { size: 11 },
                             },
                         },
@@ -524,7 +552,7 @@
                             grid: { display: false },
                             ticks: {
                                 font: { weight: '600' },
-                                color: '#374151',
+                                color: theme.tickY,
                             },
                         },
                     },
@@ -532,6 +560,32 @@
             });
         }
     }
+
+    window.addEventListener('tu:themechange', function () {
+        var c = getThemeColors();
+        Chart.defaults.color = c.text;
+        Object.keys(window.telyujiDashboardCharts).forEach(function (k) {
+            var ch = window.telyujiDashboardCharts[k];
+            if (!ch) return;
+            if (ch.options.plugins && ch.options.plugins.tooltip) {
+                ch.options.plugins.tooltip.backgroundColor = c.tooltipBg;
+                ch.options.plugins.tooltip.titleColor = c.tooltipTitle;
+                ch.options.plugins.tooltip.bodyColor = c.tooltipBody;
+                ch.options.plugins.tooltip.borderColor = c.tooltipBorder;
+            }
+            if (ch.options.scales) {
+                if (ch.options.scales.x) {
+                    if (ch.options.scales.x.ticks) ch.options.scales.x.ticks.color = c.text;
+                    if (ch.options.scales.x.grid) ch.options.scales.x.grid.color = c.grid;
+                    if (ch.options.scales.x.title) ch.options.scales.x.title.color = c.text;
+                }
+                if (ch.options.scales.y && ch.options.scales.y.ticks) {
+                    ch.options.scales.y.ticks.color = c.tickY;
+                }
+            }
+            ch.update('none');
+        });
+    });
 })();
 </script>
 @endpush

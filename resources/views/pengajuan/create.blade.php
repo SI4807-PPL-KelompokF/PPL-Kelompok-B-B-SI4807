@@ -44,6 +44,33 @@
             </div>
         @endif
 
+        @if ($user && !$user->isValidasiKtm() && Route::has('profil.show'))
+            <div class="tu-alert {{ $user->isKtmDitolak() ? 'tu-alert--danger' : 'tu-alert--warning' }} flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" dusk="banner-ktm-pengajuan" role="status">
+                <div>
+                    @if ($user->isKtmDitolak())
+                        <p class="font-semibold">Status KTM: Ditolak — mohon perbarui berkas identitas Anda.</p>
+                        <p class="text-xs opacity-90 mt-0.5">Anda tetap dapat mengisi pengajuan, namun pastikan KTM terbaru segera diunggah di halaman Profil.</p>
+                    @else
+                        <p class="font-semibold">Status Profil &amp; KTM: Belum Tervalidasi.</p>
+                        <p class="text-xs opacity-90 mt-0.5">Lengkapi profil akademik &amp; unggah KTM agar identitas Anda terisi otomatis dan cepat diverifikasi Laboran.</p>
+                    @endif
+                </div>
+                <a href="{{ route('profil.show') }}" class="tu-btn tu-btn--sm tu-btn--ghost shrink-0 self-start sm:self-center">
+                    <span>Lengkapi Profil &amp; KTM</span>
+                </a>
+            </div>
+        @endif
+
+        @php
+            $defaultNama = old('nama_pemohon', $user ? $user->displayName() : '');
+            $defaultNim = old('nim_nip', $user->nomor_induk ?? '');
+            $defaultFakultas = old('fakultas', $user->fakultas_id ?? '');
+            $defaultProdi = old('prodi', $user->prodi_id ?? '');
+            $prodiList = ($defaultFakultas && isset($fakultasProdiMap[$defaultFakultas]))
+                ? $fakultasProdiMap[$defaultFakultas]
+                : [];
+        @endphp
+
         <form action="{{ route('pengajuan.store') }}" method="POST" id="formPengajuanUji" class="space-y-8" novalidate>
             @csrf
 
@@ -61,9 +88,9 @@
                     <div>
                         <label for="nama_pemohon" class="tu-label">Nama Lengkap Pemohon <span class="text-racing-red">*</span></label>
                         <input type="text" id="nama_pemohon" name="nama_pemohon" dusk="input-nama-pemohon"
-                               value="{{ old('nama_pemohon', $user->name ?? '') }}" required
+                               value="{{ $defaultNama }}" required
                                class="tu-input @error('nama_pemohon') is-invalid @enderror"
-                               placeholder="Contoh: Giri Pulung Nugroho">
+                               placeholder="Masukkan nama lengkap sesuai KTM / kartu pegawai">
                         @error('nama_pemohon')
                             <p class="tu-error">{{ $message }}</p>
                         @enderror
@@ -72,7 +99,7 @@
                     <div>
                         <label for="nim_nip" class="tu-label">Nomor Induk (NIM / NIP / NIDN) <span class="text-racing-red">*</span></label>
                         <input type="text" id="nim_nip" name="nim_nip" dusk="input-nim-nip"
-                               value="{{ old('nim_nip', $user->nim_nip ?? '102022400284') }}" required
+                               value="{{ $defaultNim }}" required
                                class="tu-input @error('nim_nip') is-invalid @enderror"
                                placeholder="Contoh: 102022400284">
                         @error('nim_nip')
@@ -86,7 +113,7 @@
                                 class="tu-input @error('fakultas') is-invalid @enderror" onchange="updateProdiOptions()">
                             <option value="">-- Pilih Fakultas --</option>
                             @foreach ($fakultasProdiMap as $fak => $prodis)
-                                <option value="{{ $fak }}" {{ old('fakultas', 'Fakultas Rekayasa Industri (FRI)') === $fak ? 'selected' : '' }}>
+                                <option value="{{ $fak }}" {{ $defaultFakultas === $fak ? 'selected' : '' }}>
                                     {{ $fak }}
                                 </option>
                             @endforeach
@@ -101,12 +128,8 @@
                         <select id="prodi" name="prodi" dusk="select-prodi" required
                                 class="tu-input @error('prodi') is-invalid @enderror">
                             <option value="">-- Pilih Program Studi --</option>
-                            @php
-                                $selectedFak = old('fakultas', 'Fakultas Rekayasa Industri (FRI)');
-                                $prodiList = $fakultasProdiMap[$selectedFak] ?? ['S1 Sistem Informasi', 'S1 Teknik Industri', 'S1 Teknik Logistik'];
-                            @endphp
                             @foreach ($prodiList as $pName)
-                                <option value="{{ $pName }}" {{ old('prodi', 'S1 Sistem Informasi') === $pName ? 'selected' : '' }}>
+                                <option value="{{ $pName }}" {{ $defaultProdi === $pName ? 'selected' : '' }}>
                                     {{ $pName }}
                                 </option>
                             @endforeach
@@ -337,7 +360,65 @@
 
 <script>
     const prodiByFakultas = @json($fakultasProdiMap);
-    const oldProdi = @json(old('prodi', 'S1 Sistem Informasi'));
+    const oldProdi = @json($defaultProdi);
+
+    function sanitizeSopHtml(rawHtml) {
+        const allowed = { P: true, BR: true, STRONG: true, B: true, EM: true, I: true, U: true, UL: true, OL: true, LI: true };
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(rawHtml, 'text/html');
+
+        function cleanNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return document.createTextNode(node.textContent || '');
+            }
+            if (node.nodeType !== Node.ELEMENT_NODE) {
+                return document.createDocumentFragment();
+            }
+            const tag = node.tagName.toUpperCase();
+            if (!allowed[tag]) {
+                const frag = document.createDocumentFragment();
+                Array.from(node.childNodes).forEach(function (child) {
+                    frag.appendChild(cleanNode(child));
+                });
+                return frag;
+            }
+            const el = document.createElement(tag.toLowerCase());
+            Array.from(node.childNodes).forEach(function (child) {
+                el.appendChild(cleanNode(child));
+            });
+            return el;
+        }
+
+        const container = document.createDocumentFragment();
+        Array.from(doc.body.childNodes).forEach(function (child) {
+            container.appendChild(cleanNode(child));
+        });
+        return container;
+    }
+
+    function renderSopPenyiapan(sopText) {
+        const el = document.getElementById('dispSopPenyiapan');
+        if (!el) return;
+
+        const raw = (sopText || '').trim();
+        if (!raw) {
+            el.classList.add('whitespace-pre-line');
+            el.classList.remove('tu-sop-content');
+            el.textContent = 'Tidak ada panduan spesifik untuk instrumen ini.';
+            return;
+        }
+
+        if (/<(p|ol|ul|li|br|strong|b|em|i|u)\b/i.test(raw)) {
+            el.classList.remove('whitespace-pre-line');
+            el.classList.add('tu-sop-content');
+            el.innerHTML = '';
+            el.appendChild(sanitizeSopHtml(raw));
+        } else {
+            el.classList.add('whitespace-pre-line');
+            el.classList.remove('tu-sop-content');
+            el.textContent = raw;
+        }
+    }
 
     function updateProdiOptions() {
         const fakSelect = document.getElementById('fakultas');
@@ -368,9 +449,8 @@
         const sla = opt.getAttribute('data-sla') || '2';
         const kuota = opt.getAttribute('data-kuota') || '5';
         const sisa = opt.getAttribute('data-sisa') || '5';
-        const sop = opt.getAttribute('data-sop') || 'Tidak ada panduan spesifik.';
+        const sop = opt.getAttribute('data-sop') || '';
 
-        // Render status
         const statusEl = document.getElementById('dispStatusMesin');
         if (status === 'Aktif') {
             statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span> <span>Aktif Siap Pakai</span>';
@@ -380,10 +460,8 @@
             statusEl.className = 'mt-1 font-bold text-sm text-red-600 flex items-center gap-1.5';
         }
 
-        // Render SLA
         document.getElementById('dispSlaMesin').textContent = sla + ' Hari Kerja';
 
-        // Render Kuota
         const kuotaEl = document.getElementById('dispKuotaMesin');
         kuotaEl.textContent = sisa + ' / ' + kuota + ' Slot Tersedia';
         if (parseInt(sisa, 10) <= 0) {
@@ -394,8 +472,7 @@
             kuotaEl.classList.add('text-tiger-flame');
         }
 
-        // Render SOP
-        document.getElementById('dispSopPenyiapan').textContent = sop;
+        renderSopPenyiapan(sop);
     }
 
     function toggleJenisSampel() {

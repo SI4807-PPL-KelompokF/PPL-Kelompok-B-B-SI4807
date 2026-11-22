@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="relative overflow-hidden" id="lu-root" data-actor="{{ Auth::user()->name }}" data-initial-ticket="{{ $initialSelected ?? '' }}">
+<div class="relative overflow-hidden" id="lu-root" data-actor="{{ Auth::user()->displayName() }}" data-initial-ticket="{{ $initialSelected ?? '' }}">
     <x-bg-pattern uid="laboran-pat" />
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-10">
         <!-- Header -->
@@ -14,6 +14,9 @@
             </div>
             <div class="tu-reveal [--d:100ms] flex flex-wrap items-center gap-3">
                 <span class="tu-chip tu-chip--cream">.PDF &middot; .XLSX &middot; .XLS &middot; Maks. 5 MB</span>
+                <a href="{{ route('laboran.antrean.index') }}" class="tu-btn tu-btn--ghost tu-btn--sm">
+                    <span>Antrean Fisik</span>
+                </a>
                 <button type="button" id="btn-next-ticket" class="tu-btn tu-btn--sm">
                     <span>Proses Tiket Berikutnya</span>
                     <span class="arr" aria-hidden="true">&rarr;</span>

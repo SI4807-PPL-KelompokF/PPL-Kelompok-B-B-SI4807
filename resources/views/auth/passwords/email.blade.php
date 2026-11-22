@@ -21,7 +21,6 @@
             <label for="email" class="tu-label">{{ __('Alamat Email') }}</label>
             <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus
                 placeholder="nama@telkomuniversity.ac.id"
-                pattern="^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*telkomuniversity\.ac\.id$"
                 title="Gunakan alamat email berdomain @telkomuniversity.ac.id"
                 class="tu-input @error('email') is-invalid @enderror">
             @error('email')
