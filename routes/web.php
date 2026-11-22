@@ -1,21 +1,18 @@
 <?php
 
 use App\Http\Controllers\AdminFakultasProdiController;
-use App\Http\Controllers\AdminUserController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LaboranHasilUjiController;
-use App\Http\Controllers\LaboranValidasiKtmController;
 use App\Http\Controllers\AdminMesinLabController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LaboranAntreanController;
 use App\Http\Controllers\LaboranHasilUjiController;
 use App\Http\Controllers\LaboranSopController;
+use App\Http\Controllers\LaboranValidasiKtmController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PengajuanUjiController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LaboranAntreanController;
 
 /*
 |--------------------------------------------------------------------------

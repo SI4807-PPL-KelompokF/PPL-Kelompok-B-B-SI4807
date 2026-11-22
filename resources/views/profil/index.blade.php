@@ -453,7 +453,7 @@
                                         @endphp
                                         @if(in_array($ext, ['jpg', 'jpeg', 'png']))
                                             <img src="{{ route('profil.identitas.preview') }}"
-                                                 onerror="this.src='{{ Storage::url($user->foto_identitas) }}'"
+                                                 onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='{{ asset('storage/' . ltrim($user->foto_identitas, '/')) }}';}else{this.onerror=null;this.classList.add('hidden');}"
                                                  alt="Foto Identitas KTM"
                                                  class="w-20 h-20 object-cover rounded border border-gray-200 flex-shrink-0">
                                         @else

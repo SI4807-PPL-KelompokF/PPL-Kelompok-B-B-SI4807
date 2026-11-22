@@ -235,10 +235,13 @@ class AdminFakultasProdiController extends Controller
     public function destroyProdi(Prodi $prodi)
     {
         // 1. Cek apakah terhubung dengan akun users
-        $terhubungUser = User::where('prodi_id', $prodi->id)
-            ->orWhere('prodi_id', $prodi->nama_prodi)
-            ->orWhere('prodi_id', $prodi->kode_prodi)
-            ->exists();
+        $terhubungUser = User::where(function ($q) use ($prodi) {
+            $q->where('prodi_id', $prodi->id)
+              ->orWhere('prodi_id', $prodi->nama_prodi);
+            if (!empty($prodi->kode_prodi)) {
+                $q->orWhere('prodi_id', $prodi->kode_prodi);
+            }
+        })->exists();
 
         if ($terhubungUser) {
             return back()->withErrors([
@@ -248,9 +251,12 @@ class AdminFakultasProdiController extends Controller
 
         // 2. Cek apakah terhubung dengan riwayat tiket pengujian
         if (Schema::hasTable('tiket_pengujian')) {
-            $terhubungTiket = TiketPengujian::where('prodi', $prodi->nama_prodi)
-                ->orWhere('prodi', $prodi->kode_prodi)
-                ->exists();
+            $terhubungTiket = TiketPengujian::where(function ($q) use ($prodi) {
+                $q->where('prodi', $prodi->nama_prodi);
+                if (!empty($prodi->kode_prodi)) {
+                    $q->orWhere('prodi', $prodi->kode_prodi);
+                }
+            })->exists();
 
             if ($terhubungTiket) {
                 return back()->withErrors([
