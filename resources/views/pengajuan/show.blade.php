@@ -355,7 +355,10 @@
                 <!-- Kartu Resi Barcode Vektor (PBI-08) -->
                 <section class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm tu-reveal [--d:120ms] text-center space-y-4">
                     <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                        <p class="text-xs font-bold text-gray-900 uppercase tracking-wide">Resi E-Ticket Barcode</p>
+                        <div class="flex items-center gap-2">
+                            <img src="{{ asset('images/logo-telyuji.png') }}" alt="" width="20" height="20" class="h-5 w-5 object-contain shrink-0">
+                            <p class="text-xs font-bold text-gray-900 uppercase tracking-wide">Resi E-Ticket Barcode</p>
+                        </div>
                         <span class="tu-chip tu-chip--cream text-[10px]">Code 128</span>
                     </div>
 

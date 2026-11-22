@@ -215,7 +215,10 @@ class Pbi07Pbi08Pbi09PengajuanTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/pdf');
-        $this->assertStringStartsWith('%PDF-1.4', $response->getContent());
+        $pdfContent = $response->getContent();
+        $this->assertStringStartsWith('%PDF-1.4', $pdfContent);
+        $this->assertStringContainsString('/Subtype /Image', $pdfContent);
+        $this->assertStringContainsString('/Im1 Do', $pdfContent);
     }
 
     /**
@@ -241,6 +244,8 @@ class Pbi07Pbi08Pbi09PengajuanTest extends TestCase
         $printResp = $this->actingAs($this->pemohon)->get(route('pengajuan.resi.print', $tiket->nomor_tiket));
         $printResp->assertStatus(200);
         $printResp->assertSee('RESI E-TICKET &amp; BUKTI PENDAFTARAN SPESIMEN', false);
+        $printResp->assertSee('images/logo-telyuji.png', false);
+        $printResp->assertDontSee('<style>', false);
 
         $previewResp = $this->actingAs($this->pemohon)->get(route('pengajuan.resi.preview', $tiket->nomor_tiket));
         $previewResp->assertStatus(200);
