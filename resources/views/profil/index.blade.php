@@ -9,7 +9,7 @@
     <x-bg-pattern uid="profil-pat" />
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-8">
         <!-- Breadcrumb & Header -->
-        <div class="tu-reveal space-y-3">
+        <div class="space-y-3">
             <nav class="flex items-center gap-2 text-xs text-gray-500" aria-label="Breadcrumb">
                 <a href="{{ route('home') }}" class="transition-colors hover:text-racing-red">Dashboard</a>
                 <span aria-hidden="true">&rarr;</span>
@@ -51,10 +51,10 @@
             </div>
         @endif
 
-        <!-- Grid: Profil Akademik (kiri) + Unggah KTM & Status (kanan) -->
+        <!-- Grid: Profil Akademik (kiri) + Status Validasi & Unggah KTM (kanan) -->
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
             <!-- Kartu Data Profil Akademik -->
-            <section class="xl:col-span-7 bg-white border border-gray-200 rounded-lg overflow-hidden tu-reveal" aria-labelledby="profil-form-heading">
+            <section class="xl:col-span-7 bg-white border border-gray-200 rounded-lg overflow-hidden" aria-labelledby="profil-form-heading">
                 <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-200">
                     <span class="inline-grid place-items-center w-8 h-8 rounded-[3px] bg-racing-red text-white text-xs font-bold shrink-0">01</span>
                     <div>
@@ -180,10 +180,44 @@
                 </form>
             </section>
 
-            <!-- Kolom Kanan: Unggah KTM + Status Validasi -->
+            <!-- Kolom Kanan: Status Validasi + Unggah KTM -->
             <div class="xl:col-span-5 space-y-6">
+                <!-- Kartu Status Validasi KTM -->
+                <section class="bg-white border border-gray-200 rounded-lg p-6 space-y-3" aria-labelledby="status-ktm-heading">
+                    <h2 id="status-ktm-heading" class="text-sm font-bold text-gray-950">Status Validasi KTM</h2>
+
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <div dusk="pill-status-validasi">
+                            @if ($isValidated)
+                                <span class="tu-chip tu-chip--mint">Tervalidasi</span>
+                            @elseif ($isRejected)
+                                <span class="tu-chip bg-red-100 text-red-800 border-red-200">Ditolak</span>
+                            @else
+                                <span class="tu-chip tu-chip--jasmine">Belum Tervalidasi</span>
+                            @endif
+                        </div>
+                        @if ($isValidated)
+                            <p class="text-xs text-gray-600">Identitas Anda telah diverifikasi oleh Laboran.</p>
+                        @elseif ($isRejected)
+                            <p class="text-xs text-red-700 font-medium">Validasi KTM ditolak. Silakan unggah ulang foto KTM yang valid.</p>
+                        @else
+                            <p class="text-xs text-gray-600">Menunggu pemeriksaan oleh Laboran.</p>
+                        @endif
+                    </div>
+
+                    @if (!$isValidated && !$isRejected)
+                        <p class="text-xs text-gray-500 leading-relaxed pt-1 border-t border-gray-100">
+                            Lengkapi data profil dan unggah foto KTM Anda, lalu Laboran akan memvalidasi identitas dalam 1&times;24 jam kerja.
+                        </p>
+                    @elseif ($isRejected)
+                        <p class="text-xs text-red-600 leading-relaxed pt-1 border-t border-gray-100">
+                            Pastikan nama dan NIM pada berkas KTM terbaca jelas dan sesuai dengan profil akademik Anda.
+                        </p>
+                    @endif
+                </section>
+
                 <!-- Kartu Unggah Identitas KTM -->
-                <section class="bg-white border border-gray-200 rounded-lg overflow-hidden tu-reveal [--d:80ms]" aria-labelledby="ktm-upload-heading">
+                <section class="bg-white border border-gray-200 rounded-lg overflow-hidden" aria-labelledby="ktm-upload-heading">
                     <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-200">
                         <span class="inline-grid place-items-center w-8 h-8 rounded-[3px] bg-tiger-flame text-white text-xs font-bold shrink-0">02</span>
                         <div>
@@ -273,40 +307,6 @@
                             <p class="tu-error">{{ $message }}</p>
                         @enderror
                     </div>
-                </section>
-
-                <!-- Kartu Status Validasi KTM -->
-                <section class="bg-white border border-gray-200 rounded-lg p-6 space-y-3 tu-reveal [--d:140ms]" aria-labelledby="status-ktm-heading">
-                    <h2 id="status-ktm-heading" class="text-sm font-bold text-gray-950">Status Validasi KTM</h2>
-
-                    <div class="flex flex-wrap items-center gap-2.5">
-                        <div dusk="pill-status-validasi">
-                            @if ($isValidated)
-                                <span class="tu-chip tu-chip--mint">Tervalidasi</span>
-                            @elseif ($isRejected)
-                                <span class="tu-chip bg-red-100 text-red-800 border-red-200">Ditolak</span>
-                            @else
-                                <span class="tu-chip tu-chip--jasmine">Belum Tervalidasi</span>
-                            @endif
-                        </div>
-                        @if ($isValidated)
-                            <p class="text-xs text-gray-600">Identitas Anda telah diverifikasi oleh Laboran.</p>
-                        @elseif ($isRejected)
-                            <p class="text-xs text-red-700 font-medium">Validasi KTM ditolak. Silakan unggah ulang foto KTM yang valid.</p>
-                        @else
-                            <p class="text-xs text-gray-600">Menunggu pemeriksaan oleh Laboran.</p>
-                        @endif
-                    </div>
-
-                    @if (!$isValidated && !$isRejected)
-                        <p class="text-xs text-gray-500 leading-relaxed pt-1 border-t border-gray-100">
-                            Lengkapi data profil dan unggah foto KTM Anda, lalu Laboran akan memvalidasi identitas dalam 1&times;24 jam kerja.
-                        </p>
-                    @elseif ($isRejected)
-                        <p class="text-xs text-red-600 leading-relaxed pt-1 border-t border-gray-100">
-                            Pastikan nama dan NIM pada berkas KTM terbaca jelas dan sesuai dengan profil akademik Anda.
-                        </p>
-                    @endif
                 </section>
             </div>
         </div>
