@@ -30,9 +30,15 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'nama_lengkap',
         'email',
         'password',
         'role',
+        'nomor_induk',
+        'fakultas_id',
+        'prodi_id',
+        'foto_identitas',
+        'status_validasi_ktm',
     ];
 
     /**
@@ -114,5 +120,48 @@ class User extends Authenticatable
     public function tiketPengujian()
     {
         return $this->hasMany(TiketPengujian::class, 'user_id');
+    }
+
+    /**
+     * Cek apakah profil akademik pemohon sudah tervalidasi.
+     */
+    public function isValidasiKtm(): bool
+    {
+        return ($this->status_validasi_ktm ?? 'Belum Tervalidasi') === 'Tervalidasi';
+    }
+
+    /**
+     * Cek apakah validasi KTM pemohon ditolak oleh Laboran.
+     */
+    public function isKtmDitolak(): bool
+    {
+        return ($this->status_validasi_ktm ?? '') === 'Ditolak';
+    }
+
+    /**
+     * Cek apakah data profil wajib PBI-01 sudah dilengkapi.
+     */
+    public function isProfilLengkap(): bool
+    {
+        return !empty($this->nama_lengkap)
+            && !empty($this->nomor_induk)
+            && !empty($this->fakultas_id)
+            && !empty($this->prodi_id);
+    }
+
+    /**
+     * Relasi Eloquent ke Fakultas (PBI-03).
+     */
+    public function fakultas()
+    {
+        return $this->belongsTo(Fakultas::class, 'fakultas_id');
+    }
+
+    /**
+     * Relasi Eloquent ke Program Studi (PBI-03).
+     */
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class, 'prodi_id');
     }
 }
