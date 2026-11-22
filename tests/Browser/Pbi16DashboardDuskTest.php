@@ -42,16 +42,16 @@ class Pbi16DashboardDuskTest extends DuskTestCase
                 ->waitForText('Masuk ke Telyuji')
                 ->assertSee('Masuk ke Telyuji');
 
-            // 1b. Validasi login: email dengan domain selain @student.telkomuniversity.ac.id ditolak
+            // 1b. Validasi login: email dengan domain selain @telkomuniversity.ac.id ditolak
             $browser->visit('/login')
                 ->waitForText('Masuk ke Telyuji')
                 ->type('#email', 'admin@telyuji.ac.id')
                 ->type('#password', 'Telyuji#2026')
                 ->press('button[type="submit"]')
-                ->waitForText('Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.')
-                ->assertSee('Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.');
+                ->waitForText('Alamat email wajib menggunakan domain @telkomuniversity.ac.id.')
+                ->assertSee('Alamat email wajib menggunakan domain @telkomuniversity.ac.id.');
 
-            // 1c. Validasi registrasi: domain wajib @student.telkomuniversity.ac.id
+            // 1c. Validasi registrasi: domain wajib @telkomuniversity.ac.id
             $browser->visit('/register')
                 ->waitForText('Pendaftaran Akun')
                 ->type('#name', 'Akun Tes Registrasi')
@@ -59,8 +59,8 @@ class Pbi16DashboardDuskTest extends DuskTestCase
                 ->type('#password', 'Telyuji#2026')
                 ->type('#password-confirm', 'Telyuji#2026')
                 ->press('button[type="submit"]')
-                ->waitForText('Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.')
-                ->assertSee('Alamat email wajib menggunakan domain @student.telkomuniversity.ac.id.');
+                ->waitForText('Alamat email wajib menggunakan domain @telkomuniversity.ac.id.')
+                ->assertSee('Alamat email wajib menggunakan domain @telkomuniversity.ac.id.');
 
             // 2. Pemohon diblokir dengan 403 saat mengakses dashboard admin
             $browser->loginAs($pemohon)
@@ -72,11 +72,11 @@ class Pbi16DashboardDuskTest extends DuskTestCase
                 ->visit('/admin/dashboard')
                 ->assertSee('403');
 
-            // 4. Admin login menggunakan form login asli dengan domain @student.telkomuniversity.ac.id
+            // 4. Admin login menggunakan form login asli dan diarahkan ke /admin/dashboard
             $browser->driver->manage()->deleteAllCookies();
             $browser->visit('/login')
                 ->waitForText('Masuk ke Telyuji')
-                ->type('#email', 'admin@student.telkomuniversity.ac.id')
+                ->type('#email', $admin->email)
                 ->type('#password', 'Telyuji#2026')
                 ->press('button[type="submit"]')
                 ->waitForText('Dashboard Laboratorium')
