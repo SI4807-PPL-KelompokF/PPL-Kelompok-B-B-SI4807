@@ -8,10 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaboranAntreanController;
 use App\Http\Controllers\LaboranHasilUjiController;
 use App\Http\Controllers\LaboranSopController;
-<<<<<<< HEAD
 use App\Http\Controllers\LaboranSuspendController;
-=======
->>>>>>> origin/main
 use App\Http\Controllers\LaboranValidasiKtmController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PengajuanUjiController;
@@ -55,14 +52,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profil/prodi', [ProfileController::class, 'prodiByFakultas'])->name('profil.prodi');
     Route::get('/profil/identitas/preview', [ProfileController::class, 'previewIdentitas'])->name('profil.identitas.preview');
 
-<<<<<<< HEAD
-// Modul Pengajuan (PBI-07, PBI-08, PBI-09 - Giri Pulung Nugroho)
-Route::middleware(['auth', 'not_suspended'])->group(function () {
-=======
     // PBI-07, PBI-08, PBI-09, & PBI-14: Pengajuan, Resi E-Ticket, Timeline, & Unduh LHU
->>>>>>> origin/main
-    Route::get('/pengajuan/buat', [PengajuanUjiController::class, 'create'])->name('pengajuan.create');
-    Route::post('/pengajuan', [PengajuanUjiController::class, 'store'])->name('pengajuan.store');
+    Route::middleware('not_suspended')->group(function () {
+        Route::get('/pengajuan/buat', [PengajuanUjiController::class, 'create'])->name('pengajuan.create');
+        Route::post('/pengajuan', [PengajuanUjiController::class, 'store'])->name('pengajuan.store');
+    });
     Route::get('/pengajuan/{nomorTiket}', [PengajuanUjiController::class, 'show'])
         ->where('nomorTiket', '[A-Za-z0-9\-_]+')
         ->name('pengajuan.show');
@@ -111,18 +105,16 @@ Route::prefix('laboran')->name('laboran.')->middleware(['auth', 'laboran'])->gro
     Route::post('/validasi-ktm/{user}/tolak', [LaboranValidasiKtmController::class, 'reject'])->name('validasi.ktm.reject');
     Route::get('/validasi-ktm/{user}/preview', [LaboranValidasiKtmController::class, 'previewKtm'])->name('validasi.ktm.preview');
 
-<<<<<<< HEAD
     // PBI-02 (SPK-2): Manajemen Pelanggaran & Penangguhan (Suspend) Pemohon oleh Laboran (Syalfa)
     Route::get('/suspend', [LaboranSuspendController::class, 'index'])->name('suspend.index');
     Route::post('/suspend/{user}', [LaboranSuspendController::class, 'suspend'])->name('suspend.store');
     Route::match(['post', 'patch'], '/suspend/{user}/unsuspend', [LaboranSuspendController::class, 'unsuspend'])->name('suspend.unsuspend');
-=======
+
     // PBI-06: Kelola SOP Penyiapan Sampel
     Route::get('/sop', [LaboranSopController::class, 'index'])->name('sop.index');
     Route::get('/sop/{mesin}/edit', [LaboranSopController::class, 'edit'])->name('sop.edit');
     Route::put('/sop/{mesin}', [LaboranSopController::class, 'update'])->name('sop.update');
     Route::delete('/sop/{mesin}', [LaboranSopController::class, 'destroy'])->name('sop.destroy');
->>>>>>> origin/main
 });
 
 // =========================================================================
