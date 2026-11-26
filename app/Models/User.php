@@ -75,7 +75,14 @@ class User extends Authenticatable
 
     public function isPemohon(): bool
     {
-        return !$this->isAdmin() && !$this->isLaboran();
+        return ($this->role ?? self::ROLE_PEMOHON) === self::ROLE_PEMOHON;
+    }
+
+    public function displayName(): string
+    {
+        $display = trim((string) ($this->nama_lengkap ?: $this->name));
+
+        return $display !== '' ? $display : (string) $this->email;
     }
 
     public function roleLabel(): string
@@ -109,6 +116,10 @@ class User extends Authenticatable
      */
     public function homeRoute(): string
     {
+        if ($this->isAdmin() && Route::has('admin.dashboard')) {
+            return route('admin.dashboard');
+        }
+
         if ($this->isAdmin() && Route::has('admin.users.index')) {
             return route('admin.users.index');
         }

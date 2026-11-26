@@ -20,7 +20,7 @@
   }
 
   body {
-    animation: tu-fade .7s var(--ease) both;
+    animation: tu-fade .25s var(--ease) both;
   }
 
   :focus-visible {
@@ -31,7 +31,7 @@
 }
 
 @keyframes tu-fade {
-  from { opacity: 0; }
+  from { opacity: .88; }
   to { opacity: 1; }
 }
 @keyframes tu-rise {
@@ -277,10 +277,12 @@
     transform-origin: left;
     transition: transform .35s var(--ease);
   }
-  .tu-link:hover {
+  .tu-link:hover,
+  .tu-link.is-active {
     color: var(--red);
   }
-  .tu-link:hover::after {
+  .tu-link:hover::after,
+  .tu-link.is-active::after {
     transform: scaleX(1);
   }
 
@@ -490,6 +492,22 @@
     width: 3px;
     background: #059669;
   }
+  .tu-alert--danger {
+    color: #991b1b;
+    background: #fef2f2;
+    border-color: rgba(237, 30, 40, .38);
+  }
+  .tu-alert--danger::before {
+    background: var(--red);
+  }
+  .tu-alert--warning {
+    color: #78350f;
+    background: #fffbeb;
+    border-color: rgba(245, 158, 11, .45);
+  }
+  .tu-alert--warning::before {
+    background: var(--flame);
+  }
 
   /* Chips */
   .tu-chip {
@@ -534,6 +552,34 @@
   }
   .tu-sop-body {
     color: #451a03;
+  }
+  .tu-sop-content p {
+    margin-bottom: .45rem;
+  }
+  .tu-sop-content p:last-child {
+    margin-bottom: 0;
+  }
+  .tu-sop-content ol {
+    list-style-type: decimal;
+    padding-left: 1.25rem;
+    margin-bottom: .5rem;
+  }
+  .tu-sop-content ul {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    margin-bottom: .5rem;
+  }
+  .tu-sop-content li {
+    margin-bottom: .2rem;
+  }
+  .tu-sop-content strong,
+  .tu-sop-content b {
+    font-weight: 700;
+  }
+  .tu-barcode-surface {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
   }
   .tu-choice-card {
     background-color: #ffffff;
@@ -796,8 +842,9 @@
     line-height: .82;
     font-weight: 800;
     letter-spacing: -.03em;
-    color: transparent;
-    -webkit-text-stroke: 1.75px var(--sc);
+    color: var(--sc, var(--red));
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.75px var(--sc, var(--red));
     transition: transform .55s var(--ease);
   }
   .tu-item {
@@ -1508,6 +1555,7 @@
   html.dark .bg-gray-200 {
     background-color: #242a38;
   }
+  html.dark .bg-amber-50,
   html.dark .bg-amber-50\/70,
   html.dark .bg-amber-50\/80 {
     background-color: rgba(247, 212, 136, .08);
@@ -1522,11 +1570,26 @@
   html.dark .text-amber-900\/90 {
     color: #f3f4f6;
   }
-  html.dark .bg-emerald-100 {
+  html.dark .bg-emerald-50,
+  html.dark .bg-green-50 {
+    background-color: rgba(16, 185, 129, .1);
+  }
+  html.dark .bg-emerald-100,
+  html.dark .bg-green-100 {
     background-color: rgba(16, 185, 129, .16);
     border: 1px solid rgba(16, 185, 129, .38);
   }
-  html.dark .bg-red-50 {
+  html.dark .border-emerald-200,
+  html.dark .border-green-200 {
+    border-color: rgba(16, 185, 129, .38);
+  }
+  html.dark .text-green-800,
+  html.dark .text-green-700 {
+    color: #a7f3d0;
+  }
+  html.dark .bg-red-50,
+  html.dark .bg-red-50\/60,
+  html.dark .bg-red-50\/80 {
     background-color: rgba(237, 30, 40, .1);
   }
   html.dark .bg-red-100 {
@@ -1668,6 +1731,56 @@
     background: rgba(233, 247, 202, .1);
     border-color: rgba(16, 185, 129, .4);
   }
+  html.dark .tu-alert--danger {
+    color: #fecaca;
+    background: rgba(237, 30, 40, .12);
+    border-color: rgba(237, 30, 40, .45);
+  }
+  html.dark .tu-alert--warning {
+    color: #fde68a;
+    background: rgba(247, 212, 136, .1);
+    border-color: rgba(247, 212, 136, .4);
+  }
+  html.dark .tu-barcode-surface {
+    background-color: #ffffff;
+    border-color: #323a4d;
+  }
+  html.dark .ql-toolbar.ql-snow {
+    background: #141821;
+    border-color: #2a3142;
+  }
+  html.dark .ql-container.ql-snow {
+    background: #0e1118;
+    border-color: #2a3142;
+    color: #f3f4f6;
+  }
+  html.dark .ql-editor {
+    color: #f3f4f6;
+  }
+  html.dark .ql-editor.ql-blank::before {
+    color: #6b7280;
+  }
+  html.dark .ql-snow .ql-stroke {
+    stroke: #e5e7eb;
+  }
+  html.dark .ql-snow .ql-fill {
+    fill: #e5e7eb;
+  }
+  html.dark .ql-snow .ql-picker {
+    color: #e5e7eb;
+  }
+  html.dark .ql-snow .ql-picker-options {
+    background: #141821;
+    border-color: #2a3142;
+  }
+  html.dark .ql-snow.ql-toolbar button:hover .ql-stroke,
+  html.dark .ql-snow.ql-toolbar button.ql-active .ql-stroke {
+    stroke: var(--red);
+  }
+  html.dark .ql-snow.ql-toolbar button:hover .ql-fill,
+  html.dark .ql-snow.ql-toolbar button.ql-active .ql-fill {
+    fill: var(--red);
+  }
   html.dark .tu-bg-pat-light {
     opacity: .24;
     filter: invert(1) hue-rotate(180deg);
@@ -1780,6 +1893,89 @@
     border-color: #242a38;
     color: #e5e7eb;
     opacity: .55;
+  }
+
+  /* ── Warna Identitas Resmi 7 Fakultas Telkom University ── */
+  .tu-fak-fte {
+    background: #dbeafe;
+    border: 1px solid #93c5fd;
+    color: #1e3a8a;
+  }
+  .tu-fak-fri {
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    color: #166534;
+  }
+  .tu-fak-fif {
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+  }
+  .tu-fak-feb {
+    background: #e0f2fe;
+    border: 1px solid #7dd3fc;
+    color: #0369a1;
+  }
+  .tu-fak-fks {
+    background: #f3e8ff;
+    border: 1px solid #d8b4fe;
+    color: #6b21a8;
+  }
+  .tu-fak-fik {
+    background: #ffedd5;
+    border: 1px solid #fdba74;
+    color: #c2410c;
+  }
+  .tu-fak-fit {
+    background: #ecfccb;
+    border: 1px solid #bef264;
+    color: #3f6212;
+  }
+  .tu-fak-default {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #374151;
+  }
+
+  html.dark .tu-fak-fte {
+    background: rgba(30, 58, 138, .35);
+    border-color: rgba(96, 165, 250, .45);
+    color: #bfdbfe;
+  }
+  html.dark .tu-fak-fri {
+    background: rgba(22, 101, 52, .35);
+    border-color: rgba(74, 222, 128, .4);
+    color: #bbf7d0;
+  }
+  html.dark .tu-fak-fif {
+    background: rgba(180, 130, 16, .28);
+    border-color: rgba(250, 204, 21, .45);
+    color: #fde68a;
+  }
+  html.dark .tu-fak-feb {
+    background: rgba(14, 116, 144, .32);
+    border-color: rgba(56, 189, 248, .45);
+    color: #bae6fd;
+  }
+  html.dark .tu-fak-fks {
+    background: rgba(109, 40, 217, .3);
+    border-color: rgba(167, 139, 250, .45);
+    color: #e9d5ff;
+  }
+  html.dark .tu-fak-fik {
+    background: rgba(194, 65, 12, .32);
+    border-color: rgba(251, 146, 60, .45);
+    color: #fed7aa;
+  }
+  html.dark .tu-fak-fit {
+    background: rgba(77, 124, 15, .32);
+    border-color: rgba(163, 230, 53, .45);
+    color: #d9f99d;
+  }
+  html.dark .tu-fak-default {
+    background: #1f2533;
+    border-color: #323a4d;
+    color: #d1d5db;
   }
 }
 

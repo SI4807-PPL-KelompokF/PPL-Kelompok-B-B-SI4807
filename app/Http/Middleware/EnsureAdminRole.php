@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class EnsureAdminRole
 {
     /**
-     * Pastikan pengguna terautentikasi memiliki peran 'admin'.
+     * Pastikan hanya pengguna terautentikasi dengan peran "admin" yang dapat mengakses rute Administrator.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
@@ -19,14 +19,15 @@ class EnsureAdminRole
         $user = $request->user();
 
         if (!$user || !$user->isAdmin()) {
+            $message = 'Akses ditolak. Fitur ini hanya dapat diakses oleh Administrator.';
+
             if ($request->expectsJson()) {
                 return response()->json([
-                    'ok' => false,
-                    'message' => 'Akses ditolak. Halaman ini hanya dapat diakses oleh Administrator.',
+                    'message' => $message,
                 ], 403);
             }
 
-            abort(403, 'Akses ditolak. Halaman ini hanya dapat diakses oleh Administrator.');
+            abort(403, $message);
         }
 
         return $next($request);

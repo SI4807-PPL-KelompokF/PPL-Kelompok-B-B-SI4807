@@ -13,7 +13,7 @@
     <title>{{ config('app.name', 'Telyuji') }} - Sistem Pengujian Laboratorium</title>
 
     <!-- Scripts -->
-    <script src="{{ mix('js/app.js') }}" defer></script>
+    <script src="{{ asset(mix('js/app.js')) }}" defer></script>
 
     <!-- Foundry Typeface: General Sans (Indian Type Foundry) -->
     <link rel="preconnect" href="https://api.fontshare.com">
@@ -21,7 +21,8 @@
     <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
 
     <!-- Styles -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset(mix('css/app.css')) }}" rel="stylesheet">
+    @stack('styles')
 
     <script>
         (function () {
@@ -42,54 +43,98 @@
     <div id="app" class="min-h-full flex flex-col">
         <header id="tu-header" class="tu-header sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16 items-center">
+                <div class="flex justify-between h-16 items-center gap-4">
                     <!-- Brand / Logo -->
-                    <a href="{{ url('/') }}" class="tu-brand flex items-center gap-3 rounded-md" aria-label="Telyuji - Beranda">
+                    <a href="{{ url('/') }}" class="tu-brand flex items-center gap-3 rounded-md shrink-0" aria-label="Telyuji - Beranda">
                         <x-brand-logo />
                     </a>
 
-                    <!-- Section links (Desktop) -->
-                    <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600" aria-label="Navigasi utama">
-                        <a href="{{ url('/') }}#alur" class="tu-link">Alur</a>
-                        <a href="{{ url('/') }}#katalog-lab" class="tu-link">Katalog</a>
-                        <a href="{{ url('/') }}#faq" class="tu-link">FAQ</a>
-                        @auth
-                            @if (Route::has('admin.users.index') && Auth::user()->isAdmin())
-                                <a href="{{ route('admin.users.index') }}" dusk="nav-admin-users" class="tu-link font-semibold text-gray-900">
-                                    Manajemen Pengguna
-                                </a>
+                    <!-- Section & Role Navigation (Desktop) -->
+                    <nav class="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-medium text-gray-600" aria-label="Navigasi utama">
+                        @guest
+                            <a href="{{ url('/') }}#alur" class="tu-link">Alur</a>
+                            <a href="{{ url('/') }}#katalog-lab" class="tu-link">Katalog</a>
+                            <a href="{{ url('/') }}#faq" class="tu-link">FAQ</a>
+                        @else
+                            @if (Auth::user()->isAdmin())
+                                @if (Route::has('admin.dashboard'))
+                                    <a href="{{ route('admin.dashboard') }}" dusk="nav-admin-dashboard"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('admin.dashboard', 'home') ? 'is-active' : '' }}">
+                                        Dasbor Analitik
+                                    </a>
+                                @endif
+                                @if (Route::has('admin.users.index'))
+                                    <a href="{{ route('admin.users.index') }}" dusk="nav-admin-users"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('admin.users.*') ? 'is-active' : '' }}">
+                                        Manajemen Pengguna
+                                    </a>
+                                @endif
                                 @if (Route::has('admin.master.fakultas-prodi.index'))
-                                    <a href="{{ route('admin.master.fakultas-prodi.index') }}" dusk="nav-admin-master-fakultas" class="tu-link font-semibold text-gray-900">
+                                    <a href="{{ route('admin.master.fakultas-prodi.index') }}" dusk="nav-admin-master-fakultas"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('admin.master.*', 'admin.fakultas.*', 'admin.prodi.*') ? 'is-active' : '' }}">
                                         Master Fakultas &amp; Prodi
                                     </a>
                                 @endif
-                            @elseif (Route::has('laboran.pengujian.index') && Auth::user()->isLaboran())
-                                <a href="{{ route('laboran.pengujian.index') }}" dusk="nav-laboran-pbi13" class="tu-link font-semibold text-gray-900">
-                                    Panel Laboran
-                                </a>
+                                @if (Route::has('admin.mesin.index'))
+                                    <a href="{{ route('admin.mesin.index') }}" dusk="nav-admin-mesin"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('admin.mesin.*') ? 'is-active' : '' }}">
+                                        Katalog Mesin
+                                    </a>
+                                @endif
+                            @elseif (Auth::user()->isLaboran())
+                                @if (Route::has('laboran.antrean.index'))
+                                    <a href="{{ route('laboran.antrean.index') }}" dusk="nav-laboran-antrean"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('laboran.antrean.*') ? 'is-active' : '' }}">
+                                        Antrean Fisik
+                                    </a>
+                                @endif
+                                @if (Route::has('laboran.pengujian.index'))
+                                    <a href="{{ route('laboran.pengujian.index') }}" dusk="nav-laboran-pbi13"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('laboran.pengujian.*', 'home') ? 'is-active' : '' }}">
+                                        Hasil Uji
+                                    </a>
+                                @endif
                                 @if (Route::has('laboran.validasi.ktm.index'))
-                                    <a href="{{ route('laboran.validasi.ktm.index') }}" dusk="nav-laboran-validasi-ktm" class="tu-link font-semibold text-gray-900">
+                                    <a href="{{ route('laboran.validasi.ktm.index') }}" dusk="nav-laboran-validasi-ktm"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('laboran.validasi.ktm.*') ? 'is-active' : '' }}">
                                         Validasi KTM
                                     </a>
                                 @endif
+<<<<<<< HEAD
                                 @if (Route::has('laboran.suspend.index'))
                                     <a href="{{ route('laboran.suspend.index') }}" dusk="nav-laboran-suspend" class="tu-link font-semibold text-gray-900">
                                         Kelola Suspend
+=======
+                                @if (Route::has('laboran.sop.index'))
+                                    <a href="{{ route('laboran.sop.index') }}" dusk="nav-laboran-sop"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('laboran.sop.*') ? 'is-active' : '' }}">
+                                        Kelola SOP
+>>>>>>> origin/main
                                     </a>
                                 @endif
                             @else
-                                <a href="{{ route('home') }}" dusk="nav-pemohon-dashboard" class="tu-link font-semibold text-gray-900">
+                                <a href="{{ route('home') }}" dusk="nav-pemohon-dashboard"
+                                   class="tu-link font-semibold text-gray-900 {{ request()->routeIs('home') ? 'is-active' : '' }}">
                                     Dashboard
                                 </a>
-                                <a href="{{ route('pengajuan.create') }}" dusk="nav-buat-pengajuan" class="tu-link font-semibold text-racing-red">
-                                    + Buat Pengajuan
-                                </a>
+                                @if (Route::has('profil.show'))
+                                    <a href="{{ route('profil.show') }}" dusk="nav-pemohon-profil"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('profil.*') ? 'is-active' : '' }}">
+                                        Profil &amp; KTM
+                                    </a>
+                                @endif
+                                @if (Route::has('pengajuan.create'))
+                                    <a href="{{ route('pengajuan.create') }}" dusk="nav-buat-pengajuan"
+                                       class="tu-link font-semibold text-racing-red {{ request()->routeIs('pengajuan.create') ? 'is-active' : '' }}">
+                                        + Buat Pengajuan
+                                    </a>
+                                @endif
                             @endif
-                        @endauth
+                        @endguest
                     </nav>
 
                     <!-- Auth links + Theme toggle + Mobile menu button -->
-                    <div class="flex items-center gap-2 sm:gap-3">
+                    <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                         <button type="button" id="themeToggleBtn" dusk="theme-toggle" aria-label="Ganti mode gelap atau terang" title="Mode Gelap / Terang" class="tu-theme-btn">
                             <svg class="tu-theme-icon tu-theme-icon--sun w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <circle cx="12" cy="12" r="4" stroke-width="2" />
@@ -113,9 +158,9 @@
                                 </a>
                             @endif
                         @else
-                            <div class="flex items-center gap-3">
-                                <span class="hidden sm:inline text-sm font-medium text-gray-700">
-                                    {{ Auth::user()->name }}
+                            <div class="flex items-center gap-2.5 sm:gap-3">
+                                <span class="hidden lg:inline text-sm font-medium text-gray-700 max-w-[160px] truncate">
+                                    {{ Auth::user()->displayName() }}
                                 </span>
                                 <span dusk="header-role-badge" class="tu-chip {{ Auth::user()->roleChipClass() }}">
                                     {{ Auth::user()->roleLabel() }}
@@ -147,44 +192,73 @@
             <!-- Mobile navigation drawer -->
             <nav id="mobileMenu" class="md:hidden hidden border-t border-gray-200 bg-white" aria-label="Navigasi mobile">
                 <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col divide-y divide-gray-100 text-sm font-medium text-gray-700">
-                    <a href="{{ url('/') }}#alur" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
-                        <span>Alur Pengujian</span>
-                        <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
-                    </a>
-                    <a href="{{ url('/') }}#katalog-lab" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
-                        <span>Katalog Laboratorium</span>
-                        <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
-                    </a>
-                    <a href="{{ url('/') }}#faq" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
-                        <span>Pertanyaan Umum (FAQ)</span>
-                        <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
-                    </a>
-                    @auth
-                        @if (Route::has('admin.users.index') && Auth::user()->isAdmin())
-                            <a href="{{ route('admin.users.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
-                                <span>Manajemen Pengguna</span>
-                                <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
-                            </a>
+                    @guest
+                        <a href="{{ url('/') }}#alur" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
+                            <span>Alur Pengujian</span>
+                            <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                        </a>
+                        <a href="{{ url('/') }}#katalog-lab" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
+                            <span>Katalog Laboratorium</span>
+                            <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                        </a>
+                        <a href="{{ url('/') }}#faq" data-mobile-link class="py-2.5 flex items-center justify-between transition-colors hover:text-tiger-flame">
+                            <span>Pertanyaan Umum (FAQ)</span>
+                            <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                        </a>
+                    @else
+                        @if (Auth::user()->isAdmin())
+                            @if (Route::has('admin.dashboard'))
+                                <a href="{{ route('admin.dashboard') }}" data-mobile-link dusk="mobile-nav-admin-dashboard" class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Dasbor Analitik Admin</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
+                            @if (Route::has('admin.users.index'))
+                                <a href="{{ route('admin.users.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Manajemen Pengguna</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
                             @if (Route::has('admin.master.fakultas-prodi.index'))
                                 <a href="{{ route('admin.master.fakultas-prodi.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
                                     <span>Master Fakultas &amp; Prodi</span>
                                     <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                                 </a>
                             @endif
-                        @elseif (Route::has('laboran.pengujian.index') && Auth::user()->isLaboran())
-                            <a href="{{ route('laboran.pengujian.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
-                                <span>Panel Laboran</span>
-                                <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
-                            </a>
+                            @if (Route::has('admin.mesin.index'))
+                                <a href="{{ route('admin.mesin.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Katalog Mesin Lab</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
+                        @elseif (Auth::user()->isLaboran())
+                            @if (Route::has('laboran.antrean.index'))
+                                <a href="{{ route('laboran.antrean.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Antrean Fisik &amp; Digital</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
+                            @if (Route::has('laboran.pengujian.index'))
+                                <a href="{{ route('laboran.pengujian.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Unggah &amp; Revisi Hasil Uji</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
                             @if (Route::has('laboran.validasi.ktm.index'))
                                 <a href="{{ route('laboran.validasi.ktm.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
                                     <span>Validasi KTM</span>
                                     <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                                 </a>
                             @endif
+<<<<<<< HEAD
                             @if (Route::has('laboran.suspend.index'))
                                 <a href="{{ route('laboran.suspend.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
                                     <span>Kelola Suspend</span>
+=======
+                            @if (Route::has('laboran.sop.index'))
+                                <a href="{{ route('laboran.sop.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Kelola SOP Sampel</span>
+>>>>>>> origin/main
                                     <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                                 </a>
                             @endif
@@ -193,12 +267,20 @@
                                 <span>Dashboard Pengujian</span>
                                 <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                             </a>
-                            <a href="{{ route('pengajuan.create') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-racing-red transition-colors hover:text-tiger-flame">
-                                <span>+ Buat Pengajuan Uji Baru</span>
-                                <span class="text-xs text-racing-red" aria-hidden="true">&rarr;</span>
-                            </a>
+                            @if (Route::has('profil.show'))
+                                <a href="{{ route('profil.show') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Profil &amp; Validasi KTM</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
+                            @if (Route::has('pengajuan.create'))
+                                <a href="{{ route('pengajuan.create') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-racing-red transition-colors hover:text-tiger-flame">
+                                    <span>+ Buat Pengajuan Uji Baru</span>
+                                    <span class="text-xs text-racing-red" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
                         @endif
-                    @endauth
+                    @endguest
                 </div>
             </nav>
         </header>
@@ -226,7 +308,7 @@
                         <a href="{{ url('/') }}#faq" class="tu-link block w-fit text-gray-700">Pertanyaan umum</a>
                     </nav>
                     <nav class="md:col-span-3 text-sm space-y-2.5" aria-label="Akun">
-                        <p class="text-xs font-semibold text-gray-400 mb-4">Akun</p>
+                        <p class="text-xs font-semibold text-gray-400 mb-4">Ruang Kerja</p>
                         @guest
                             @if (Route::has('login'))
                                 <a href="{{ route('login') }}" class="tu-link block w-fit text-gray-700">Masuk</a>
@@ -235,15 +317,41 @@
                                 <a href="{{ route('register') }}" class="tu-link block w-fit text-gray-700">Daftar pemohon</a>
                             @endif
                         @else
-                            <a href="{{ Auth::user()->homeRoute() }}" class="tu-link block w-fit text-gray-700">
-                                @if (Auth::user()->isAdmin())
-                                    Manajemen Pengguna
-                                @elseif (Auth::user()->isLaboran())
-                                    Panel Laboran
-                                @else
-                                    Dashboard Pengujian
+                            @if (Auth::user()->isAdmin())
+                                @if (Route::has('admin.dashboard'))
+                                    <a href="{{ route('admin.dashboard') }}" class="tu-link block w-fit text-gray-700">Dasbor Analitik</a>
                                 @endif
-                            </a>
+                                @if (Route::has('admin.users.index'))
+                                    <a href="{{ route('admin.users.index') }}" class="tu-link block w-fit text-gray-700">Manajemen Pengguna</a>
+                                @endif
+                                @if (Route::has('admin.master.fakultas-prodi.index'))
+                                    <a href="{{ route('admin.master.fakultas-prodi.index') }}" class="tu-link block w-fit text-gray-700">Master Fakultas &amp; Prodi</a>
+                                @endif
+                                @if (Route::has('admin.mesin.index'))
+                                    <a href="{{ route('admin.mesin.index') }}" class="tu-link block w-fit text-gray-700">Katalog Mesin Lab</a>
+                                @endif
+                            @elseif (Auth::user()->isLaboran())
+                                @if (Route::has('laboran.antrean.index'))
+                                    <a href="{{ route('laboran.antrean.index') }}" class="tu-link block w-fit text-gray-700">Antrean Fisik &amp; Digital</a>
+                                @endif
+                                @if (Route::has('laboran.pengujian.index'))
+                                    <a href="{{ route('laboran.pengujian.index') }}" class="tu-link block w-fit text-gray-700">Unggah &amp; Revisi Hasil Uji</a>
+                                @endif
+                                @if (Route::has('laboran.validasi.ktm.index'))
+                                    <a href="{{ route('laboran.validasi.ktm.index') }}" class="tu-link block w-fit text-gray-700">Validasi KTM</a>
+                                @endif
+                                @if (Route::has('laboran.sop.index'))
+                                    <a href="{{ route('laboran.sop.index') }}" class="tu-link block w-fit text-gray-700">Kelola SOP Sampel</a>
+                                @endif
+                            @else
+                                <a href="{{ route('home') }}" class="tu-link block w-fit text-gray-700">Dashboard Pengujian</a>
+                                @if (Route::has('pengajuan.create'))
+                                    <a href="{{ route('pengajuan.create') }}" class="tu-link block w-fit text-gray-700">Buat Pengajuan Baru</a>
+                                @endif
+                                @if (Route::has('profil.show'))
+                                    <a href="{{ route('profil.show') }}" class="tu-link block w-fit text-gray-700">Profil &amp; Validasi KTM</a>
+                                @endif
+                            @endif
                         @endguest
                     </nav>
                 </div>
@@ -311,6 +419,7 @@
                         localStorage.setItem('tu-theme', isDark ? 'dark' : 'light');
                     } catch (e) {}
                     syncThemeBtn();
+                    window.dispatchEvent(new CustomEvent('tu:themechange', { detail: { dark: isDark } }));
                 });
             }
 
@@ -436,5 +545,8 @@
             }
         })();
     </script>
+
+    {{-- Slot untuk script tambahan halaman (misal: Chart.js di dashboard admin, Quill di editor SOP) --}}
+    @stack('scripts')
 </body>
 </html>

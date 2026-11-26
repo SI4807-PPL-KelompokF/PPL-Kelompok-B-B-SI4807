@@ -138,9 +138,10 @@ class DokumenHasilUjiService
 
                 $lockedTiket->update([
                     'status' => TiketPengujian::STATUS_SELESAI,
+                    'completed_at' => $lockedTiket->completed_at ?? now(),
                 ]);
 
-                $actorName = $actor ? $actor->name : 'Laboran';
+                $actorName = $actor ? $actor->displayName() : 'Laboran';
                 $actionCode = $isRevision ? AuditTrail::AKSI_REVISI : AuditTrail::AKSI_UNGGAH;
                 $defaultNote = $isRevision
                     ? "Revisi dokumen hasil uji v{$newVersion}: menggantikan {$oldFileName} dengan {$originalName}."

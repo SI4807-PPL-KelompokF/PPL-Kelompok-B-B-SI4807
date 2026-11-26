@@ -31,7 +31,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Arahkan pengguna setelah login ke halaman sesuai perannya (Admin / Laboran / Pemohon).
+     * Arahkan pengguna setelah login ke halaman beranda sesuai perannya (Admin / Laboran / Pemohon).
      */
     public function redirectTo(): string
     {

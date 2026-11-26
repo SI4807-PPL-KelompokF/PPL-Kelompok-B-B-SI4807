@@ -7,22 +7,10 @@
         <!-- Header -->
         <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div class="tu-reveal max-w-2xl">
-                <div class="flex items-center gap-2 mb-3">
-                    <a href="{{ route('laboran.pengujian.index') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-racing-red transition-colors">
-                        <span>&larr; Panel Pengujian</span>
-                    </a>
-                    <span class="text-gray-300">&middot;</span>
-                    <span class="tu-chip tu-chip--jasmine text-[11px]">PBI-01 Validasi Identitas</span>
-                </div>
                 <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-950 leading-[1.05]">Validasi Identitas &amp; KTM</h1>
                 <p class="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">
                     Periksa kesesuaian data akademik dan berkas KTM/ID pemohon sebelum mereka diizinkan mengajukan uji laboratorium.
                 </p>
-            </div>
-            <div class="tu-reveal [--d:100ms] flex flex-wrap items-center gap-3">
-                <a href="{{ route('laboran.pengujian.index') }}" class="tu-btn tu-btn--sm tu-btn--ghost">
-                    <span>Panel Pengujian Lab</span>
-                </a>
             </div>
         </div>
 
@@ -78,23 +66,31 @@
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between lg:justify-end gap-4 lg:gap-6 pb-4">
                     <div class="flex overflow-x-auto no-scrollbar gap-1 border-b sm:border-b-0 border-gray-100 pb-2 sm:pb-0" role="tablist">
                         <a href="{{ route('laboran.validasi.ktm.index', ['status' => 'all', 'q' => $search]) }}"
+                           role="tab"
+                           aria-selected="{{ $statusFilter === 'all' ? 'true' : 'false' }}"
                            dusk="tab-semua"
-                           class="tu-tab {{ $statusFilter === 'all' ? 'active' : '' }}">
+                           class="tu-tab">
                            Semua <span class="tu-mono text-xs text-gray-400">({{ $metrics['total'] }})</span>
                         </a>
                         <a href="{{ route('laboran.validasi.ktm.index', ['status' => 'menunggu', 'q' => $search]) }}"
+                           role="tab"
+                           aria-selected="{{ $statusFilter === 'menunggu' ? 'true' : 'false' }}"
                            dusk="tab-menunggu"
-                           class="tu-tab {{ $statusFilter === 'menunggu' ? 'active' : '' }}">
+                           class="tu-tab">
                            Perlu Verifikasi <span class="tu-mono text-xs text-gray-400">({{ $metrics['menunggu'] }})</span>
                         </a>
                         <a href="{{ route('laboran.validasi.ktm.index', ['status' => 'tervalidasi', 'q' => $search]) }}"
+                           role="tab"
+                           aria-selected="{{ $statusFilter === 'tervalidasi' ? 'true' : 'false' }}"
                            dusk="tab-tervalidasi"
-                           class="tu-tab {{ $statusFilter === 'tervalidasi' ? 'active' : '' }}">
+                           class="tu-tab">
                            Tervalidasi <span class="tu-mono text-xs text-gray-400">({{ $metrics['tervalidasi'] }})</span>
                         </a>
                         <a href="{{ route('laboran.validasi.ktm.index', ['status' => 'ditolak', 'q' => $search]) }}"
+                           role="tab"
+                           aria-selected="{{ $statusFilter === 'ditolak' ? 'true' : 'false' }}"
                            dusk="tab-ditolak"
-                           class="tu-tab {{ $statusFilter === 'ditolak' ? 'active' : '' }}">
+                           class="tu-tab">
                            Ditolak <span class="tu-mono text-xs text-gray-400">({{ $metrics['ditolak'] }})</span>
                         </a>
                     </div>
@@ -261,8 +257,8 @@
                 <p class="text-xs text-gray-500" id="modalSubtitle">Dokumen identitas pemohon</p>
             </div>
             <div class="flex items-center gap-2">
-                <a id="modalNewTabLink" href="#" target="_blank" class="text-xs font-semibold text-racing-red hover:underline px-2 py-1">
-                    Buka Tab Baru ↗
+                <a id="modalNewTabLink" href="about:blank" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-racing-red hover:underline px-2 py-1">
+                    Buka Tab Baru &rarr;
                 </a>
                 <button type="button" onclick="closePreviewModal()" class="w-8 h-8 rounded-full hover:bg-gray-100 grid place-items-center text-gray-500 hover:text-gray-900">
                     ✕

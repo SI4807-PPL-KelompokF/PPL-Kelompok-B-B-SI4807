@@ -85,15 +85,14 @@ Telyuji hadir sebagai solusi sistem informasi manajemen layanan laboratorium ter
 
 ## Karakteristik Pengguna, Hak Akses & Rute Utama
 
-1. **Admin (`admin` — `/admin/pengguna`):**
-   - Mengelola akun pengguna civitas akademika (tambah, ubah peran, perbarui data, dan hapus akun Pemohon, Laboran, maupun Admin).
-   - Mengelola master data institusi serta pengawasan sistem.
+1. **Admin (`admin` — `/admin/dashboard`):**
+   - Memantau statistik operasional laboratorium, tingkat penggunaan mesin uji, dan distribusi pengajuan per fakultas pada Dasbor Analitik (`/admin/dashboard`).
+   - Mengelola akun pengguna civitas akademika (`/admin/pengguna`), master data Fakultas & Program Studi (`/admin/master-fakultas-prodi`), serta katalog mesin & status operasional (`/admin/mesin`).
 2. **Laboran (`laboran` — `/laboran/pengujian`):**
-   - Mengelola antrean pengujian sampel laboratorium.
-   - Mengunggah dan merevisi dokumen Laporan Hasil Uji (LHU) berformat `.pdf`, `.xlsx`, atau `.xls` (maks. 5 MB) dengan validasi *magic bytes*, penyimpanan terenkripsi `AES-256-CBC` di *private storage*, checksum `SHA-256`, serta pencatatan otomatis ke *Audit Trail*.
+   - Memvalidasi identitas & KTM pemohon (`/laboran/validasi-ktm`), memvalidasi penerimaan fisik/digital & memproses antrean mesin (`/laboran/antrean`), serta mengelola panduan SOP penyiapan sampel (`/laboran/sop`).
+   - Mengunggah dan merevisi dokumen Laporan Hasil Uji (LHU) berformat `.pdf`, `.xlsx`, atau `.xls` (maks. 5 MB) dengan validasi *magic bytes*, penyimpanan terenkripsi `AES-256-CBC` di *private storage*, checksum `SHA-256`, serta pencatatan otomatis ke *Audit Trail* (`/laboran/pengujian`).
 3. **Pemohon (`pemohon` — `/home`):**
-   - Mahasiswa (`@student.telkomuniversity.ac.id`) maupun Dosen/Staf (`@telkomuniversity.ac.id`) yang mengajukan sampel pengujian.
-   - Memantau progres pengujian sampel secara *real-time* dan mengunduh dokumen LHU resmi miliknya sendiri melalui `/pengajuan/{nomorTiket}/unduh-lhu`.
+   - Mahasiswa (`@student.telkomuniversity.ac.id`) maupun Dosen/Staf (`@telkomuniversity.ac.id`) yang melengkapi profil akademik & validasi KTM (`/profil`), mengajukan sampel pengujian (`/pengajuan/buat`), mencetak Resi E-Ticket Barcode, memantau Visual Timeline Tracking (`/pengajuan/{nomorTiket}`), dan mengunduh dokumen LHU resmi (`/pengajuan/{nomorTiket}/unduh-lhu`).
 
 ---
 
@@ -171,7 +170,7 @@ Perintah `--seed` akan menyiapkan sampel antrean pengujian awal beserta 3 akun d
 
 | Peran | Email Login | Kata Sandi | Halaman Tujuan |
 | :--- | :--- | :--- | :--- |
-| **Admin** | `admin@telkomuniversity.ac.id` | `Telyuji#2026` | `/admin/pengguna` |
+| **Admin** | `admin@telkomuniversity.ac.id` | `Telyuji#2026` | `/admin/dashboard` |
 | **Laboran** | `laboran@telkomuniversity.ac.id` | `Telyuji#2026` | `/laboran/pengujian` |
 | **Pemohon** | `pemohon@telkomuniversity.ac.id` | `Telyuji#2026` | `/home` |
 

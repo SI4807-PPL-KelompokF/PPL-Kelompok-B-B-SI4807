@@ -16,11 +16,48 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'email' => strtolower($this->faker->unique()->userName()) . '@telkomuniversity.ac.id',
+            'email' => strtolower(preg_replace('/[^a-zA-Z0-9._]/', '', $this->faker->unique()->userName())) . '@telkomuniversity.ac.id',
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
+            'role' => \App\Models\User::ROLE_PEMOHON,
         ];
+    }
+
+    /**
+     * State untuk Admin Telyuji.
+     */
+    public function admin()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => \App\Models\User::ROLE_ADMIN,
+            ];
+        });
+    }
+
+    /**
+     * State untuk Laboran Telyuji.
+     */
+    public function laboran()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => \App\Models\User::ROLE_LABORAN,
+            ];
+        });
+    }
+
+    /**
+     * State untuk Pemohon Telyuji.
+     */
+    public function pemohon()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'role' => \App\Models\User::ROLE_PEMOHON,
+            ];
+        });
     }
 
     /**
