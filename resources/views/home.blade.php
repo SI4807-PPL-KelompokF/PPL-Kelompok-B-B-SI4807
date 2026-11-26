@@ -20,6 +20,32 @@
             </div>
         </div>
 
+        @if (Auth::user()->is_suspended)
+            <div class="rounded-xl border border-red-300 bg-red-50 p-4 sm:p-5 flex items-start gap-4 text-red-900 shadow-sm" dusk="suspended-banner" role="alert">
+                <div class="rounded-full bg-red-100 p-2 text-red-600 shrink-0">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-base font-bold text-red-800">Akun Anda Sedang Ditangguhkan (Suspended)</h3>
+                    <p class="mt-1 text-sm text-red-700 leading-relaxed">
+                        Akses pembuatan pengajuan laboratorium dinonaktifkan sementara oleh Laboran dengan alasan:
+                        <strong class="font-semibold text-red-900">{{ Auth::user()->alasan_suspend ?: 'Pelanggaran tata tertib / SOP laboratorium.' }}</strong>
+                    </p>
+                    <p class="mt-2 text-xs text-red-600">
+                        Silakan hubungi staf Laboran atau bagian operasional laboratorium kampus untuk informasi lebih lanjut mengenai pemulihan akun.
+                    </p>
+                </div>
+            </div>
+        @endif
+
+        @if ($errors->has('suspended'))
+            <div class="rounded-xl border border-red-300 bg-red-50 p-4 text-sm font-medium text-red-800 shadow-sm" role="alert">
+                {{ $errors->first('suspended') }}
+            </div>
+        @endif
+
         @if (session('status'))
             <div class="tu-alert" role="alert">
                 {{ session('status') }}

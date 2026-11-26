@@ -39,6 +39,8 @@ class User extends Authenticatable
         'prodi_id',
         'foto_identitas',
         'status_validasi_ktm',
+        'is_suspended',
+        'alasan_suspend',
     ];
 
     /**
@@ -58,6 +60,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_suspended' => 'boolean',
     ];
 
     public function isAdmin(): bool
@@ -163,5 +166,27 @@ class User extends Authenticatable
     public function prodi()
     {
         return $this->belongsTo(Prodi::class, 'prodi_id');
+    }
+
+    /**
+     * Tangguhkan (suspend) akun pemohon dengan alasan tertentu (PBI-02 / SPK-2).
+     */
+    public function suspendAkun(string $alasan): bool
+    {
+        return $this->update([
+            'is_suspended' => true,
+            'alasan_suspend' => $alasan,
+        ]);
+    }
+
+    /**
+     * Cabut status suspend pemohon (PBI-02 / SPK-2).
+     */
+    public function cabutSuspend(): bool
+    {
+        return $this->update([
+            'is_suspended' => false,
+            'alasan_suspend' => null,
+        ]);
     }
 }
