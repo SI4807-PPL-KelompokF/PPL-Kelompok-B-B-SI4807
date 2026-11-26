@@ -100,6 +100,12 @@
                                         Validasi KTM
                                     </a>
                                 @endif
+                                @if (Route::has('laboran.suspend.index'))
+                                    <a href="{{ route('laboran.suspend.index') }}" dusk="nav-laboran-suspend"
+                                       class="tu-link font-semibold text-gray-900 {{ request()->routeIs('laboran.suspend.*') ? 'is-active' : '' }}">
+                                        Kelola Suspend
+                                    </a>
+                                @endif
                                 @if (Route::has('laboran.sop.index'))
                                     <a href="{{ route('laboran.sop.index') }}" dusk="nav-laboran-sop"
                                        class="tu-link font-semibold text-gray-900 {{ request()->routeIs('laboran.sop.*') ? 'is-active' : '' }}">
@@ -241,6 +247,12 @@
                             @if (Route::has('laboran.validasi.ktm.index'))
                                 <a href="{{ route('laboran.validasi.ktm.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
                                     <span>Validasi KTM</span>
+                                    <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
+                                </a>
+                            @endif
+                            @if (Route::has('laboran.suspend.index'))
+                                <a href="{{ route('laboran.suspend.index') }}" data-mobile-link class="py-2.5 flex items-center justify-between font-semibold text-gray-900 transition-colors hover:text-tiger-flame">
+                                    <span>Kelola Suspend</span>
                                     <span class="text-xs text-gray-400" aria-hidden="true">&rarr;</span>
                                 </a>
                             @endif
