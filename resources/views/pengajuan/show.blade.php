@@ -1,6 +1,17 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $viewer = Auth::user();
+    $isLaboran = $viewer && $viewer->isLaboran();
+    $lhuDownloadUrl = $isLaboran
+        ? route('laboran.pengujian.download', $tiket->nomor_tiket)
+        : route('pemohon.pengujian.download', $tiket->nomor_tiket);
+    $canDownloadLhu = $tiket->canDownloadHasil() && ($isLaboran || $tiket->isOwnedBy($viewer));
+    $lhuDoc = $tiket->dokumenHasil;
+    $lhuExt = $lhuDoc ? strtolower((string) $lhuDoc->ekstensi) : '';
+@endphp
+
 <div class="relative overflow-hidden bg-gray-50 min-h-screen py-8 sm:py-12">
     <x-bg-pattern uid="timeline-pat" />
 
@@ -56,13 +67,20 @@
                         <span>Cetak Barcode</span>
                     </a>
 
-                    @if ($tiket->isCompleted() && $tiket->dokumenHasil)
-                        <a href="{{ route('pemohon.pengujian.download', $tiket->nomor_tiket) }}" dusk="btn-unduh-lhu" class="tu-btn tu-btn--sm bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600">
+                    @if ($canDownloadLhu)
+                        <a href="{{ $lhuDownloadUrl }}" dusk="btn-unduh-lhu" class="tu-btn tu-btn--sm bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>Unduh LHU Resmi</span>
                         </a>
+                    @else
+                        <button type="button" disabled aria-disabled="true" dusk="btn-unduh-lhu-disabled" title="Dokumen LHU hanya dapat diunduh setelah status pengajuan Selesai" class="tu-btn tu-btn--sm tu-btn--ghost opacity-50 cursor-not-allowed">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <span>Unduh LHU Resmi</span>
+                        </button>
                     @endif
                 </div>
             </div>
@@ -349,8 +367,59 @@
                 </section>
             </div>
 
-            <!-- Kolom Kanan (4 Col): Kartu Barcode & Tindakan Cepat Resi -->
+            <!-- Kolom Kanan (4 Col): Kartu LHU, Barcode & Riwayat -->
             <div class="lg:col-span-4 space-y-6">
+                <!-- Kartu Unduh Laporan Hasil Uji (PBI-14) -->
+                <section class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4" dusk="card-lhu-download">
+                    <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                        <p class="text-xs font-bold text-gray-900 uppercase tracking-wide">Laporan Hasil Uji (LHU)</p>
+                        @if ($canDownloadLhu)
+                            <span class="tu-chip tu-chip--mint">Siap Unduh</span>
+                        @else
+                            <span class="tu-chip tu-chip--cream">Belum Selesai</span>
+                        @endif
+                    </div>
+
+                    @if ($canDownloadLhu)
+                        <div class="flex items-start gap-3 border border-gray-200 bg-gray-50 p-3.5 rounded">
+                            <span class="lu-badge {{ $lhuExt === 'pdf' ? 'lu-badge--pdf' : 'lu-badge--xls' }} shrink-0">
+                                {{ strtoupper($lhuExt ?: 'PDF') }}
+                            </span>
+                            <div class="min-w-0 flex-1 space-y-1">
+                                <p class="text-xs font-semibold text-gray-950 truncate" title="{{ $lhuDoc->nama_berkas_asli }}">
+                                    {{ $lhuDoc->nama_berkas_asli }}
+                                </p>
+                                <p class="tu-mono text-[11px] text-gray-500">
+                                    v{{ $lhuDoc->versi }} &middot; {{ $lhuDoc->ukuran_formatted }}
+                                </p>
+                                @if ($lhuDoc->catatan_laboran)
+                                    <p class="text-[11px] text-gray-600 leading-snug pt-0.5">
+                                        {{ $lhuDoc->catatan_laboran }}
+                                    </p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <a href="{{ $lhuDownloadUrl }}" dusk="card-btn-unduh-lhu" class="tu-btn tu-btn--block tu-btn--sm bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            <span>Unduh LHU Resmi</span>
+                        </a>
+                    @else
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Laporan Hasil Uji belum tersedia. Tombol unduh akan aktif otomatis setelah status pengajuan <span class="font-semibold text-gray-900">Selesai</span>.
+                        </p>
+
+                        <button type="button" disabled aria-disabled="true" dusk="card-btn-unduh-lhu-disabled" title="Dokumen LHU hanya dapat diunduh setelah status pengajuan Selesai" class="tu-btn tu-btn--ghost tu-btn--block tu-btn--sm opacity-50 cursor-not-allowed">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                            <span>Unduh LHU Resmi</span>
+                        </button>
+                    @endif
+                </section>
+
                 <!-- Kartu Resi Barcode Vektor (PBI-08) -->
                 <section class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm tu-reveal [--d:120ms] text-center space-y-4">
                     <div class="flex items-center gap-2 border-b border-gray-100 pb-3">
