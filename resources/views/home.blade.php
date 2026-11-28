@@ -169,10 +169,14 @@
                                             <a href="{{ route('pengajuan.resi.download', $tiket->nomor_tiket) }}" dusk="download-resi-{{ $tiket->nomor_tiket }}" title="Unduh Resi E-Ticket Barcode" class="tu-btn tu-btn--sm tu-btn--ghost !py-1 !px-2.5 text-xs">
                                                 <span>Resi PDF</span>
                                             </a>
-                                            @if ($tiket->isCompleted() && $tiket->dokumenHasil)
+                                            @if ($tiket->canDownloadHasil())
                                                 <a href="{{ route('pemohon.pengujian.download', $tiket->nomor_tiket) }}" dusk="download-lhu-{{ $tiket->nomor_tiket }}" class="tu-btn tu-btn--sm !py-1 !px-2.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-600">
                                                     <span>Unduh LHU</span>
                                                 </a>
+                                            @else
+                                                <button type="button" disabled aria-disabled="true" dusk="download-lhu-disabled-{{ $tiket->nomor_tiket }}" title="Dokumen LHU hanya dapat diunduh setelah status pengajuan Selesai" class="tu-btn tu-btn--sm tu-btn--ghost !py-1 !px-2.5 text-xs opacity-50 cursor-not-allowed">
+                                                    <span>Unduh LHU</span>
+                                                </button>
                                             @endif
                                         </div>
                                     </td>
