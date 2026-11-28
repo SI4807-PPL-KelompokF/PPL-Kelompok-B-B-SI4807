@@ -74,8 +74,21 @@ class HomeController extends Controller
             ->where('nomor_tiket', $nomorTiket)
             ->firstOrFail();
 
-        abort_unless($tiket->canBeDownloadedBy(Auth::user()), 403, 'Anda tidak memiliki izin untuk mengunduh dokumen hasil uji ini.');
-        abort_unless($tiket->isCompleted() && $tiket->dokumenHasil !== null, 404, 'Laporan Hasil Uji belum diterbitkan.');
+        abort_unless(
+            $tiket->isOwnedBy(Auth::user()),
+            403,
+            'Anda tidak memiliki izin untuk mengunduh dokumen hasil uji ini.'
+        );
+        abort_unless(
+            $tiket->isCompleted(),
+            403,
+            'Dokumen hasil uji hanya dapat diunduh apabila status pengajuan sudah Selesai.'
+        );
+        abort_unless(
+            $tiket->dokumenHasil !== null,
+            404,
+            'Laporan Hasil Uji belum tersedia.'
+        );
 
         return $hasilUjiService->downloadResponse($tiket);
     }

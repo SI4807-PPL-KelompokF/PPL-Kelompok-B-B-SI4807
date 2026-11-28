@@ -146,16 +146,30 @@ class TiketPengujian extends Model
     }
 
     /**
+     * Periksa apakah tiket ini dimiliki oleh pengguna yang diberikan.
+     */
+    public function isOwnedBy(?User $user): bool
+    {
+        return $user !== null
+            && $this->user_id !== null
+            && (int) $this->user_id === (int) $user->id;
+    }
+
+    /**
+     * Dokumen hasil uji hanya dapat diunduh apabila status tiket "Selesai"
+     * dan berkas LHU sudah diterbitkan.
+     */
+    public function canDownloadHasil(): bool
+    {
+        return $this->isCompleted() && $this->dokumenHasil !== null;
+    }
+
+    /**
      * Periksa apakah pengguna berhak mengunduh dokumen LHU tiket ini.
      */
     public function canBeDownloadedBy(?User $user): bool
     {
-        if (!$user) {
-            return false;
-        }
-
-        return $user->isLaboran()
-            || ($this->user_id !== null && (int) $this->user_id === (int) $user->id);
+        return $user !== null && ($user->isLaboran() || $this->isOwnedBy($user));
     }
 
     /**

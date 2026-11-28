@@ -229,6 +229,9 @@ class DokumenHasilUjiService
             'Content-Type' => $payload['mime_type'],
             'Content-Disposition' => 'attachment; filename="' . $payload['file_name'] . '"',
             'X-Content-Type-Options' => 'nosniff',
+            'Cache-Control' => 'private, no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
         ]);
     }
 
